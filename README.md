@@ -4,3 +4,4 @@ Projektarbete i kursen Datatekniskt projekt
 
 ## Medlemmar
 Pictodon - Viktor Frideen
+Ferddan - Fredrik Österström
