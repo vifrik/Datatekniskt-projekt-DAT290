@@ -7,6 +7,6 @@ Pictodon - Viktor Frideen
 
 Ferddan - Fredrik Österström
 
-NazifTheDon - Nazif Kadirogl
+NazifTheDon - Nazif Kadiroglu
 
 luksch1121 - Lukas Schiavone
