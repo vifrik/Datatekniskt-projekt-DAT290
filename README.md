@@ -1,5 +1,5 @@
 # Datatekniskt-projekt-DAT290
-## Beksrivning
+## Beskrivning
 Projektarbete i kursen Datatekniskt projekt
 
 ## Medlemmar
