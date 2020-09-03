@@ -5,9 +5,11 @@ Projektarbete i kursen Datatekniskt projekt
 ## Medlemmar
 Pictodon - Viktor Frideen
 
+Markus-Moen - Markus Moen
+
 Ferddan - Fredrik Österström
 
-NazifTheDon - Nazif Kadiroglu
+NazifTheDon - Nazif Kadirogl
 
 luksch1121 - Lukas Schiavone
 
