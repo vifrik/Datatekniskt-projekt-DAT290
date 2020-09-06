@@ -1,7 +1,8 @@
 \documentclass{article}
+\usepackage[swedish]{babel}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-
-\renewcommand{\contentsname}{Innehåll}
+\usepackage{graphicx}
 
 \begin{document}
 \begin{center}
@@ -29,10 +30,12 @@ Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fre
 \pagenumbering{arabic} 
 
 \section{Syfte}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas gravida lectus a blandit tincidunt. Donec aliquet tempor lacus in cursus. Nulla consequat eros nibh, placerat placerat odio tempus ac. Nam eget imperdiet urna, eget luctus erat. Nam leo sem, pretium vitae orci eu, malesuada congue felis. Integer efficitur arcu a quam aliquet vehicula. Donec ullamcorper facilisis fringilla. Duis vehicula augue eros, eget fringilla est finibus sed. Vivamus imperdiet elit quis purus convallis interdum. Vivamus consequat tortor in feugiat scelerisque. Sed tincidunt sodales lacus sed mattis.\par
-Maecenas vel leo luctus, sagittis elit sed, pulvinar ipsum. Nulla rutrum consequat arcu. Nullam facilisis imperdiet urna, a fermentum erat aliquet vitae. Mauris faucibus iaculis orci, quis sagittis dolor cursus ut. Proin eu condimentum nisl. Proin pretium volutpat velit molestie ultricies. Ut sodales mauris eu magna maximus, vel consectetur enim pretium. Fusce vel mi feugiat, convallis massa non, suscipit risus. Phasellus gravida ligula eget sagittis faucibus. Curabitur suscipit turpis euismod vehicula elementum. Nulla vestibulum velit eu urna rutrum posuere. Curabitur augue purus, faucibus a diam quis, fermentum mattis mi. Etiam eget quam id lacus iaculis volutpat. Sed eget volutpat urna, quis porta est.
+
+75.250 inbrottsstölder 2019 \ref{brastold}
 
 \section{Mål}
+
+Systemet ska ge användaren bättre kontroll över sina tillhörigheter. Systemet ska vara väldokumenterat och fackmannamässigt utfört med goda förutsättningar för expansion.
 
 \section{Bakgrund}
 
@@ -55,7 +58,7 @@ Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom 
     
     \item[Viktor Frideen, planeringsansvarig:] Ansvarar för att informera gruppen om hur arbete med projektet och dess delmål fortgår och även för att uppmärksamma gruppen om de hamnar efter planeringen.
     
-    E-mail: 
+    E-mail: viktor.frideen@outlook.com
     
     \item[Nazif Kadiroglu, teknik dokumentansvarig:] Ansvarar för att all kod i projektet är väl dokumenterad.
     
@@ -95,11 +98,70 @@ Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att
 
 \section{Milstolpar}
 
+\begin{table}[!h]
+    \begin{center}
+    \begin{tabular}{ |c|c|c|c| }\hline
+    Nr & Beskrivning & Datum \\\hline\hline
+    %\multirow{3}{4em}{Multiple row} & cell2 & cell3 \\ 
+    1 & Projektplan inlämnad & 2020-xx-xx \\\hline
+    .. & ... & ... \\\hline
+    .. & ... & ... \\\hline
+    .. & ... & ... \\\hline
+    \end{tabular}
+    \caption{Milstolpar för projektet}
+    \label{milstolpar}
+    \end{center}
+\end{table}
+
 \section{Aktiviteter}
+
+Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimmar motsvarande 1200h. De 200h som varje medlem i gruppen förväntas lägga ner innefattar all tid som spenderas under projektets gång.
+
+\begin{table}[!h]
+    \begin{center}
+    \begin{tabular}{ |c|c|c| }\hline
+    Beskrivning & Tidsåtgång \\\hline\hline
+    Föreläsningar (1.5h/vecka, 8 veckor, 6 personer) & 72h \\\hline
+    Projektmöten (2h/vecka, 8 veckor, 6 personer) & 96h \\\hline
+    Projektledning (2h/vecka, 8 veckor, 2 personer) & 32h \\\hline
+    Framtagning av LaTeX-mallar & 9h \\\hline
+    Arbeta med projektplan & 100h \\\hline
+    Första genomläsning av mirkodatordokumentation & 30h \\\hline
+    Programmering av periferienhet, dörr & 30h \\\hline
+    Programmering av periferienhet, rörelse & 30h \\\hline
+    Programmering av centralenhet & 50h \\\hline
+    Programmering av buss & 50h \\\hline
+    ... & ... \\\hline
+    Förbered/genomför demonstration & 40h \\\hline
+    Arbeta med projektrapport & 300h \\\hline
+    \end{tabular}
+    \caption{Aktivitetslista för projektet}
+    \label{milstolpar}
+    \end{center}
+\end{table}
 
 \section{Tidsplan}
 
 \section{Mötesplan}
+\begin{table}[!h]
+    \begin{center}
+    \begin{tabular}{ |c|c|c| } 
+    \hline
+    Datum & tid & Lokal \\
+    \hline\hline
+    02/09-20 & 13:00-15:00 & ED4209 \\\hline
+    09/09-20 & 15:00-17:00 & Zoom \\\hline
+    16/09-20 & 13:00-15:00 & Zoom \\\hline
+    23/09-20 & 13:00-15:00 & Zoom \\\hline
+    30/09-20 & 13:00-15:00 & Zoom \\\hline
+    07/10-20 & 13:00-15:00 & Zoom \\\hline
+    14/10-20 & 13:00-15:00 & Zoom \\\hline
+    21/10-20 & 13:00-15:00 & Zoom \\\hline
+    \end{tabular}
+    \caption{Tabell över mötestillfällen}
+    \label{motesplan}
+    \end{center}
+\end{table}
 
 \section{Kommunikationsplan}
 
@@ -107,5 +169,7 @@ Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att
 
 \section{Spelregler}
 
+\bibliographystyle{ieeetr}
+\bibliography{referenser}
 
 \end{document}
