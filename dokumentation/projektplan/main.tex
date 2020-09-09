@@ -65,13 +65,31 @@ Vi strävar efter att utveckla ett system som ska ge användaren bättre kontrol
 
 \section{Bakgrund}
 
+\subsection{Begrepp}
+
+\begin{description}
+    \item[CAN:] Controller Area Network
+    \item[MD407:] Mikrodator av typen MD407 
+\end{description}
+
 \subsection{Referenser}
 
 \subsection{Tekniska förutsättningar}
 
-Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta ger oss {3 \choose 2 = 3} olika kombinationer av sensorer.
+Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver tillsammans periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta möjliggör 3 över 2 olika kombinationer av sensorer med periferienheterna.
 
 \section{Systemöversikt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{blockschema.png}
+    \caption{Blocksschema över larmsystemet}
+    %\label{fig:my_label}
+\end{figure}
+
+Centralenheten kommunicerar med periferienheterna genom en \textit{Controller Area Network}-buss. Periferienheterna undersöker ändringar hos deras sensorer och vid funnen ändring rapporteras detta till centralenheten för larm. Inrapporteringen sker via ett meddelande på bussen som skapar ett avbrott hos centralenheten och aktiverar larmdonet.
+
+Centralenheten måste kunna identifiera vilken periferienhet som skickat meddelandet och förstå varför det skicades. Centralenhetenen kommunicerar med en dator för att ge användaren en tydlig bild om var larmet uppstod.
 
 \section{Resursplan}
 
@@ -186,7 +204,7 @@ Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimma
     \end{center}
 \end{table}
 
-Projektet har delats upp i aktiviteter. Anledningen till detta är för att gruppen ska ha bättre koll på vad som ska genomföras under projektets gång och även optimal planering av nedlagda timmar. Viktigt att notera är att aktiviteterna har givits en uppskattad tidsåtgång i tabellen \ref{tab:aktivitetslista}. Tidsåtgången kan däremot variera under projektets gång där vissa aktiviteter kan kräva mer eller mindre tid än den upskattade tidsåtgången.
+Projektet har delats upp i aktiviteter. Anledningen till detta är för att gruppen ska ha bättre koll på vad som ska genomföras under projektets gång och även optimal planering av nedlagda timmar. Viktigt att notera är att aktiviteterna har givits en uppskattad tidsåtgång i tabell \ref{aktivitetslista}. Tidsåtgången kan däremot variera under projektets gång där vissa aktiviteter kan kräva mer eller mindre tid än den upskattade tidsåtgången.
 
 Tabellen ovan \ref{tab:aktivitetslista} tyder på att gruppen sammanlagt kommer lägga ungefär 1200 timmar på projektet. Dessa timmar sorteras in på 19 aktivitetr och 4 kategorier. Första kategorin, som innefattar nummer 1-4, berör det administrativa. Andra kategorin, det vill säga nummer 5-12, berör rapoort delen av projektet. Denna del kommer tillmestadels handla om att skriva om projektet, renskrivning och oppositionsrapport. Tredje kategorin, där nummer 13-19 ingår, kommer att handla om det praktiska arbetet. Här berörs allt från programmering av periferienheter till tester och demonstrationer. 
 
@@ -195,8 +213,18 @@ Tabellen ovan \ref{tab:aktivitetslista} tyder på att gruppen sammanlagt kommer 
 
 
 \section{Tidsplan}
+\begin{figure}
+    \includegraphics[width=\textwidth]{Gantschema.pdf}
+    \caption{Gant-schema}
+    \label{fig:Gant}
+\end{figure}
+
+Aktiviteter som inte visas i \ref{fig:Gant} sker kontinuerligt under projektets gång. De olika aktiviteterna och deras tidåtgång har lagts upp i ett gant-schema. De första två veckorna är lågintensiva där gruppen får en överbklick på hur projektet skall se ut och även arbeta på projektplaneringen. Efter dessa veckor blir det högintensivt där gruppen sätter igång med det praktiska och även arbetar på projektrapporten. Utöver detta ska även opositionsrapporten skrivas. Sista 2 veckorna går åt till att färdigställa rapoorten och förbereda inför demonstration. Det redovisade gant-schemat ger gruppen en överblick på ungefär när deadlinen på de olika rapporterna är samt hur många dagar gruppen har på sig på de angivna aktiviteterna. 
 
 \section{Mötesplan}
+
+Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
+
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ |c|c|c| }\hline
