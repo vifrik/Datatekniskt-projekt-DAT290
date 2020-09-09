@@ -1,37 +1,56 @@
-\documentclass{article}
+\documentclass[a4paper]{article}
+
+%Packages
 \usepackage[swedish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{float}
+
+\restylefloat{table}
 
 \begin{document}
-\begin{center}
+
+%
+% Front page
+%
+
 \thispagestyle{empty}
-\parskip=14pt%
-\vspace*{3\parskip}%
 
-{\LARGE Projektplan DAT290}
+\begin{center}
+    \parskip=14pt%
+    \vspace*{3\parskip}%
 
-{\large Larmsystem, grupp 11
+    {\LARGE Projektplan DAT290}
 
-Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
+    {\large Larmsystem, grupp 11
 
-\today}
+    Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
+    \today}
 
-\rule{7cm}{0.4pt}\\
+    \rule{7cm}{0.4pt}\\
 \end{center}
 \newpage
 
+%
+% ToC, Table of Contents 
+%
+
 \thispagestyle{empty}
+
 \tableofcontents
 \newpage
+
+%
+% Projektplan
+%
 
 \pagenumbering{arabic}
 
 \section{Syfte}
 
-År 2019 anmäldes 75250  inbrottsstölder i Sverige vilket är en minskning med 14\%\ från året innan \ref{brastold}. Detta är en stark minskning och en trend som vi gärna ser fortsätta gå åt samma håll. Därför har vi valt att utveckla ett larm som enkelt kan installeras i alla typer av bostäder och som ger ett grundligt skydd mot oönskat intrång. Vi eftersträvar att i den slutgiltiga produkten kunna erbjuda en rad olika larmkomponenter som enkelt kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution.
+År 2019 anmäldes 75250  inbrottsstölder i Sverige vilket är en minskning med 14\%\ från året innan \cite{brastold}. Detta är en stark minskning och en trend som vi gärna ser fortsätta gå åt samma håll. Därför har vi valt att utveckla ett larm som enkelt kan installeras i alla typer av bostäder och som ger ett grundligt skydd mot oönskat intrång. Vi eftersträvar att i den slutgiltiga produkten kunna erbjuda en rad olika larmkomponenter som enkelt kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution.
 
 %Detta syfte kanske är lite för bakgrundigt?
 
@@ -40,6 +59,7 @@ Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fre
 Vi strävar efter att utveckla ett system som ska ge användaren bättre kontroll och övervakningsmöjligheter över sina tillhörigheter. Systemet ska vara väldokumenterat och fackmannamässigt utfört med goda förutsättningar för expansion. Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta olika periferienheter. Huvudsakligen kommer två periferienheter att utecklas, ett dörrlarm samt ett rörelselarm.
 
 %Fylla på lite här om vi ska göra några extrauppgifter?
+%Vi bör granska ord som personaliserar texten, ex: Vi, jag etc. Går dessa att undvika i sammahanget?
 
 \section{Bakgrund}
 
@@ -102,18 +122,20 @@ Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att
 
 \section{Milstolpar}
 
-\begin{table}[!h]
+\begin{table}[H]
     \begin{center}
-    \begin{tabular}{ |c|c|c|c| }\hline
-    Nr & Beskrivning & Datum \\\hline\hline
-    %\multirow{3}{4em}{Multiple row} & cell2 & cell3 \\
-    1 & Projektplan inlämnad & 2020-xx-xx \\\hline
-    .. & ... & ... \\\hline
-    .. & ... & ... \\\hline
-    .. & ... & ... \\\hline
-    \end{tabular}
-    \caption{Milstolpar för projektet}
-    \label{milstolpar}
+        \begin{tabular}{ |c|c|c|c| }\hline
+            Nr & Beskrivning & Datum \\\hline\hline
+            %\multirow{3}{4em}{Multiple row} & cell2 & cell3 \\
+            1 & Projektplan inlämnad & 2020-xx-xx \\\hline
+            .. & ... & ... \\\hline
+            .. & ... & ... \\\hline
+            .. & ... & ... \\\hline
+        \end{tabular}
+        % Text underneath the table
+        \caption{Milstolpar för projektet}
+        % Label for reference usage
+        \label{milstolpar}
     \end{center}
 \end{table}
 
@@ -121,49 +143,47 @@ Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att
 
 Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimmar motsvarande 1200h. De 200h som varje medlem i gruppen förväntas lägga ner innefattar all tid som spenderas under projektets gång.
 
-\begin{table}[!h]
+\begin{table}[H]
     \begin{center}
-    \begin{tabular}{ |c|c|c| }\hline
-    Beskrivning & Tidsåtgång \\\hline\hline
-    Föreläsningar (1.5h/vecka, 8 veckor, 6 personer) & 72h \\\hline
-    Projektmöten (2h/vecka, 8 veckor, 6 personer) & 96h \\\hline
-    Projektledning (2h/vecka, 8 veckor, 2 personer) & 32h \\\hline
-    Framtagning av LaTeX-mallar & 9h \\\hline
-    Arbeta med projektplan & 100h \\\hline
-    Första genomläsning av mirkodatordokumentation & 30h \\\hline
-    Programmering av periferienhet, dörr & 30h \\\hline
-    Programmering av periferienhet, rörelse & 30h \\\hline
-    Programmering av centralenhet & 50h \\\hline
-    Programmering av buss & 50h \\\hline
-    ... & ... \\\hline
-    Förbered/genomför demonstration & 40h \\\hline
-    Arbeta med projektrapport & 300h \\\hline
-    \end{tabular}
-    \caption{Aktivitetslista för projektet}
-    \label{milstolpar}
+        \begin{tabular}{ |c|c|c| }\hline
+            Beskrivning & Tidsåtgång \\\hline\hline
+            Föreläsningar (3h/vecka, 8 veckor, 6 personer) & 144h \\\hline
+            Projektmöten (2h/vecka, 8 veckor, 6 personer) & 96h \\\hline
+            Projektledning (2h/vecka, 8 veckor, 2 personer) & 32h \\\hline
+            Framtagning av LaTeX-mallar & 9h \\\hline
+            Arbeta med projektplan & 100h \\\hline
+            Första genomläsning av mirkodatordokumentation & 30h \\\hline
+            Programmering av periferienhet, dörr & 30h \\\hline
+            Programmering av periferienhet, rörelse & 30h \\\hline
+            Programmering av centralenhet & 50h \\\hline
+            Programmering av buss & 50h \\\hline
+            ... & ... \\\hline
+            Förbered/genomför demonstration & 40h \\\hline
+            Arbeta med projektrapport & 300h \\\hline
+        \end{tabular}
+        \caption{Aktivitetslista för projektet}
+        \label{milstolpar}
     \end{center}
 \end{table}
 
 \section{Tidsplan}
 
 \section{Mötesplan}
-\begin{table}[!h]
+\begin{table}[H]
     \begin{center}
-    \begin{tabular}{ |c|c|c| }
-    \hline
-    Datum & tid & Lokal \\
-    \hline\hline
-    02/09-20 & 13:00-15:00 & ED4209 \\\hline
-    09/09-20 & 15:00-17:00 & Zoom \\\hline
-    16/09-20 & 13:00-15:00 & Zoom \\\hline
-    23/09-20 & 13:00-15:00 & Zoom \\\hline
-    30/09-20 & 13:00-15:00 & Zoom \\\hline
-    07/10-20 & 13:00-15:00 & Zoom \\\hline
-    14/10-20 & 13:00-15:00 & Zoom \\\hline
-    21/10-20 & 13:00-15:00 & Zoom \\\hline
-    \end{tabular}
-    \caption{Tabell över mötestillfällen}
-    \label{motesplan}
+        \begin{tabular}{ |c|c|c| }\hline
+            Datum & tid & Lokal \\\hline\hline
+            02/09-20 & 13:00-15:00 & ED4209 \\\hline
+            09/09-20 & 15:00-17:00 & Zoom \\\hline
+            16/09-20 & 13:00-15:00 & Zoom \\\hline
+            23/09-20 & 13:00-15:00 & Zoom \\\hline
+            30/09-20 & 13:00-15:00 & Zoom \\\hline
+            07/10-20 & 13:00-15:00 & Zoom \\\hline
+            14/10-20 & 13:00-15:00 & Zoom \\\hline
+            21/10-20 & 13:00-15:00 & Zoom \\\hline
+        \end{tabular}
+        \caption{Tabell över mötestillfällen}
+        \label{motesplan}
     \end{center}
 \end{table}
 
@@ -173,7 +193,9 @@ Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimma
 
 \section{Spelregler}
 
+% Tells the compiler what reference system to use
 \bibliographystyle{ieeetr}
-\bibliography{referenser}
+% Prints the reference list at the end of the file
+\bibliography{referenser.bib}
 
 \end{document}
