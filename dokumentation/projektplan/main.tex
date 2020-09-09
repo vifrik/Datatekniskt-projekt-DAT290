@@ -65,13 +65,31 @@ Vi strävar efter att utveckla ett system som ska ge användaren bättre kontrol
 
 \section{Bakgrund}
 
+\subsection{Begrepp}
+
+\begin{description}
+    \item[CAN:] Controller Area Network
+    \item[MD407:] Mikrodator av typen MD407 
+\end{description}
+
 \subsection{Referenser}
 
 \subsection{Tekniska förutsättningar}
 
-Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta ger oss {3 \choose 2 = 3} olika kombinationer av sensorer.
+Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver tillsammans periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta möjliggör 3 över 2 olika kombinationer av sensorer med periferienheterna.
 
 \section{Systemöversikt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{blockschema.png}
+    \caption{Blocksschema över larmsystemet}
+    %\label{fig:my_label}
+\end{figure}
+
+Centralenheten kommunicerar med periferienheterna genom en \textit{Controller Area Network}-buss. Periferienheterna undersöker ändringar hos deras sensorer och vid funnen ändring rapporteras detta till centralenheten för larm. Inrapporteringen sker via ett meddelande på bussen som skapar ett avbrott hos centralenheten och aktiverar larmdonet.
+
+Centralenheten måste kunna identifiera vilken periferienhet som skickat meddelandet och förstå varför det skicades. Centralenhetenen kommunicerar med en dator för att ge användaren en tydlig bild om var larmet uppstod.
 
 \section{Resursplan}
 
@@ -177,7 +195,7 @@ Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimma
     \end{center}
 \end{table}
 
-Projektet har delats upp i aktiviteter. Anledningen till detta är för att gruppen ska ha bättre koll på vad som ska genomföras under projektets gång och även optimal planering av nedlagda timmar. Viktigt att notera är att aktiviteterna har givits en uppskattad tidsåtgång i tabellen \ref{tab:aktivitetslista}. Tidsåtgången kan däremot variera under projektets gång där vissa aktiviteter kan kräva mer eller mindre tid än den upskattade tidsåtgången.
+Projektet har delats upp i aktiviteter. Anledningen till detta är för att gruppen ska ha bättre koll på vad som ska genomföras under projektets gång och även optimal planering av nedlagda timmar. Viktigt att notera är att aktiviteterna har givits en uppskattad tidsåtgång i tabell \ref{aktivitetslista}. Tidsåtgången kan däremot variera under projektets gång där vissa aktiviteter kan kräva mer eller mindre tid än den upskattade tidsåtgången.
 
 
 
@@ -186,6 +204,9 @@ Projektet har delats upp i aktiviteter. Anledningen till detta är för att grup
 \section{Tidsplan}
 
 \section{Mötesplan}
+
+Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
+
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ |c|c|c| }\hline
