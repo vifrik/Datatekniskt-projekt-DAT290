@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{float}
 
+\newcommand\namn{Larmsystem}
+
 \restylefloat{table}
 
 \begin{document}
@@ -23,7 +25,7 @@
 
     {\LARGE Projektplan DAT290}
 
-    {\large Larmsystem, grupp 11
+    {\large \namn, grupp 11
 
     Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
@@ -66,6 +68,8 @@ Vi strävar efter att utveckla ett system som ska ge användaren bättre kontrol
 \subsection{Referenser}
 
 \subsection{Tekniska förutsättningar}
+
+Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta ger oss {3 \choose 2 = 3} olika kombinationer av sensorer.
 
 \section{Systemöversikt}
 
