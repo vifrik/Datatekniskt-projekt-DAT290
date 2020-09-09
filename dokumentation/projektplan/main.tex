@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{float}
 
+\newcommand\namn{Larmsystem}
+
 \restylefloat{table}
 
 \begin{document}
@@ -23,7 +25,7 @@
 
     {\LARGE Projektplan DAT290}
 
-    {\large Larmsystem, grupp 11
+    {\large \namn, grupp 11
 
     Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
@@ -67,6 +69,8 @@ Vi strävar efter att utveckla ett system som ska ge användaren bättre kontrol
 
 \subsection{Tekniska förutsättningar}
 
+Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- och avståndssensor. Detta ger oss {3 \choose 2 = 3} olika kombinationer av sensorer.
+
 \section{Systemöversikt}
 
 \section{Resursplan}
@@ -86,7 +90,7 @@ Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom 
 
     \item[Nazif Kadiroglu, teknik dokumentansvarig:] Ansvarar för att all kod i projektet är väl dokumenterad.
 
-    E-mail:
+    E-mail: nazif.kadiroglu1@gmail.com
 
     \item[Markus Moen, testansvarig:] Ansvarar för att tester på både hårdvara och mjukvara testas och dokumenteras väl.
 
@@ -98,10 +102,10 @@ Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom 
 
     \item[Fredrik Österström, gruppledare och resursansvarig:] Ansvarar för att kommunikation med kursens lärare, gruppmöten, hårdvarans tillgänglighet och att de verktyg gruppen har valt för kommunikation och versionhantering används väl.
 
-    E-mail:
+    E-mail: fredrik.osterstrom@hotmail.com
 \end{description}
 
-Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus. Detta rum, och med det hårdvaran, kan bokas via en anslagstavla som även den finns i EDIT-huset. Det är dock möjligt att anslagstavlan kommer bytas ut till ett digitalt alternativ. Hårdvaran som finns tillgänglig är:
+Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus. Detta rum, och med det hårdvaran, kan bokas via doodle. Länkar till bokningssystemet finna tillgängliga på kurshemsidan. Hårdvaran som finns tillgänglig är:
 
 \begin{itemize}
     \item 3x MD407 kort
@@ -121,6 +125,7 @@ Mjukvaran som kommer användas är CodeLite vilket är fördelaktigt då den kan
 Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att gruppmedlemmar är på plats i Chalmers. För arbete på distans kan gruppen kommunicera via Discord, som stödjer både röst- och textbaserad kommunikation.
 
 \section{Milstolpar}
+Schiavone
 
 
 %Milstolpar: Projektplan klar, dörrlarmsenhet avklarad, rörelselarmsenhet avklarad, centralenhet delvis avlkarad, centralenhet och periferienheter sammankopplade, första utkast slutrapport, andra utkast, projektrapport avklarad.
@@ -155,25 +160,39 @@ Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimma
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{ |c|c|c| }\hline
-            Beskrivning & Tidsåtgång \\\hline\hline
-            Föreläsningar (3h/vecka, 8 veckor, 6 personer) & 144h \\\hline
-            Projektmöten (2h/vecka, 8 veckor, 6 personer) & 96h \\\hline
-            Projektledning (2h/vecka, 8 veckor, 2 personer) & 32h \\\hline
-            Framtagning av LaTeX-mallar & 9h \\\hline
-            Arbeta med projektplan & 100h \\\hline
-            Första genomläsning av mirkodatordokumentation & 30h \\\hline
-            Programmering av periferienhet, dörr & 30h \\\hline
-            Programmering av periferienhet, rörelse & 30h \\\hline
-            Programmering av centralenhet & 50h \\\hline
-            Programmering av buss & 50h \\\hline
-            ... & ... \\\hline
-            Förbered/genomför demonstration & 40h \\\hline
-            Arbeta med projektrapport & 300h \\\hline
+            Nr & Beskrivning & Tidsåtgång \\\hline\hline
+            1 & Föreläsningar (4h/vecka, 8 veckor, 6 personer) & 192h \\\hline
+            2 & Projektmöten (2h/vecka, 8 veckor, 6 personer) & 96h \\\hline
+            3 & Skrivande av protocoll, kallelser etc & 20h \\\hline
+            4 & Framtagning av LaTeX-mallar & 18h \\\hline
+            5 & Arbeta med projektplan & 120h \\\hline
+            6 & Dokumentations läsning & 50h \\\hline
+            7 & Rapportutkast & 110h \\\hline
+            8 & Renskrivande av Rapportutkast 1 & 15h \\\hline
+            9 & Rapportutkast 2 & 70h\\\hline
+            10 & Renskrivning av rapportutkast 2 & 10h \\\hline
+            11 & Oppositionsrapport & 30h\\\hline
+            12 & Slutföring av projektrapport & 100h\\\hline
+            13 & Programmering av periferienhet, dörr & 30h \\\hline
+            14 & Programmering av periferienhet, rörelse & 30h \\\hline
+            15 & Programmering av centralenhet & 50h \\\hline
+            16 & Tester och testrapport & 100h\\\hline
+            17 & Granskning av kod & 50h \\\hline
+            18 & Teknisk dokumentation & 50 \\\hline
+            19 & Förbered/genomför demonstration & 35h \\\hline
         \end{tabular}
         \caption{Aktivitetslista för projektet}
-        \label{milstolpar}
+        \label{aktivitetslista}
     \end{center}
 \end{table}
+
+Projektet har delats upp i aktiviteter. Anledningen till detta är för att gruppen ska ha bättre koll på vad som ska genomföras under projektets gång och även optimal planering av nedlagda timmar. Viktigt att notera är att aktiviteterna har givits en uppskattad tidsåtgång i tabellen \ref{tab:aktivitetslista}. Tidsåtgången kan däremot variera under projektets gång där vissa aktiviteter kan kräva mer eller mindre tid än den upskattade tidsåtgången.
+
+Tabellen ovan \ref{tab:aktivitetslista} tyder på att gruppen sammanlagt kommer lägga ungefär 1200 timmar på projektet. Dessa timmar sorteras in på 19 aktivitetr och 4 kategorier. Första kategorin, som innefattar nummer 1-4, berör det administrativa. Andra kategorin, det vill säga nummer 5-12, berör rapoort delen av projektet. Denna del kommer tillmestadels handla om att skriva om projektet, renskrivning och oppositionsrapport. Tredje kategorin, där nummer 13-19 ingår, kommer att handla om det praktiska arbetet. Här berörs allt från programmering av periferienheter till tester och demonstrationer. 
+
+
+
+
 
 \section{Tidsplan}
 
