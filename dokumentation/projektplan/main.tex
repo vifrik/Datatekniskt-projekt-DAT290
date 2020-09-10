@@ -157,7 +157,7 @@ Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Cha
     \item 1x Kopplingsplatta
 \end{itemize}
 
-Mjukvaran som kommer användas är CodeLite vilket är fördelaktigt då den kan simulera MD407 korten och då gruppmedlemmarna har erfarenthet med denna mjukvara. GitHub används för versionshantering.
+Programspråket C kommer att användas för att skriva mjukvaran för detta projekt. Den IDE (Integrated Design Environment) som kommer användas är CodeLite då den kan simulera MD407 korten och då gruppmedlemmarna har erfarenthet med denna IDE. GitHub används för versionshantering.
 
 Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att gruppmedlemmar är på plats i Chalmers. För arbete på distans kan gruppen kommunicera via Discord, som stödjer både röst- och textbaserad kommunikation.
 % !mycket, Arbetet sker på ... övervägande del
@@ -288,6 +288,20 @@ Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
     \end{table}
 
 \section{Kvalitetsplan}
+
+För att verifiera att systemet och dess delsystem fungerar behöver testning utföras. Mjukvara kan primärt testas i simulator, men innan den kan markeras som klar måste den även testas i hårdvaran. Vid test av de olika komponenterna skall följande mall fyllas i:
+
+\begin{description}
+\item[Komponent] Den del av systemet ska testas.
+
+\item[Testsyfte] Vilken funktionalitet som testas.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+
+\item[Resultat] Resultatet av testet.
+
+\item[Analys] Vad testresultatet innebär; om komponenten fungerar som planerat, behöver testas ytterligare eller om vidare utveckling krävs.
+\end{description}
 
 \section{Spelregler}
 
