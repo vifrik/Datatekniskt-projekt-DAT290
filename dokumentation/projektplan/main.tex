@@ -77,7 +77,7 @@ Grunden i systemet kommer vara en centralenhet till vilken användaren kan anslu
 
 \section{Bakgrund}
 
-Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Tillsammans skapar komponenterna möjligheten att till exempel, larma på/av, koppla fler enheter eller konfiguration av befintliga enheter. Koppling sker via instruktioner. En instruktion kan skickas både manuellt eller automatiskt via en av komponenterna.
+Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman fler enheter eller inställing av befintliga enheter. Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
 
 \subsection{Begrepp}
 
@@ -90,7 +90,7 @@ Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Tillsam
 
 \subsection{Tekniska förutsättningar}
 
-Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver tillsammans periferienheterna och centralenheten. För kommunikation mellan datorerna via CAN-bussen finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör 3 över 2 olika kombinationer av sensorer med periferienheterna.
+Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver tillsammans periferienheterna och centralenheten. För kommunikation mellan datorerna används Controller Area Network-protokollet(CAN), för detta finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör 3 över 2 olika kombinationer av sensorer med periferienheterna.
 
 % !För kommunikation
 % Sensorer skickar insamlad data till periferienheterna
@@ -184,9 +184,9 @@ En del av arbetet kan ske på distans, icke desto mindre test på hårdvaran kr�
         \label{table:milstolpar}
 \end{table}
 
-För att underlätta projektet har arbetet delats in i nio olika milstolpar. Vi har bestämt oss för att sätta som mål att vara klara med alla inlämningar fredagen innan deras deadlines. På så vis finns det flexibilitet ifall en inlämning inte är klart vid dess angivna tid.
+För att underlätta projektet har arbetet delats in i nio olika milstolpar. Dessa milstolpar är placerade på fredagen innan kursens officiella deadlines, då det lämnar utrymme för mer arbete efter milstolparna om så behövs. 
 
-Programmeringsarbetet har delats in i fyra delar. Först utvecklas dörrlarmet och sedan rörelselarmet. Vi har valt denna uppdelning då kod från den ena periferienheten kan återanvändas för den andra. Därefter utvecklas centralenheten. Slutligen har vi suttit som mål att sammankoppla periferienheterna med centralenheten och överse att de kan kommunicera med varandra.
+Programmeringsarbetet har delats in i fyra delar. Först utvecklas dörrlarmet och sedan rörelselarmet. Därefter utvecklas centralenheten och slutligen skall periferienheterna och centralenheten sammankopplas. 
 
 \section{Aktiviteter}
 
@@ -262,13 +262,13 @@ Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{ |c|c|c|c| }\hline 
+    \begin{tabular}{ |c|c|c|c| }\hline
      Vad & När & Till & Hur \\\hline
      Dagsordning LV1 & 02/09-20 & Alla & Anslag i canvas \\\hline
      Mötesprotokoll LV1 & 02/09-20 & Alla & Anslag i canvas \\\hline
      Dagsordning LV2 & 09/09-20 & Alla & Anslag i canvas \\\hline
      Mötesprotokoll LV2 & 10/09-20 & Alla & Anslag i canvas \\\hline
-     Projektplan & 09/13-20 & Lärarteam & Canvas inlämning (LaTeX) \\\hline 
+     Projektplan & 09/13-20 & Lärarteam & Canvas inlämning (LaTeX) \\\hline
      Dagsordning LV3 & 16/09-20 & Alla & Anslag i canvas \\\hline
      Mötesprotokoll LV3 & 17/09-20 & Alla & Anslag i canvas \\\hline
      Dagsordning LV4 & 23/09-20 & Alla & Anslag i canvas \\\hline
@@ -291,7 +291,7 @@ Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
     \label{table:kommunikationsplan}
 \end{table}
 
-För intern kommunikation används både Discord och Messenger. Gruppmöten kommer i första hand att ske igenom Zoom.
+För intern kommunikation används både Discord och Messenger. Gruppmöten med handledare kommer i första hand att ske igenom Zoom.
 
 \section{Kvalitetsplan}
 
