@@ -66,9 +66,9 @@
 
 %Vi strävar efter att utveckla ett system som ska ge användaren bättre kontroll och övervakningsmöjligheter över sina tillhörigheter.
 
-Målsättningen är att i den slutgiltiga produkten kunna erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution. Systemet ska vara väldokumenterat och fackmannamässigt utfört med goda förutsättningar för expansion.
+Slutgiltiga produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution. Systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
-Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta olika periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm samt ett rörelselarm. I mån av tid kommer systemet också utökas med bredare funktionallitet. Ett testläge för systemet, möjlighet att konfigurera rörelselarmets funktionallitet, och ett inbyggt skydd mot så kallade "replay attacker" kommer prioriteras.
+Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm. I mån av tid kommer också systemets funktionalitet utökas. Ett testläge för systemet, möjlighet att konfigurera rörelselarmets funktionallitet, och ett inbyggt skydd mot så kallade ``replay attacker'' kommer prioriteras.
 
 %Fylla på lite här om vi ska göra några extrauppgifter?
 %Vi bör granska ord som personaliserar texten, ex: Vi, jag etc. Går dessa att undvika i sammahanget?
@@ -111,9 +111,9 @@ Centralenheten måste kunna identifiera vilken periferienhet som skickat meddela
 
 \section{Resursplan}
 
-E-mailadresser till gruppens medlemmar finns i följande lista. 
+E-mailadresser och ansvarsområden finns angivna i följade lista. Ansvar syftar på att den ansvarige ska se till att arbetet blir gjort, men inte att den ansvarige är skyldig att göra allt.
 
-Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom sitt ansvarsområde, utan till att den ansvarige ska se till att det sköts ordentligt utav hela gruppen.
+\subsection{Gruppmedlemmar och ansvarsområden}
 
 \begin{description}
     \item[Titus Blosse, administrativt dokumentansvarig:] Ansvarar för att mötesprotokoll förs och att de olika rapporterna som ska skrivas under projektets gång såväl påbörjas som skickas in i tid.
@@ -124,11 +124,11 @@ Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom 
 
     E-mail: viktor.frideen@outlook.com
 
-    \item[Nazif Kadiroglu, teknik dokumentansvarig:] Ansvarar för att all kod i projektet är väl dokumenterad.
+    \item[Nazif Kadiroglu, teknik dokumentansvarig:] Ansvarar för att all kod i projektet är dokumenterad.
 
     E-mail: nazif.kadiroglu1@gmail.com
 
-    \item[Markus Moen, testansvarig:] Ansvarar för att tester på både hårdvara och mjukvara testas och dokumenteras väl.
+    \item[Markus Moen, testansvarig:] Ansvarar för att tester på både hårdvara och mjukvara testas och dokumenteras.
 
     E-mail: markus.offersten@gmail.com
 
@@ -136,12 +136,12 @@ Ansvar i följande lista syftar inte till att en ansvarig skall göra allt inom 
 
     E-mail: luksch1121@gmail.com
 
-    \item[Fredrik Österström, gruppledare och resursansvarig:] Ansvarar för att kommunikation med kursens lärare, gruppmöten, hårdvarans tillgänglighet och att de verktyg gruppen har valt för kommunikation och versionhantering används väl.
+    \item[Fredrik Österström, gruppledare och resursansvarig:] Ansvarar för att kommunikation med kursens lärare, gruppmöten, hårdvarans tillgänglighet och att de verktyg gruppen har valt för kommunikation och versionhantering används.
 
     E-mail: fredrik.osterstrom@hotmail.com
 \end{description}
 
-Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus. Detta rum, och med det hårdvaran, kan bokas via doodle. Länkar till bokningssystemet finna tillgängliga på kurshemsidan. Hårdvaran som finns tillgänglig är:
+Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus. Detta rum och hårdvaran bokas via doodle. Länkar till bokningssystemet finns tillgängliga på kurshemsidan. Hårdvaran som finns tillgänglig är:
 
 \begin{itemize}
     \item 3x MD407 kort
@@ -156,10 +156,9 @@ Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Cha
     \item 1x Kopplingsplatta
 \end{itemize}
 
-Programspråket C kommer att användas för att skriva mjukvaran för detta projekt. Den IDE (Integrated Design Environment) som kommer användas är CodeLite då den kan simulera MD407 korten och då gruppmedlemmarna har erfarenthet med denna IDE. GitHub används för versionshantering.
+Programspråket C kommer användas för att skriva mjukvaran. Den IDE (Integrated Design Environment) som kommer användas är CodeLite. då de kan simulera MD407-korten. Detta är fördelaktigt eftersom gruppmedlemmarna redan har erfarenthet med denna IDE. GitHub används för versionshantering.
 
-Mycket av arbetet kan ske på distans då endast test på hårdvaran kräver att gruppmedlemmar är på plats i Chalmers. För arbete på distans kan gruppen kommunicera via Discord, som stödjer både röst- och textbaserad kommunikation.
-% !mycket, Arbetet sker på ... övervägande del
+En del av arbetet kan ske på distans, icke desto mindre test på hårdvaran kräver att gruppmedlemmar är på plats i Chalmers. Kommunikationen för arbete på distans är via Discord, som stödjer både röst- och textbaserad kommunikation samt skärm- och videodelning.
 
 \section{Milstolpar}
 
@@ -296,7 +295,7 @@ För intern kommunikation används både Discord och Messenger. Gruppmöten komm
 
 \section{Kvalitetsplan}
 
-För att verifiera att systemet och dess delsystem fungerar behöver tester utföras. Tester av mjukvaran kan primärt göras i simulator, men innan den kan markeras som klar måste den även testas i hårdvaran. Vid test av de olika komponenterna skall följande mall fyllas i:
+För att verifiera att systemet och dess delsystem fungerar behöver tester utföras. Tester av mjukvaran kan i viss mån göras i simulator, men innan den kan markeras som klar måste den testas i hårdvaran. Vid test av de olika komponenterna skall följande mall fyllas i:
 
 \begin{description}
 \item[Komponent] Den del av systemet ska testas.
@@ -313,7 +312,7 @@ För att verifiera att systemet och dess delsystem fungerar behöver tester utf�
 %\section{Spelregler}
 
 % Tells the compiler what reference system to use
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtran}
 % Prints the reference list at the end of the file
 \bibliography{referenser.bib}
 
