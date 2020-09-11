@@ -8,3 +8,4 @@
 *.synctex.gz
 __*
 *.pdf
+*.synctex(busy)
