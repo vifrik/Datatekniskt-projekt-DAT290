@@ -1,6 +1,5 @@
 \documentclass[a4paper]{article}
 
-%Packages
 \usepackage[swedish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -13,15 +12,12 @@
 
 \begin{document}
 
-%
-% Front page
-%
 
 \thispagestyle{empty}
 
 \begin{center}
-    \parskip=14pt%
-    \vspace*{3\parskip}%
+    \parskip=14pt
+    \vspace*{3\parskip}
 
     {\LARGE Projektplan DAT290}
 
@@ -35,49 +31,26 @@
 \end{center}
 \newpage
 
-%
-% ToC, Table of Contents
-%
-
 \thispagestyle{empty}
 
 \tableofcontents
 \newpage
 
-%
-% Projektplan
-%
 
 \pagenumbering{arabic}
 
-% Kategorisera här, typ introduktion, teknisk beskrivnin...
 \section{Syfte}
-
-75.250 inbrott anmäldes i Sverige år 2019. En minskning med 14\% från året innan \cite{brastold}. Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm. Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen. % Skriv resten av världen här
-
-%Därför har vi valt att utveckla ett larm som enkelt kan installeras i alla typer av bostäder och som ger ett grundligt skydd mot oönskat intrång. Vi eftersträvar att i den slutgiltiga produkten kunna erbjuda en rad olika larmkomponenter som enkelt kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution.
-%I Sverige anmäldes 75250 inbrottsstölder år 2019 vilket är en minskning med 14\%\ från året innan \cite{brastold}. Detta är en trend som vi gärna ser hålla i sig. Därför har vi valt att utveckla ett larm som kan installeras i många typer av bostäder och som ger ett grundligt skydd mot oönskat intrång.
-
-%Detta syfte kanske är lite för bakgrundigt?
-% År borde inte vara i fokus, kanske börja med 75250 eller inbrottsstölder som meningen handlar om
-% !Enkelt
+Inbrott är ett vanligt problem i Sverige. År 2019 anmäldes 75.250 inbrottstölder. En minskning med 14\% från året innan \cite{brastold}. Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm. Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen. 
 
 \section{Mål}
 
-%Vi strävar efter att utveckla ett system som ska ge användaren bättre kontroll och övervakningsmöjligheter över sina tillhörigheter.
+Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika situation. Systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
-Slutgiltiga produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika sitution. Systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
-
-Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm. I mån av tid kommer också systemets funktionalitet utökas. Ett testläge för systemet, möjlighet att konfigurera rörelselarmets funktionallitet, och ett inbyggt skydd mot så kallade ``replay attacker'' kommer prioriteras.
-
-%Fylla på lite här om vi ska göra några extrauppgifter?
-%Vi bör granska ord som personaliserar texten, ex: Vi, jag etc. Går dessa att undvika i sammahanget?
-% fokus bör inte vara vi
-% !bättre
+Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm. I mån av tid kommer systemets funktionalitet utökas. Ett testläge för systemet, möjlighet att konfigurera rörelselarmet, och ett inbyggt skydd mot så kallade ``replay attacker'' kommer prioriteras.
 
 \section{Bakgrund}
 
-Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman fler enheter eller inställing av befintliga enheter. Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
+Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman enheter eller inställning av befintliga enheter. Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
 
 \subsection{Begrepp}
 
@@ -89,10 +62,7 @@ Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Kompone
 
 \subsection{Tekniska förutsättningar}
 
-Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver tillsammans periferienheterna och centralenheten. För kommunikation mellan datorerna används CAN (Controller Area Network)-protokollet, för detta finns ett kodexempel. Periferienheterna använder sig av sensorer för att upptäcka och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör 3 över 2 olika kombinationer av sensorer med periferienheterna.
-
-% !För kommunikation
-% Sensorer skickar insamlad data till periferienheterna
+Hårdvaran för att driva larmsystemet är utvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna används CAN (Controller Area Network)-protokollet, för detta finns ett kodexempel. Periferienheterna använder sensorer för att upptäcka störningar och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör tre över två olika kombinationer av sensorer med periferienheterna.
 
 \section{Systemöversikt}
 
@@ -100,13 +70,11 @@ Hårdvaran för att driva larmsystemet är färdigutvecklad och dokumenterad. Tr
     \centering
     \includegraphics[width=\textwidth]{blockschema.png}
     \caption{Preliminärt blocksschema över larmsystemet}
-    %\label{fig:my_label}
 \end{figure}
 
-Centralenheten kommunicerar med periferienheterna genom en \textit{Controller Area Network}-buss. Periferienheterna undersöker ändringar hos deras sensorer och vid funnen ändring rapporteras detta till centralenheten för larm. Inrapporteringen sker via ett meddelande på bussen som skapar ett avbrott hos centralenheten och aktiverar larmdonet.
-% Ändringar hos sensorer undersöks av periferi...
+Centralenheten kommunicerar med periferienheterna genom en CAN-buss. Periferienheterna undersöker ändringar hos deras sensorer och vid funnen ändring rapporteras detta till centralenheten för alarm. Inrapporteringen sker via ett meddelande på bussen som skapar ett avbrott hos centralenheten och aktiverar larmdonet.
 
-Centralenheten måste kunna identifiera vilken periferienhet som skickat meddelandet och förstå varför det skickades. Identifikationen sker via kommunikation med en extern dator för att ge användaren en tydlig bild om var larmet uppstod.
+Centralenheten måste kunna identifiera vilken periferienhet som skickat meddelandet och förstå varför det skickades. Identifikationen sker via kommunikation med en extern dator för att ge användaren en tydlig bild om var alarmet uppstod.
 
 \section{Resursplan}
 
@@ -142,7 +110,7 @@ E-mailadresser och ansvarsområden finns angivna i följade lista. Ansvar syftar
 
 \subsection{Hård- och mjukvara}
 
-Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus. Rummet och hårdvaran bokas via doodle. Länkar till bokningssystemet finns tillgängliga på kurshemsidan. Hårdvaran som finns tillgänglig är:
+Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Chalmers campus Johanneberg. Rummet och hårdvaran bokas via Doodle. Länkar till bokningssystemet finns på kurshemsidan. Hårdvaran som finns tillgänglig är:
 
 \begin{itemize}
     \item 3x MD407 kort
@@ -157,13 +125,9 @@ Hårdvaran för detta projekt finns tillgänglig i rum 4209 i EDIT-huset på Cha
     \item 1x Kopplingsplatta
 \end{itemize}
 
-Programspråket C kommer användas för att skriva mjukvaran. Den IDE (Integrated Design Environment) som kommer användas är CodeLite, då gruppmedlemmarna redan har erfarenthet med denna IDE. CodeLite kan även simulera MD407-korten med hjälp av programvaran SimServer, vilket är fördelaktigt för projektet.
+Programspråket C kommer användas för att skriva mjukvaran. Den IDE (Integrated Design Environment) som kommer användas är CodeLite då gruppmedlemmarna redan har erfarenthet med denna IDE. CodeLite kan även simulera MD407-korten med hjälp av programvaran SimServer. GitHub används för versionhantering.
 
-%den kan simulera MD407-korten med hjälp av programvaran SimServer. Detta är fördelaktigt eftersom gruppmedlemmarna redan har erfarenthet med denna IDE. GitHub används för versionshantering.
-
-En del av arbetet kan ske på distans, men föt att utföra test på hårdvaran krävs det att gruppmedlemmar är på plats i Chalmers. 
-
-%Kommunikationen för arbete på distans är via Discord, som stödjer både röst- och textbaserad kommunikation samt skärm- och videodelning.
+En del av arbetet kan ske på distans, men för att utföra test på hårdvaran krävs det att gruppmedlemmar är på plats i Chalmers.
 
 \section{Milstolpar}
 
@@ -171,8 +135,7 @@ En del av arbetet kan ske på distans, men föt att utföra test på hårdvaran 
 \begin{table}[H]
     \centering
         \begin{tabular}{ |c|c|c| }\hline
-            Nr & Beskrivning & Datum \\\hline\hline
-            %\multirow{3}{4em}{Multiple row} & cell2 & cell3 \\
+            Nr & Beskrivning & Datum \\\hline \hline
             1 & Projektplan klar & 11/09-20 \\\hline
             2 & Dörrlarm klart & 18/09-20 \\\hline
             3 & Rörelselarm klart & 25/09-20 \\\hline
@@ -183,19 +146,17 @@ En del av arbetet kan ske på distans, men föt att utföra test på hårdvaran 
             8 & Andra utkast slutrapport & 16/10-20 \\\hline
             9 & Slutrapport avklarad & 30/10-20 \\\hline
         \end{tabular}
-        % Text underneath the table
         \caption{Milstolpar för projektet}
-        % Label for reference usage
         \label{table:milstolpar}
 \end{table}
 
-För att underlätta projektet har arbetet delats in i nio olika milstolpar. Dessa milstolpar är placerade på fredagen innan kursens officiella deadlines, då det lämnar utrymme för mer arbete efter milstolparna om så behövs. 
+För att underlätta projektet har arbetet delats in i nio olika milstolpar. Milstolparna är placerade fredagen innan slutdatumet då det lämnar utrymme för mer arbete om så behövs.
 
 Programmeringsarbetet har delats in i fyra delar. Först utvecklas dörrlarmet och sedan rörelselarmet. Därefter utvecklas centralenheten och slutligen skall periferienheterna och centralenheten sammankopplas. 
 
 \section{Aktiviteter}
 
-Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimmar motsvarande 1200h. Tiden som varje medlem i gruppen förväntas lägga ner innefattar all tid som spenderas under projektets gång.
+Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimmar motsvarande 1200h. Tiden som varje medlem i gruppen förväntas lägga ner innefattar all tid som spenderas på projektet.
 
 \begin{table}[H]
     \begin{center}
@@ -226,26 +187,23 @@ Gruppmedlemmarna förväntas spendera 200h vardera med ett totalt antal mantimma
     \end{center}
 \end{table}
 
-Projektet har delats upp i aktiviteter för att gruppen ska ha koll på vad som ska genomföras under projektets gång. Noterbart är att aktiviteterna har givits en uppskattad tidsåtgång i tabell \ref{table:aktivitetslista}. Tidsåtgången kan variera under projektets gång och kan avvika från den upskattade tidsåtgången. Tabell \ref{table:aktivitetslista} ovan visar att gruppen sammanlagt kommer lägga cirka 1200 timmar på projektet. Dessa timmar sorteras in på 19 aktiviteter och 4 kategorier.
-
-%Första kategorin, som innefattar nummer 1-4, berör det administrativa. Andra kategorin, det vill säga nummer 5-12, berör rapport delen av projektet. Denna del kommer tillmestadels handla om att skriva om projektet, renskrivning och oppositionsrapport. Tredje kategorin, där nummer 13-19 ingår, kommer att handla om det praktiska arbetet. Här berörs allt från programmering av periferienheter till tester och demonstrationer.
+Projektet har delats upp i aktiviteter för att gruppen ska ha koll på vad som ska genomföras. Noterbart är att aktiviteterna har givits en uppskattad tidsåtgång i tabell \ref{table:aktivitetslista}. Tabell \ref{table:aktivitetslista} visar att gruppen sammanlagt kommer lägga cirka 1200 timmar på projektet. Dessa timmar sorteras in på 19 aktiviteter och fyra kategorier.
 
 \begin{description}
-    \item[Första kategorin] innefattar aktivitet 1-3 och berör inläsningen och förarbetet gruppen kommer göra under arbetets gång. (182h)
+    \item[Aktivitet 1-3] berör inläsningen och förarbetet gruppen kommer göra under projektet. (182h)
     
-    \item[Andra kategorin] innefattar aktivitet 4-5 och berör det administrativa arbetet. (128h)
+    \item[Aktivitet 4-5] berör det administrativa arbetet. (128h)
     
-    \item[Tredje kategorin] innefattar aktivitet 6-12 och berör den skriftliga delen av projektet. (495h)
+    \item[Aktivitet 6-12] berör den skriftliga delen av projektet. (495h)
     
-    \item[Fjärde kategorin] innefattar aktivitet 13-19 berör den praktiska delen av projektet. Här berörs programmering, test och demonstrationer. (395h)
+    \item[Aktivitet 13-19] berör den praktiska delen av projektet. Detta innefattar programmering, test och demonstrationer. (395h)
     
-    \end{description}
+\end{description}
 
-% !dessa timmar, !denna del, !här
 
 \section{Tidsplan}
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{Gantschema.pdf}
+    \includegraphics[width=\textwidth]{Gantt-Schema1.png}
     \caption{Gantt-schema}
     \label{figure:gantt}
 \end{figure}
@@ -254,7 +212,7 @@ Aktiviteter och tidsåtgång presenteras i Gantt-schemat ovan. Andra aktiviteter
 \begin{description}
 \item [Första två veckorna] innefattar introduktion till projektet och skrivning av projektplan.
 
-\item [När projektplan är färdigställt] börjar gruppen arbeta med den praktiska delen av projektet. Under cirka 2-4 veckors tid förväntas larmsystemet och rapportutkas 1 vara färdigt. 
+\item [När projektplan är färdigställt] börjar gruppen arbeta med den praktiska delen av projektet. Under cirka 2-4 veckors tid förväntas larmsystemet och rapportutkast 1 vara färdigt. 
 
 \item [Sista veckorna av projektet] förväntas gruppen arbeta med oppositionsrapport, rapportutkast 2 och slutrapport. Utöver detta skall varje gruppmedlem skriva en kamratuppskattning. 
 \end{description}
@@ -318,14 +276,14 @@ Mötestillfällen där alla gruppmedlemmar inklusive mentor medverkar.
 \end{table}
 Ansvaret för den skriftliga kommunikationen har främst delats upp mellan gruppledare och dokumentansvarige. Däremot kommer gruppen gemensamt fram till datum och tid för mötestillfällen. Utöver detta kommer gruppen även ha mailkontakt med handledare. 
 
-För intern kommunikation används både Discord och Messenger. Gruppmöten med handledare kommer i första hand att ske igenom Zoom.
+För intern kommunikation används tjänsterna Discord och Messenger. Gruppmöten med handledare kommer i första hand att ske igenom Zoom.
 
 \section{Kvalitetsplan}
 
 För att verifiera att systemet och dess delsystem fungerar behöver tester utföras. Tester av mjukvaran kan i viss mån göras i simulator, men innan den kan markeras som klar måste den testas i hårdvaran. Vid test av de olika komponenterna skall följande mall fyllas i:
 
 \begin{description}
-\item[Komponent] Den del av systemet ska testas.
+\item[Komponent] Den del av systemet som ska testas.
 
 \item[Testsyfte] Vilken funktionalitet som testas.
 
@@ -336,11 +294,8 @@ För att verifiera att systemet och dess delsystem fungerar behöver tester utf�
 \item[Analys] Vad testresultatet innebär; om komponenten fungerar som planerat, behöver testas ytterligare eller om vidare utveckling krävs.
 \end{description}
 
-%\section{Spelregler}
-
-% Tells the compiler what reference system to use
 \bibliographystyle{IEEEtran}
-% Prints the reference list at the end of the file
+
 \bibliography{referenser.bib}
 
 \end{document}
