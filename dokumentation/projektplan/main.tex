@@ -68,7 +68,7 @@ Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Kompone
 
 \subsection{Tekniska förutsättningar}
 
-Hårdvaran för att driva larmsystemet är utvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan datorerna används CAN (Controller Area Network)-protokollet, för detta finns ett kodexempel. Periferienheterna använder sensorer för att upptäcka störningar och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör tre över två olika kombinationer av sensorer med periferienheterna.
+Hårdvaran för att driva larmsystemet är utvecklad och dokumenterad. Tre mikro-datorer av typen MD407 driver periferienheterna och centralenheten. För kommunikation mellan enheterna kommer ett kommunikationsprotokoll utvecklas. Protokollet kommer använda CAN (Controller Area Network)-protokollet som utgångspunkt men kommer anpassas för detta projekt. Grunden för kommunikationen kommer vara ett pollingsystem där centralenheten kontinuerligt skickar och tar emot statusmeddelanden till periferienheterna. Periferienheterna använder sensorer för att upptäcka störningar och initiera ett alarm som skickas till centralenheten. Till varje periferienhet kopplas en sensor av typen dörr-, vibrations- eller avståndssensor. Detta möjliggör tre över två olika kombinationer av sensorer med periferienheterna.
 
 \section{Systemöversikt}
 
