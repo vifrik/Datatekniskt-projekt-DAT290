@@ -1,0 +1,12 @@
+.codelite
+stm
+*/Debug
+
+Makefile
+
+*.project
+*.json
+*.mk
+*.txt
+*.x
+*.workspace
