@@ -1,0 +1,24 @@
+\documentclass[a4paper]{article}
+
+\usepackage[swedish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+
+\begin{document}
+
+\section{Meddelandetyper}
+\begin{description}
+  \item[Larm:]Enhets-ID, Vilket sorts larm
+  \item[DHCP Offer:] Enhet-ID
+  \item[DHCP Req:] Vilken typ av enhet som frågar
+  \item[Pollingmeddedelande:] Enhets-ID, ReplaySkydd,(antal skickade pollingmeddelanden utan svar(Bra för debugg?))
+  \item[Pollingsvar:] Enhets-ID, ReplaySkydd-svar, Status rapport
+  \item[Larma På:] Enhets-ID
+  \item[Larma Av:] Enhets-ID
+  \item[Dörrinställning:] Enhets-ID, FördröjningsTid
+  \item[Rörelsesensor larmalokalt:] Enhets-ID, av/på
+\end{description}
+
+\end{document}
