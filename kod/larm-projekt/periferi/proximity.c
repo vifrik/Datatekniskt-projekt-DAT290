@@ -23,8 +23,8 @@
 
 unsigned volatile long time_start = 0;
 unsigned volatile long time_end = 0;
-
 unsigned volatile int distance = 0;
+extern unsigned long sys_time;
 
 void irq_handler_exti0(void) {
 	if (*EXTI_PR & EXTI0_IRQ_BPOS) {
