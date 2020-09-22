@@ -37,8 +37,7 @@ void irq_handler_exti0(void) {
 			count++;
 		}*/
 		
-		char buffer[20];
-		DUMP(itoa(sys_time, buffer, 10));
+		DUMP_numeric(sys_time);
 		
 		time_end = sys_time;
 		
@@ -75,7 +74,7 @@ void proximity_init(void) {
 
 	*SCB_VTOR = 0x2001C000; // Sätt upp avbrottsvektor
 	
-	*EXTI0_IRQVEC = irq_handler_exti0;
+	//*EXTI0_IRQVEC = irq_handler_exti0;
 	
 	*NVIC_ISER0 |= NVIC_EXTI0_IRQ_BPOS;
 }
