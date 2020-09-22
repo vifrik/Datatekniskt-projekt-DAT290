@@ -1,0 +1,81 @@
+\documentclass[a4paper]{article}
+
+\usepackage[swedish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+
+\newcommand\namn{Larmsystem}
+
+\restylefloat{table}
+
+\begin{document}
+
+
+\thispagestyle{empty}
+
+\begin{center}
+    \parskip=14pt
+    \vspace*{3\parskip}
+
+    {\LARGE Projektrapport DAT290}
+
+    {\large \namn, grupp 11
+
+    Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
+
+    \today}
+
+    \rule{7cm}{0.4pt}\\
+\end{center}
+\newpage
+
+\thispagestyle{empty}
+
+\tableofcontents
+\newpage
+
+
+\pagenumbering{arabic}
+
+\section{Syfte}
+Inbrott är ett vanligt problem i Sverige. År 2019 anmäldes 75.250 inbrottstölder. En minskning med 14\% från året innan \cite{brastold}. Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm. Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
+
+\section{Mål}
+
+Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika situation. Systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+
+Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm.
+
+I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn, och ett inbyggt skydd mot ''replay attacker''.
+
+\section{Bakgrund}
+
+Beståndsdelarna i larmsystemet är en centralenhet och periferienheter. Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman enheter eller inställning av befintliga enheter. Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
+
+\subsection{Begrepp}
+
+\begin{description}
+    \item[CAN:] Controller Area Network
+    \item[MD407:] Mikrodator av typen MD407
+\end{description}
+
+\section{Arbetsmetod}
+
+\section{Teknisk Bakgrund}
+
+\section{Systemöversikt}
+
+\section{Delsystem}
+
+\section{Resultat}
+
+\section{Slutsatser}
+
+
+\bibliographystyle{IEEEtran}
+
+\bibliography{referenser.bib}
+
+\end{document}
