@@ -65,11 +65,6 @@ CANMsg encode (msgTest message) {
 
 typedef void (*VoidFunction)(void);
 
-// Encode/Decode msg functions
-msgDoorAlarm initDoorAlarm(uchar iD);
-CANMsg eDoorAlarm(msgDoorAlarm msg);
-msgDoorAlarm dDoorAlarm(CANMsg msg);
-
 // Exported CAN functions
 void can1_init(VoidFunction interrupt);
 int can_receive(CANMsg *msg);
