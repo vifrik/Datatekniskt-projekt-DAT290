@@ -24,23 +24,6 @@ typedef struct {
 	uchar buff[8]; // A message carries at most 8 bytes of data
 } CANMsg;
 
-typedef struct { //Struct for Door Sensor alarm message
-	uchar dir;
-    uchar msgId;
-    uchar nodeId;
-} msgDoorAlarm;
-
-typedef struct { //Struct for Motion Sensor alarm message
-	uchar dir;
-	uchar msgId;
-	uchar nodeId;
-} msgMSAlarm;
-
-typedef struct { //Struct for central->periphery unit Polling msg
-	uchar msgId;
-} msgPoll;
-
-
 /* msgDoorAlarm initDoorAlarm(uchar iD) {
     msgDoorAlarm msg;
     //msg.msgId = 1;
@@ -87,12 +70,5 @@ msgDoorAlarm dDoorAlarm(CANMsg msg);
 void can1_init(VoidFunction interrupt);
 int can_receive(CANMsg *msg);
 int can_send(CANMsg *msg);
-
-// Some extra functions for USART
-void _outchar(char c);
-char _tstchar( void );
-char _getchar( void );
-void usart_send(char *s);
-void DUMP(char* s);
     
 #endif
