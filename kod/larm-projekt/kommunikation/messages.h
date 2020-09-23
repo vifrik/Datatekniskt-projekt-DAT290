@@ -1,20 +1,16 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-typedef struct { //Struct for Door Sensor alarm message
-	uchar dir;
-    uchar msgId;
-    uchar nodeId;
-} msgDoorAlarm;
-
-typedef struct { //Struct for Motion Sensor alarm message
-	uchar dir;
-	uchar msgId;
-	uchar nodeId;
-} msgMSAlarm;
-
-typedef struct { //Struct for central->periphery unit Polling msg
-	uchar msgId;
-} msgPoll;
+enum MSG_ID {
+	ALARM,
+	ALARM_OFF,
+	POLL_REQUEST,
+	POLL_RESPONSE,
+	DICP_REQUEST, // Dynamic ID Configuration Protocol
+	DICP_RESPONSE,
+	TOL_SET,
+	ACTIVE_ON,
+	ACTIVE_OFF,
+}
 
 #endif

@@ -105,44 +105,6 @@ void can1_init(VoidFunction interrupt) {
     CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
 
-
-//
-//Functions to encode/decode msg structs into a general msg struct
-//
-msgDoorAlarm initDoorAlarm(uchar iD) { //init Alarm struct to be sent to central
-    msgDoorAlarm msg;
-    //msg.msgId = 1;
-	msg.dir = 0;
-    msg.nodeId = iD;
-    return msg;
-}
-
-CANMsg eDoorAlarm(msgDoorAlarm msg) { //DoorAlarm-struct -> general CANMsg-struct
-    CANMsg cmsg;
-	cmsg.dir = 0;
-    cmsg.msgId = 1;
-    cmsg.nodeId = msg.nodeId;
-    cmsg.length = 0;
-    cmsg.buff[0];
-}
-
-msgDoorAlarm dDoorAlarm(CANMsg msg) { //General CANMsg-struct -> DoorAlarm-struct
-	msgDoorAlarm returnMsg;
-	returnMsg.dir = 0;
-	returnMsg.msgId = 1;
-	returnMsg.nodeId = msg.nodeId;
-	return returnMsg;
-}
-
-void decodeCANMsg(CANMsg msg) { //filter msg´s via msgId. Choose decodefunc by lookin at msgId.
-	switch(msg.msgId) {
-		case 1:
-		dDoorAlarm(msg); //Run decode function for doorAlarm
-		break;
-		}
-}
-
-
 //
 // Read a message from the CAN bus and copy it to the supplied message data structure
 //

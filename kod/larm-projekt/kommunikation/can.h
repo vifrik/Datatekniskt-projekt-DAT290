@@ -24,6 +24,10 @@ typedef struct {
 	uchar buff[8]; // A message carries at most 8 bytes of data
 } CANMsg;
 
+typedef struct  {
+
+} AlarmMsg;
+
 /* msgDoorAlarm initDoorAlarm(uchar iD) {
     msgDoorAlarm msg;
     //msg.msgId = 1;
