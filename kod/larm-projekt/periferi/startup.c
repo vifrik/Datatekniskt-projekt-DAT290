@@ -1,7 +1,8 @@
-#include "peripheral.h"
+#include "door_peripheral.h"
 
 void main() {
-	think();
+	peripheral_init();
+	peripheral_think();
 
     return;
 }
