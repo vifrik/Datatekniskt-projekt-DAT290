@@ -1,6 +1,3 @@
-#include "usart.h"
-#include "can.h"
-#include "peripheral.h"
 #include "peripheral.h"
 
 void main() {
