@@ -9,3 +9,4 @@ Makefile
 *.txt
 *.x
 *.workspace
+*.s

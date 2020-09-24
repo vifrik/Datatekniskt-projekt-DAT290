@@ -1,10 +1,9 @@
-#include "usart.h"
-#include "can.h"
-#include "peripheral.h"
-#include "peripheral.h"
+#include "proximity_peripheral.h"
+#include "door_peripheral.h"
 
 void main() {
-	think();
+	door_peripheral_init();
+	door_peripheral_think();
 
     return;
 }

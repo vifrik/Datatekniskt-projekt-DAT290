@@ -2,6 +2,6 @@
 #define DOOR_H
 
 void door_init();
-void door_read();
+unsigned char door_read();
 
 #endif
