@@ -3,6 +3,7 @@
  *
  */
  #include "centralenhet.h"
+ #include "central_response.h"
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
 void startup ( void )
@@ -17,6 +18,7 @@ __asm volatile(
 
 void main(void)
 {
-	think();
+	init();
+	//think();
 }
 

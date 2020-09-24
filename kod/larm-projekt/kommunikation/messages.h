@@ -76,7 +76,7 @@ enum MSG_ID {
 	DICP_RESPONSE,
 	TOL_SET,
 	ACTIVE_ON,
-	ACTIVE_OFF,
-}
+	ACTIVE_OFF
+};
 
 #endif
