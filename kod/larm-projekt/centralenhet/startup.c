@@ -2,8 +2,8 @@
  * 	startup.c
  *
  */
- #include "centralenhet.h"
- #include "central_response.h"
+#include "centralenhet.h"
+
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 
 void startup ( void )
