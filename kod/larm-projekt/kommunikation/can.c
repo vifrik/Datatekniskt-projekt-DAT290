@@ -119,8 +119,9 @@ int can_receive(CANMsg *msg){
     CAN_Receive(CAN1, CAN_FIFO0, &RxMessage);
 	
 	msg->dir    = (RxMessage.StdId >> 10) & 0x1; //Added dir
-    msg->msgId  = (RxMessage.StdId >> 4) & 0x7F;
-    msg->nodeId = RxMessage.StdId & 0x0F;
+    msg->msgId  = (RxMessage.StdId >> 5) & 0x1F;
+    msg->nodeId = RxMessage.StdId & 0x1F;
+	
     msg->length = (RxMessage.DLC & 0x0F);
 
     for (index = 0; index < msg->length; index++) {
@@ -138,9 +139,8 @@ int can_send(CANMsg *msg){
     CAN_TypeDef* canport = CAN1;
     CanTxMsg TxMessage;
     uint8_t TransmitMailbox = 0;
-    
-    //set the transmit ID, standard identifiers are used, combine IDs
-    TxMessage.StdId = (msg->dir << 10) + (msg->msgId<<4) + msg->nodeId; //added dir
+
+    TxMessage.StdId = (msg->dir << 10) + (msg->msgId<<5) + msg->nodeId; //added dir
     TxMessage.RTR = CAN_RTR_Data;
     TxMessage.IDE = CAN_Id_Standard;
     if (msg->length > 8) 

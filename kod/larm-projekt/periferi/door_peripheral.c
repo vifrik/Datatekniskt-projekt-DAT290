@@ -21,6 +21,13 @@ void state_init(void) {
     state.tolerance = 0;
 }
 
+// TODO: Lägg till riktning på allt!!!
+// TODO: Lägg till riktning på allt!!!
+// TODO: Lägg till riktning på allt!!!
+// TODO: Lägg till riktning på allt!!!
+// TODO: Lägg till riktning på allt!!!
+// TODO: Lägg till riktning på allt!!!
+
 void alarm_raise() {
     state.alarm = 1;
 
@@ -28,6 +35,7 @@ void alarm_raise() {
 
     msg.msgId = ALARM;
     msg.nodeId = state.id;
+	msg.dir = 1;
     msg.length = 0;
 	for (int i = 0; i < 8; i++) {
 		msg.buff[i] = 0;
@@ -59,6 +67,7 @@ void request_id() {
     CANMsg msg;
     msg.msgId = DICP_REQUEST;
     msg.nodeId = state.id;
+	msg.dir = 1;
     msg.length = 0;
 	for (int i = 0; i < 8; i++) {
 		msg.buff[i] = 0;
@@ -83,7 +92,7 @@ void receiver(void) {
     CANMsg msg;
     can_receive(&msg);
 	
-    if (!state.id || msg.msgId == state.id) {
+    if (msg.nodeId == state.id) {
         switch(msg.msgId) {
             case ALARM:
                 break;
@@ -123,16 +132,17 @@ void door_peripheral_init(void) {
 
 void door_peripheral_think(void) {	
 	while(1) {
+		DUMP("loop");
 		uchar door_status = door_read();
 		DUMP_numeric(door_status);
 		
-		if (door_status) {
+		if (!state.alarm && door_status) {
 			alarm_raise();
 		}
 		
 		//DUMP_numeric(proximity_read());
 		
 		// Delay 10^6 us = 1s
-		delay(1000000);
+		//delay(1000000);
 	}
 }
