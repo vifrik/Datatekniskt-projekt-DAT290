@@ -1,6 +1,9 @@
 #include "usart.h"
 #include "stm32f4xx_gpio.h"
+#include "stm32f4xx_exti.h"
+#include "stm32f4xx_syscfg.h"
 #include "stk.h"
+#include "misc.h"
 
 // Required pointers for interupts
 #define SYSCFG				0x40013800
@@ -22,7 +25,6 @@
 #define SCB_VTOR 			((volatile unsigned long *) 0xE000ED08)
 
 unsigned volatile long time_start = 0;
-unsigned volatile long time_end = 0;
 unsigned volatile int distance = 0;
 extern unsigned long sys_time;
 
@@ -30,19 +32,17 @@ void irq_handler_exti0(void) {
 	if (*EXTI_PR & EXTI0_IRQ_BPOS) {
 		*EXTI_PR |= EXTI0_IRQ_BPOS;
 	
-		/*if (*GPIO_E_IDR_LOW & 1) {
-			*GPIO_E_ODR_LOW |= (1 << 4);
-			*GPIO_E_ODR_LOW &= ~(1 << 4);
-				
-			count++;
-		}*/
-		
-		DUMP_numeric(sys_time);
-		
-		time_end = sys_time;
-		
-		long delta_time = time_end - time_start;
-		distance = delta_time/58;
+		if (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0)) {
+			
+			DUMP("sys_time");
+			DUMP_numeric(sys_time);
+			DUMP_numeric(time_start);
+			
+			long delta_time = sys_time - time_start;
+			distance = delta_time/58;
+			
+			DUMP_numeric(distance);
+		}
 	}
 }
 
@@ -64,27 +64,34 @@ void proximity_init(void) {
 	init.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOE, &init);
 	
-	*SYSCFG_EXTICR1 &= ~0xF; // Koppla PE1-PE0 till avbrottslina EXTI1-EXTI0
-	*SYSCFG_EXTICR1 |= 0x4;
+	EXTI_InitTypeDef EXTI_InitStructure;
 	
-	*EXTI_IMR |= 0x1; // Konfigurera EXTI1-EXTI0 för att generera avbrott
+	// Configure EXTI Line0
+    EXTI_InitStructure.EXTI_Line = EXTI_Line0;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
 	
-	*EXTI_FTSR &= ~0x1;
-	*EXTI_RTSR |= 0x1; // Konfigurera för avbrott på positiv flank
-
-	*SCB_VTOR = 0x2001C000; // Sätt upp avbrottsvektor
+	NVIC_InitTypeDef NVIC_InitStructure;
 	
-	//*EXTI0_IRQVEC = irq_handler_exti0;
+	// Avbrottsvektor
+    *((void (**) (void)) EXTI0_IRQVEC) = irq_handler_exti0;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 	
-	*NVIC_ISER0 |= NVIC_EXTI0_IRQ_BPOS;
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource0);
 }
 
-unsigned int proximity_read(void) {
+unsigned int proximity_read(void) {	
+	time_start = sys_time;
+	
 	GPIO_WriteBit(GPIOE, GPIO_Pin_1, Bit_SET);
 	delay(10);
 	GPIO_WriteBit(GPIOE, GPIO_Pin_1, Bit_RESET);
-	
-	time_start = sys_time;
 	
 	return distance;
 }
