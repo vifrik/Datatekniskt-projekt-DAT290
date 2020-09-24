@@ -21,25 +21,21 @@ void state_init(void) {
 	state.tolerance = 0;
 }
 
-// TODO: Lägg till riktning på allt!!!
-// TODO: Lägg till riktning på allt!!!
-// TODO: Lägg till riktning på allt!!!
-// TODO: Lägg till riktning på allt!!!
-// TODO: Lägg till riktning på allt!!!
-// TODO: Lägg till riktning på allt!!!
+void canmsg_init(CANMsg *msg) {
+	msg->nodeId = state.id;
+	msg->dir = 1;
+	msg->length = 0;
+	for (int i = 0; i < 8; i++) {
+		msg->buff[i] = 0;
+	}
+}
 
 void alarm_raise() {
 	state.alarm = 1;
 
 	CANMsg msg;
-
+	canmsg_init(&msg);
 	msg.msgId = ALARM;
-	msg.nodeId = state.id;
-	msg.dir = 1;
-	msg.length = 0;
-	for (int i = 0; i < 8; i++) {
-		msg.buff[i] = 0;
-	}
 
 	can_send(&msg);
 }
@@ -50,13 +46,12 @@ void alarm_lower() {
 
 void poll_respond(CANMsg *msg) {
 	CANMsg response;
+	canmsg_init(&msg);
 	response.msgId = POLL_RESPONSE;
-	response.nodeId = state.id;
 	response.length = 2;
 	for (int i = 0; i < 8; i++) {
 		response.buff[i] = ~msg->buff[i];
 	}
-
 
 	can_send(&response);
 }
@@ -65,14 +60,9 @@ void request_id() {
 	DUMP("Requesting ID");
 
 	CANMsg msg;
+	canmsg_init(&msg);
 	msg.msgId = DICP_REQUEST;
-	msg.nodeId = state.id;
-	msg.dir = 1;
-	msg.length = 0;
-	for (int i = 0; i < 8; i++) {
-		msg.buff[i] = 0;
-	}
-
+	
 	can_send(&msg);
 }
 
