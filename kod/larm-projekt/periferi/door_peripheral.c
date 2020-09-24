@@ -59,6 +59,7 @@ void request_id() {
     CANMsg msg;
     msg.msgId = DICP_REQUEST;
     msg.nodeId = state.id;
+	msg.dir = 1;
     msg.length = 0;
 	for (int i = 0; i < 8; i++) {
 		msg.buff[i] = 0;
