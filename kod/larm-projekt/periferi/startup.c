@@ -1,8 +1,9 @@
+#include "proximity_peripheral.h"
 #include "door_peripheral.h"
 
 void main() {
-	peripheral_init();
-	peripheral_think();
+	proximity_peripheral_init();
+	proximity_peripheral_think();
 
     return;
 }

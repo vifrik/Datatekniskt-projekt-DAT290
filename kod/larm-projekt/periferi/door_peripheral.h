@@ -1,7 +1,7 @@
-#ifndef PERIPHERAL_H
-#define PERIPHERAL_H
+#ifndef DOOR_PERIPHERAL_H
+#define DOOR_PERIPHERAL_H
 
-void peripheral_init(void);
-void peripheral_think(void);
+void door_peripheral_init(void);
+void door_peripheral_think(void);
 
 #endif

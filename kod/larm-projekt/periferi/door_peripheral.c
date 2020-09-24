@@ -113,7 +113,7 @@ void receiver(void) {
     }
 }
 
-void peripheral_init(void) {
+void door_peripheral_init(void) {
 	state_init();
 	stk_init();
 	door_init();
@@ -121,7 +121,7 @@ void peripheral_init(void) {
     request_id();
 }
 
-void peripheral_think(void) {	
+void door_peripheral_think(void) {	
 	while(1) {
 		uchar door_status = door_read();
 		DUMP_numeric(door_status);

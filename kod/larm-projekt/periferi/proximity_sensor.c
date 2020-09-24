@@ -37,15 +37,9 @@ void irq_handler_exti0(void) {
 		
 		if (rising) {
 			time_start = sys_time;
-		} else {
-			DUMP("sys_time");
-			DUMP_numeric(sys_time);
-			DUMP_numeric(time_start);
-				
+		} else {				
 			long delta_time = sys_time - time_start;
-			distance = delta_time/58;
-				
-			DUMP_numeric(distance);
+			distance = delta_time*3.4/100;
 		}
 		
 		EXTI_ClearITPendingBit(EXTI_Line0);
