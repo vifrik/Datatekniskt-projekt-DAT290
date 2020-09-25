@@ -2,81 +2,12 @@
 #include "can.h"
 #include "messages.h"
 #include "door_sensor.h"
+#include "shared_peripheral.h"
 
-typedef unsigned char uchar;
+extern State state;
 
-typedef struct {
-	uchar active;
-	uchar id;
-	uchar alarm;
-	uchar tolerance;
-} State;
-
-State state;
-
-void state_init(void) {
-	state.active = 0;
-	state.id = 0;
-	state.alarm = 0;
-	state.tolerance = 0;
-}
-
-void canmsg_init(CANMsg *msg) {
-	msg->nodeId = state.id;
-	msg->dir = 1;
-	msg->length = 0;
-	for (int i = 0; i < 8; i++) {
-		msg->buff[i] = 0;
-	}
-}
-
-void alarm_raise() {
-	state.alarm = 1;
-
-	CANMsg msg;
-	canmsg_init(&msg);
-	msg.msgId = ALARM;
-
-	can_send(&msg);
-}
-
-void alarm_lower() {
-	state.alarm = 0;
-}
-
-void poll_respond(CANMsg *msg) {
-	CANMsg response;
-	canmsg_init(&msg);
-	response.msgId = POLL_RESPONSE;
-	response.length = 2;
-	for (int i = 0; i < 8; i++) {
-		response.buff[i] = ~msg->buff[i];
-	}
-
-	can_send(&response);
-}
-
-void request_id() {
-	DUMP("Requesting ID");
-
-	CANMsg msg;
-	canmsg_init(&msg);
-	msg.msgId = DICP_REQUEST;
-	
-	can_send(&msg);
-}
-
-void update_door_id(CANMsg *msg) {
-	DUMP("Recieved ID");
-	DUMP_numeric(msg->buff[0]);
-	state.id = msg->buff[0];
-}
-
-void update_tolerance(CANMsg *msg) {
-	state.tolerance = msg->buff[0];
-}
-
-void receiver(void) {
+// Hanterar CAN-meddelanden
+void door_receiver(void) {
 	DUMP("CAN message received: ");
 
 	CANMsg msg;
@@ -90,14 +21,14 @@ void receiver(void) {
 				alarm_lower();
 				break;
 			case POLL_REQUEST:
+				poll_respond(&msg);
 				break;
 			case POLL_RESPONSE:
-				poll_respond(&msg);
 				break;
 			case DICP_REQUEST:
 				break;
 			case DICP_RESPONSE:
-				update_door_id(&msg);
+				update_id(&msg);
 				break;
 			case TOL_SET:
 				update_tolerance(&msg);
@@ -112,14 +43,16 @@ void receiver(void) {
 	}
 }
 
+// Initialisering av dörrenhet
 void door_peripheral_init(void) {
 	state_init();
 	stk_init();
 	door_init();
-	can1_init(receiver);
+	can1_init(door_receiver);
 	request_id();
 }
 
+// Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
 		DUMP("loop");

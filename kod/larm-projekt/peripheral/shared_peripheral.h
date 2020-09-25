@@ -1,6 +1,8 @@
 #ifndef SHARED_PERIPHERAL_H
 #define SHARED_PERIPHERAL_H
 
+#include "can.h"
+
 typedef unsigned char uchar;
 
 typedef struct {
@@ -10,13 +12,15 @@ typedef struct {
 	uchar tolerance;
 } State;
 
-void state_init(State *state);
-void canmsg_init(CANMsg *msg, State *state);
-void alarm_raise(State *state)M
-void alarm_lower(State *state);
-void poll_respond(CANMsg *msg, State *state);
-void request_id(State *state);
-void update_id(CANMsg *msg, State *state);
-void update_tolerance(CANMsg *msg, State *state);
+State state;
+
+void state_init();
+void canmsg_init(CANMsg *msg);
+void alarm_raise();
+void alarm_lower();
+void poll_respond(CANMsg *msg);
+void request_id();
+void update_id(CANMsg *msg);
+void update_tolerance(CANMsg *msg);
 
 #endif
