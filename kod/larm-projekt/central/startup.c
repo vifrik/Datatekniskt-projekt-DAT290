@@ -2,7 +2,7 @@
  * 	startup.c
  *
  */
-#include "centralenhet.h"
+#include "central.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
 

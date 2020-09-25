@@ -36,11 +36,13 @@ DICP_REQUEST:
 msgId = DICP_REQUEST
 nodeId = 0
 dir = 0
+length = 1
+data = PERIPHERAL_TYPE
 
 // Respond to request with ID
 DICP_RESPONSE:
 msgId = DICP_RESPONSE
-nodeId = 0xF
+nodeId = 0x0
 dir = 1
 lenght = 1
 data = id
@@ -77,6 +79,11 @@ enum MSG_ID {
 	TOL_SET,
 	ACTIVE_ON,
 	ACTIVE_OFF
+};
+
+enum PERIPHERAL_TYPE {
+    DOOR,
+    PROXIMITY
 };
 
 #endif

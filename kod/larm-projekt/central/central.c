@@ -1,27 +1,82 @@
+#include <stdlib.h>
 #include "messages.h"
 #include "can.h"
 #include "usart.h"
+#include "stk.h"
+#include "central.h"
+
+void *_sbrk(int incr) { return (void *)-1; }
+
+extern unsigned long sys_time;
+int newId = 0;
+int counter = 0;
+int ready = 0;
+PERIPHERAL peripherals[15];
+
+void init_peripheral(PERIPHERAL *p) {
+    p->type = 0;
+    for(int i = 0; i < 8; i++) {
+        p->buff[i] = 0;
+    }
+}
+
+// Genererar ett slumpmässigt 16-bitars tal med hjälp av standard c-funktioner.
+uchar random_gen(void) {
+    srand(sys_time); 
+    return (uchar)(rand() % 256); 
+}
+
 void raise_alarm(void) {
 	//Do things
 	DUMP("PANIC");
 }
 
+void send_poll(uchar id) {
+    DUMP("POLL REQUEST SENT");
+    CANMsg msg;
+    msg.msgId = POLL_REQUEST;
+    msg.nodeId = id;
+    msg.dir = 0;
+    msg.length = 8;
+    for(int i = 0; i < msg.length; i++){
+        msg.buff[i] = random_gen();
+    }
+    can_send(&msg);
+}
+
 void check_poll_response(CANMsg *msg) {
-	//if(msg.buff = )
-	//Kolla så svar från rätt nod
-	//Kolla om alarm
-	//Kolla så responsen är korrekt
+    DUMP("POLL RESPONSE RECEIVED");
+   // delay(1000000);
+    for(int i = 0; i >= msg->length; i++) {
+        if(peripherals[msg->nodeId].buff[i] != ~msg->buff[i]){
+            raise_alarm();
+        }
+    }
+    ready = 1;
 }
 
 void send_id(CANMsg *msg) {
-	DUMP("RECEIVED REQUEST");
-	CANMsg response;
-	response.nodeId = 0; //Kalla någon funktion som håller reda på någon array av alla inkopplade periferienheter
-	response.msgId = DICP_RESPONSE;
-	response.length = 1;
-	response.buff[0] = 1;
-	can_send(&response);
-	DUMP("DICP RESPONSE SENT");
+    if(newId < 16){
+        DUMP("RECEIVED REQUEST");
+
+        PERIPHERAL peripheral;
+        init_peripheral(&peripheral);
+        peripheral.type = msg->buff[0];
+        peripherals[newId] = peripheral;
+        
+        CANMsg response;
+        response.dir = 0;
+        response.nodeId = 0xF;
+        response.msgId = DICP_RESPONSE;
+        response.length = 1;
+        response.buff[0] = newId;
+        newId++;
+        can_send(&response);
+        DUMP("DICP RESPONSE SENT");
+    }
+    else {
+        //TODO error
+    }
 }
 
 void receiver(void) {
@@ -61,4 +116,14 @@ void receiver(void) {
 
 void init(void) {
 	can1_init(receiver);
+    
+    while(newId == 0); 
+    send_poll(0); 
+    while(1) {
+        if(ready) {
+                counter++;
+                send_poll(counter%newId);
+                ready = 0;
+        }
+    }
 }
