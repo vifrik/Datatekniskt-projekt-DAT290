@@ -52,6 +52,7 @@ void usart_send(char* s){
        _outchar(*(s++));
 }
 
+// Översätter char till int så det synns på Eterm8
 void usart_send_numeric(int n) {
 	char buffer[20];
 	itoa(n,buffer,10);
@@ -65,6 +66,7 @@ void DUMP(char *s) {
 #endif
 }
 
+// Översätter char till int så det synns på Eterm8 (Debugg syfte)
 void DUMP_numeric(int n) {
 	unsigned char buffer[16];
 	itoa(n,buffer,10);

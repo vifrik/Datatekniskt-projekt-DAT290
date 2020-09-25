@@ -5,32 +5,13 @@
 #include "stk.h"
 #include "misc.h"
 
-// Required pointers for interupts
-/*
-#define SYSCFG				0x40013800
-#define SYSCFG_EXTICR1		((volatile unsigned int *) (SYSCFG+0x8))
-
-#define EXTI				0x40013C00
-#define EXTI_IMR			((volatile unsigned int *) (EXTI))
-#define EXTI_FTSR			((volatile unsigned int *) (EXTI+0xC))
-#define EXTI_RTSR			((volatile unsigned int *) (EXTI+0x8))
-#define EXTI_PR				((volatile unsigned int *) (EXTI+0x14))
-
-#define EXTI0_IRQVEC		((void (**)(void)) 0x2001C058)
-
-#define NVIC_ISER0			((volatile unsigned int *) 0xE000E100)
-#define NVIC_EXTI0_IRQ_BPOS	(1 << 6)
-
-#define EXTI0_IRQ_BPOS		1
-
-#define SCB_VTOR 			((volatile unsigned long *) 0xE000ED08)
-*/
 #define EXTI0_IRQVEC		((void (**)(void)) 0x2001C058)
 
 unsigned volatile long time_start = 0;
 unsigned volatile int distance = 0;
 extern unsigned long sys_time;
 
+// Avbrottshanterare
 void irq_handler_exti0(void) {	
 	if(EXTI_GetITStatus(EXTI_Line0) != RESET) {
 		unsigned char rising = GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0);
@@ -46,6 +27,7 @@ void irq_handler_exti0(void) {
 	}
 }
 
+// Initialisering av GPIO och avbrott
 void proximity_init(void) {
 	EXTI_InitTypeDef   EXTI_InitStructure;
 	GPIO_InitTypeDef   GPIO_InitStructure;
@@ -87,6 +69,7 @@ void proximity_init(void) {
     *((void (**) (void)) EXTI0_IRQVEC) = irq_handler_exti0;
 }
 
+// Skriver 1 och sedan 0 på trig med 10us fördröjning, returnerar avstånd
 unsigned int proximity_read(void) {		
 	GPIO_WriteBit(GPIOE, GPIO_Pin_1, Bit_SET);
 	delay(10);
