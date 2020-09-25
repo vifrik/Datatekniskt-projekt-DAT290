@@ -1,32 +1,11 @@
 #include "stm32f4xx_gpio.h"
-#include "stm32f4xx_can.h"
-#include "stm32f4xx_rcc.h"
-
-// Required pointers for interupts
-#define SYSCFG				0x40013800
-#define SYSCFG_EXTICR1		((volatile unsigned int *) (SYSCFG+0x8))
-
-#define EXTI				0x40013C00
-#define EXTI_IMR			((volatile unsigned int *) (EXTI))
-#define EXTI_FTSR			((volatile unsigned int *) (EXTI+0xC))
-#define EXTI_RTSR			((volatile unsigned int *) (EXTI+0x8))
-#define EXTI_PR				((volatile unsigned int *) (EXTI+0x14))
-
-#define EXTI0_IRQVEC		((void (**)(void)) 0x2001C058)
-
-#define NVIC_ISER0			((volatile unsigned int *) 0xE000E100)
-#define NVIC_EXTI0_IRQ_BPOS	(1 << 6)
-
-#define EXTI0_IRQ_BPOS		1
-
-#define SCB_VTOR 			((volatile unsigned long *) 0xE000ED08)
+#include "usart.h"
+//#include "stm32f4xx_rcc.h"
 
 #define GPIO_Pin_Low               ((uint16_t)0x00FF)  /* All pins selected */
 #define GPIO_Pin_High              ((uint16_t)0xFF00)  /* All pins selected */
 
-
-
-void mainInit(void){
+void keyboard_init(void) {
 	GPIO_InitTypeDef init;
 	GPIO_StructInit( &init );
 	
@@ -53,7 +32,9 @@ void mainInit(void){
 
 }
 
-void kbdActivate(unsigned int row) {
+// Bug här?
+// Borde vi inte alltid resetta alla rader och sedan sätta en pin? Nu sätter vi bara en pin utan att nollställa de resterande eftersom default aldrig inträffar om row har ett giltigt värde
+void activate_row(unsigned int row) {
     switch(row) {
         case 1: GPIO_WriteBit(GPIOD, GPIO_Pin_12, Bit_SET ); break;
         case 2: GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET ); break;
@@ -63,9 +44,10 @@ void kbdActivate(unsigned int row) {
     }
 }
 
-int kbdGetCol(void) {
+int get_column(void) {
     unsigned char c;
-	c = (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11))*8 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_10))*4 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9))*2 | GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_8);
+	c = GPIO_ReadInputData(GPIOD) >> 8 & 0xF;
+	//c = (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11))*8 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_10))*4 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9))*2 | GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_8);
     if (c & 8) return 4;
     if (c & 4) return 3;
     if (c & 2) return 2;
@@ -76,14 +58,14 @@ int kbdGetCol(void) {
 unsigned char keyb(void) {
 	char key[] = {1,2,3,0xA,4,5,6,0xB,7,8,9,0xC,0xE,0,0xF,0xD};
 	int row,col;
-	for(row = 1; row <= 4; row++){
-		kbdActivate(row);
-		if(col = kbdGetCol() ){
-			kbdActivate(0);
+	for (row = 1; row <= 4; row++) {
+		activate_row(row);
+		if (col = get_column()) {
+			activate_row(0);
 			return key[4*(row - 1) + (col - 1)];
 		}
 	}
-	kbdActivate(0);
+	activate_row(0);
 	return 0xFF;
 }
 
@@ -96,11 +78,21 @@ void out7seg(unsigned char c) {
 	}
 }
 
-void think(void) {
-	mainInit();
+unsigned char released = 1;
 
-    while (1) {
-		//GPIO_Write(GPIOD, 0x3F);
-        out7seg(keyb());
-    }
+void keyboard_input(unsigned char input[4]) {
+	unsigned char key =  keyb();
+
+	if (released && key != 0xFF) {
+		released = 0;
+
+		// Shift all values left
+		for (int i = 0; i < 3; i++) {
+			input[i] = input[i+1];
+		}
+
+		input[3] = key;
+	} else if (key == 0xFF) {
+		released = 1;
+	}
 }

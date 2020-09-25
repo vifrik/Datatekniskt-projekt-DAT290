@@ -5,19 +5,19 @@
 #include "stk.h"
 #include "central.h"
 #include "error.h"
+#include "keypad.h"
 
 #define DEVICES_MAX 15
 
 void *_sbrk(int incr) { return (void *)-1; }
 
 extern unsigned long sys_time;
-State state = {0, 0, 0};
+State state = {0, 0, 0, 0};
 Peripheral peripherals[DEVICES_MAX];
 
-void peripheral_init(Peripheral *p, uchar id, uchar type) {
-    p->id = id;
+void peripheral_init(Peripheral *p, uchar type) {
 	p->type = type;
-    for(int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         p->buff[i] = 0;
     }
 }
@@ -30,66 +30,75 @@ uchar random_gen(void) {
 
 void raise_alarm(uchar id) {
 	Peripheral p = peripherals[id];
-	
 	usart_send("###  ALARM  ###");
     usart_send("from:");
-    switch(p.type) {
+    switch (p.type) {
         case DOOR:
             usart_send("door with id:");
         case PROXIMITY:
             usart_send("proximity with id:");
     }
 
-    usart_send_numeric(p.id);
+    usart_send_numeric(id);
 }
 
-void send_poll(uchar id) {
+void poll_request(uchar id) {
     DUMP("POLL REQUEST SENT");
     CANMsg msg;
     msg.msgId = POLL_REQUEST;
     msg.nodeId = id;
     msg.dir = TO_PERIPHERAL;
     msg.length = 8;
-    for(int i = 0; i < msg.length; i++){
+    for (int i = 0; i < msg.length; i++){
         msg.buff[i] = random_gen();
+        peripherals[id].buff[i] = msg.buff[i];
     }
     can_send(&msg);
 }
 
-void check_poll_response(CANMsg *msg) {
-    DUMP("POLL RESPONSE RECEIVED");
-    Peripheral peripheral = peripherals[msg->nodeId];
-    for(int i = 0; i >= msg->length; i++) {
-        if(peripheral.buff[i] != ~msg->buff[i]){
-            raise_alarm(i);
-            break;
+void poll_response_handler(CANMsg *msg) {
+	DUMP("POLL RESPONSE RECEIVED");
+	Peripheral p = peripherals[msg->nodeId];	
+    for (int i = 0; i >= msg->length; i++) {
+        if (p.buff[i] != ~msg->buff[i]) {
+			raise_alarm(msg->nodeId);
+			break;
         }
     }
     state.ready = 1;
 }
 
-void send_id(CANMsg *msg) {
-    if(state.devices < DEVICES_MAX) {
+void dicp_request_handler(CANMsg *msg) {
+    if (state.devices < DEVICES_MAX) {
         DUMP("RECEIVED REQUEST");
 
-        Peripheral peripheral;
-        peripheral_init(&peripheral, state.devices, msg->buff[0]);
-        peripherals[state.devices] = peripheral;
+        Peripheral p;
+        peripheral_init(&p, msg->buff[0]);
+        peripherals[state.devices] = p;
         
         CANMsg response;
-        response.dir = 0;
-        response.nodeId = 0xF;
-        response.msgId = DICP_RESPONSE;
+		response.msgId = DICP_RESPONSE;
+		response.nodeId = 0xF;
+        response.dir = TO_PERIPHERAL;
         response.length = 1;
         response.buff[0] = state.devices;
 
         state.devices++;
 
         can_send(&response);
-    }
-    else {
+    } else {
         error_send(msg->msgId, TO_PERIPHERAL, MAX_DEVICES);
     }
+}
+
+// active = ACTIVE_ON aktiverar periferienhet p
+// active = ACTIVE_OFF deaktiverar
+void active_toggle(uchar id, uchar active) {
+	CANMsg msg;
+	msg.msgId = active;
+	msg.nodeId = id;
+	msg.dir = TO_PERIPHERAL;
+	msg.length = 0;
 }
 
 void receiver(void) {
@@ -98,7 +107,6 @@ void receiver(void) {
     CANMsg msg;
     can_receive(&msg);
 	DUMP_numeric(msg.msgId);
-	DUMP_numeric(ALARM);
 	if (msg.dir == 1) {
 		switch (msg.msgId) {
 			case ALARM:
@@ -111,10 +119,10 @@ void receiver(void) {
             case POLL_REQUEST:
                 break;
 			case POLL_RESPONSE:
-				check_poll_response(&msg);
+				poll_response_handler(&msg);
 				break;
 			case DICP_REQUEST:
-				send_id(&msg);
+				dicp_request_handler(&msg);
 				break;
 			case DICP_RESPONSE:
 				break;
@@ -125,23 +133,38 @@ void receiver(void) {
 			case ACTIVE_OFF:
 				break;
 		}
-		
 	}
 }
 
-void init(void) {
-	can1_init(receiver);
-    
-    // Vänta tills minst en enhet är uppkopplad
-    while(state.devices == 0);
+void init() {
+    //can1_init(receiver);
+    keyboard_init();
+}
 
-    send_poll(state.curr_poll);
+uchar same(uchar arr1[], uchar arr2[]) {
+	for (int i = 0; i < 4; i++) {
+		if (arr1[i] != arr2[i])
+		return 0;
+	}	
+	return 1;
+}
+
+void think(void) {
+    // Vänta tills minst en enhet är uppkopplad
+    //while(!state.devices);
+
+    uchar passcode[4] = {1,2,3,4};
+    uchar keypad[5] = {0,0,0,0};
 
     while(1) {
-        if(state.ready) {
-            state.curr_poll++;
-            send_poll(state.curr_poll%state.devices);
-            state.ready = 0;
-        }
-    }
+		// Keypad- och USART-logik här
+        keyboard_input(keypad);
+		
+		DUMP_numeric_list(keypad, 4);
+		
+		/*if (state.ready) {
+			poll_request(state.curr_poll++%state.devices);
+			state.ready = 0;
+		}*/
+	}
 }

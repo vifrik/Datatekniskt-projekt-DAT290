@@ -19,6 +19,6 @@ __asm volatile(
 void main(void)
 {
 	init();
-	//think();
+	think();
 }
 

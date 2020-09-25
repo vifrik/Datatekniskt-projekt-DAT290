@@ -72,3 +72,12 @@ void DUMP_numeric(int n) {
 	itoa(n,buffer,10);
 	DUMP(buffer);
 }
+
+void DUMP_numeric_list(char* s, unsigned char length) {
+	for (int i = 0; i < length; i++) {
+		char buffer[16];
+		itoa(*(s++), buffer, 10);
+		_outchar(buffer[0]);
+	}
+	_outchar('\n');
+}

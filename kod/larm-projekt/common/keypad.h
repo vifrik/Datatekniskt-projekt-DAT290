@@ -1,6 +1,7 @@
 #ifndef CENTRALENHET_H
 #define CENTRALENHET_H
 
-void think(void);
+void keyboard_init(void);
+void keyboard_input(unsigned char input[4]);
 
 #endif
