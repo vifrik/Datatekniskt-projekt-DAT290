@@ -11,8 +11,12 @@ typedef struct {
 
 void init_peripheral(PERIPHERAL *p);
 
-
 void init(void);
+
+typedef struct {
+	uchar id;
+	uchar type;
+} Periphery;
 
 #endif
 

@@ -55,6 +55,36 @@ void check_poll_response(CANMsg *msg) {
     ready = 1;
 }
 
+void periphery_init(Periphery *p, uchar id, uchar type) {
+	p->id = id;
+	p->type = type;
+}
+
+Periphery units[5]; //5 är antagen max antal enheter här
+
+//type är typen på den nyanslutna enheten
+//
+uchar dicp_next_id(uchar type) {
+	uchar id;
+	uchar length = sizeof(units)/sizeof(units[0]);
+	uchar i = 0;
+	while(i <= length) {
+		if(units[i].type == 0) { //vet inte riktigt hur vi visar typer än, men så som det är just nu så ska ingen ha typ 0
+			id = i;
+			break;
+		} else if(i == length) {
+			//shit hits the fan
+		}
+		i++;
+	}
+	//Lägg till ny enhet i arrayen.
+	Periphery *p;
+	periphery_init(p, id, type);
+	units[id] = *p;
+	
+	return length;
+}
+
 void send_id(CANMsg *msg) {
     if(newId < 16){
         DUMP("RECEIVED REQUEST");

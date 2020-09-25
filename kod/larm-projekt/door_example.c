@@ -18,7 +18,7 @@ void state_init(void) {
 }
 
 void arr_clear(uchar *arr[]){
-	uchar length = sizeof(arr)/sizeof(arr[0]);
+	uchar length = sizeof(*arr)/sizeof(*arr[0]);
 	for(int i = 0;i<length;i++){
 		arr[i] = 0;
 	}

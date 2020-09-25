@@ -1,5 +1,6 @@
 #include "stm32f4xx_gpio.h"
 
+// Initialiserar GPIO
 void door_init() {
 	GPIO_InitTypeDef init;
 	GPIO_StructInit( &init );
@@ -14,6 +15,7 @@ void door_init() {
 	GPIO_Init(GPIOE, &init);
 }
 
+// Läser av PE0
 unsigned char door_read() {
 	return GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0);
 }
