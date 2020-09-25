@@ -4,17 +4,19 @@
 #include "usart.h"
 #include "stk.h"
 #include "central.h"
+#include "error.h"
+
+#define DEVICES_MAX 15
 
 void *_sbrk(int incr) { return (void *)-1; }
 
 extern unsigned long sys_time;
-int newId = 0;
-int counter = 0;
-int ready = 0;
-PERIPHERAL peripherals[15];
+State state = {0, 0, 0};
+Peripheral peripherals[DEVICES_MAX];
 
-void init_peripheral(PERIPHERAL *p) {
-    p->type = 0;
+void peripheral_init(Peripheral *p, uchar id, uchar type) {
+    p->id = id;
+	p->type = type;
     for(int i = 0; i < 8; i++) {
         p->buff[i] = 0;
     }
@@ -26,9 +28,19 @@ uchar random_gen(void) {
     return (uchar)(rand() % 256); 
 }
 
-void raise_alarm(void) {
-	//Do things
-	DUMP("PANIC");
+void raise_alarm(uchar id) {
+	Peripheral p = peripherals[id];
+	
+	usart_send("###  ALARM  ###");
+    usart_send("from:");
+    switch(p.type) {
+        case DOOR:
+            usart_send("door with id:");
+        case PROXIMITY:
+            usart_send("proximity with id:");
+    }
+
+    usart_send_numeric(p.id);
 }
 
 void send_poll(uchar id) {
@@ -36,7 +48,7 @@ void send_poll(uchar id) {
     CANMsg msg;
     msg.msgId = POLL_REQUEST;
     msg.nodeId = id;
-    msg.dir = 0;
+    msg.dir = TO_PERIPHERAL;
     msg.length = 8;
     for(int i = 0; i < msg.length; i++){
         msg.buff[i] = random_gen();
@@ -46,66 +58,37 @@ void send_poll(uchar id) {
 
 void check_poll_response(CANMsg *msg) {
     DUMP("POLL RESPONSE RECEIVED");
-   // delay(1000000);
+    Peripheral peripheral = peripherals[msg->nodeId];
     for(int i = 0; i >= msg->length; i++) {
-        if(peripherals[msg->nodeId].buff[i] != ~msg->buff[i]){
-            raise_alarm();
+        if(peripheral.buff[i] != ~msg->buff[i]){
+            raise_alarm(i);
+            break;
         }
     }
-    ready = 1;
-}
-
-void periphery_init(Periphery *p, uchar id, uchar type) {
-	p->id = id;
-	p->type = type;
-}
-
-Periphery units[5]; //5 är antagen max antal enheter här
-
-//type är typen på den nyanslutna enheten
-//
-uchar dicp_next_id(uchar type) {
-	uchar id;
-	uchar length = sizeof(units)/sizeof(units[0]);
-	uchar i = 0;
-	while(i <= length) {
-		if(units[i].type == 0) { //vet inte riktigt hur vi visar typer än, men så som det är just nu så ska ingen ha typ 0
-			id = i;
-			break;
-		} else if(i == length) {
-			//shit hits the fan
-		}
-		i++;
-	}
-	//Lägg till ny enhet i arrayen.
-	Periphery *p;
-	periphery_init(p, id, type);
-	units[id] = *p;
-	
-	return length;
+    state.ready = 1;
 }
 
 void send_id(CANMsg *msg) {
-    if(newId < 16){
+    if(state.devices < DEVICES_MAX) {
         DUMP("RECEIVED REQUEST");
 
-        PERIPHERAL peripheral;
-        init_peripheral(&peripheral);
-        peripheral.type = msg->buff[0];
-        peripherals[newId] = peripheral;
+        Peripheral peripheral;
+        peripheral_init(&peripheral, state.devices, msg->buff[0]);
+        peripherals[state.devices] = peripheral;
         
         CANMsg response;
         response.dir = 0;
         response.nodeId = 0xF;
         response.msgId = DICP_RESPONSE;
         response.length = 1;
-        response.buff[0] = newId;
-        newId++;
+        response.buff[0] = state.devices;
+
+        state.devices++;
+
         can_send(&response);
-        DUMP("DICP RESPONSE SENT");
     }
     else {
-        //TODO error
+        error_send(msg->msgId, TO_PERIPHERAL, MAX_DEVICES);
     }
 }
 
@@ -119,8 +102,10 @@ void receiver(void) {
 	if (msg.dir == 1) {
 		switch (msg.msgId) {
 			case ALARM:
-				raise_alarm(); //Fyll ut med dessa funktioner eftersom?
+				raise_alarm(msg.nodeId); //Fyll ut med dessa funktioner eftersom?
 				break;
+            case ERROR:
+                break;
 			case ALARM_OFF:
 				break;
             case POLL_REQUEST:
@@ -147,13 +132,16 @@ void receiver(void) {
 void init(void) {
 	can1_init(receiver);
     
-    while(newId == 0); 
-    send_poll(0); 
+    // Vänta tills minst en enhet är uppkopplad
+    while(state.devices == 0);
+
+    send_poll(state.curr_poll);
+
     while(1) {
-        if(ready) {
-                counter++;
-                send_poll(counter%newId);
-                ready = 0;
+        if(state.ready) {
+            state.curr_poll++;
+            send_poll(state.curr_poll%state.devices);
+            state.ready = 0;
         }
     }
 }

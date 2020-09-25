@@ -7,6 +7,7 @@ void _outchar(char c);
 char _tstchar( void );
 char _getchar( void );
 void usart_send(char *s);
+void usart_send_numeric(int n);
 void DUMP(char* s);
 void DUMP_numeric(int n);
 

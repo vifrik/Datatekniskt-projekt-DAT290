@@ -9,6 +9,13 @@ msgId = ALARM
 nodeId = sender id
 dir = 0
 
+ERROR:
+msgId = ERROR
+nodeId = peripheral
+dir = 0/1
+length = 1
+data = error code
+
 // Disables an alarm on a peripheral device
 ALARM_OFF:
 msgId = ALARM_OFF
@@ -71,6 +78,7 @@ dir = 1
 
 enum MSG_ID {
 	ALARM,
+	ERROR,
 	ALARM_OFF,
 	POLL_REQUEST,
 	POLL_RESPONSE,
@@ -84,6 +92,15 @@ enum MSG_ID {
 enum PERIPHERAL_TYPE {
     DOOR,
     PROXIMITY
+};
+
+enum ERROR_CODE {
+	MAX_DEVICES
+};
+
+enum DIRECTION {
+	TO_PERIPHERAL,
+	TO_CENTRAL
 };
 
 #endif

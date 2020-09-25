@@ -4,19 +4,18 @@
 typedef unsigned char uchar;
 
 typedef struct {
-    uchar type;
-    uchar buff[8];
-} PERIPHERAL; 
-
-
-void init_peripheral(PERIPHERAL *p);
-
-void init(void);
+    uchar devices;
+    uchar curr_poll;
+    uchar ready;
+} State;
 
 typedef struct {
-	uchar id;
-	uchar type;
-} Periphery;
+    uchar id;
+    uchar type;
+    uchar buff[8];
+} Peripheral; 
+
+void init(void);
 
 #endif
 
