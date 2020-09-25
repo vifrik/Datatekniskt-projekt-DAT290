@@ -141,20 +141,12 @@ void init() {
     keyboard_init();
 }
 
-uchar same(uchar arr1[], uchar arr2[]) {
-	for (int i = 0; i < 4; i++) {
-		if (arr1[i] != arr2[i])
-		return 0;
-	}	
-	return 1;
-}
-
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
     //while(!state.devices);
 
     uchar passcode[4] = {1,2,3,4};
-    uchar keypad[5] = {0,0,0,0};
+    uchar keypad[4] = {0,0,0,0};
 
     while(1) {
 		// Keypad- och USART-logik här
