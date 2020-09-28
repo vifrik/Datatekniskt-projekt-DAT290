@@ -75,12 +75,18 @@ Arbetsgruppen delades inledningsvis upp i tre undergrupper som ansvarade över o
 
 
 \section{Teknisk Beskrivning}
+I detta avsnitt ges en fördjupad inblick i hur systemet som utvecklats under projektet fungerar och hänger ihop. Den mjukvara och hårdvara som projektet baseras på beskrivs även i mer detalj.
 
 \subsection{Teknisk Bakgrund}
+Hårdvaran vilket system körs på är en MD407 mikrodator. All mjukvara är skriven i programspårket C. MD407 har begränsat med minne vilket gör att programmen som skrivs för den måste vara små och effektiva. C är ett lågt programspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet. C lämpar sig alltså väl för utveckling mot MD407.
+
+Systemet kretsar kring att flera MD407 sammankopplas, en MD407 agerar då som centralenhet och resterande används för att ansluta periferienheter så som dörrlarm och rörelsesensorer. MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network). CAN är ett färdigutvecklat protokoll för kommunikation mellan datorer. Ett kommunikationsprotokoll har sedan byggts uppepå CAN som är anpassat för systemet.
 
 \subsection{Systemöversikt}
 
+Vid uppstart väljs en MD407 som centralenhet för systemet. Från denna enhet körs huvudprogrammet. Centralenheten sköter den stora delen av systemets funktion. Centralenheten registrerar och håller koll på vilka periferienheter som är ansluta, kontrollerar kontinuerligt så att inget larm gått hos periferienheterna samt tar input från ansluten dator för att larma styra systemet.
 
+Två olika periferienheter finns tillgängliga att ansluta till systemet. Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd, samt en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras.
 
 \subsection{Delsystem}
 
