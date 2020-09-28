@@ -125,6 +125,15 @@ Koden är därför strukturerad så att samma kod kan köras på valfri enhet oa
 CAN ansvarar för att meddelanden kan skickas och de hanteras.
 Med hjälp av riktning och ID kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
 
+För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är att så kallade CAN-meddelanden skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
+\begin{description}
+    \item[Riktning:] Detta fält syftar till hurvida meddelandet går till eller från centralenheten. Fältet sätts till ett om meddelandet går från centralenhet till periferienhet och noll om meddelandet går från periferienhet till centralenhet. Detta fält tillåter en minskning av antalet meddelandetyper då en generell meddelandetyp så som ALARM kan användas åt båda hållen.
+    \item[Meddelande-ID:] För varje möjligt meddelande som kan skickas finns en meddelandetyp, till exempel: ALARM och ERROR. Meddedelandetyperna är alla ordnade efter prioritet.
+    \item[Enhets-ID:] varje ansluten enhet tilldelas ett unikt enhets-ID, en binär siffra 0-15. Ett lägre värde på enhets-ID:t innebär högre prioritet, därför tilldelas alltid centralenheten ID noll. Efter centralen tilldelas enheterna ett ID som relaterar till ordningen de anslöt sig i. Alltså den tredje enheten som ansluts får ID tre.
+    \item[Längd:] Längd är en indikation på hur mycket data som skickas med i meddelandets datafält. Många meddelanden skickas med längd noll då mycket information om meddelandet kan utläsas från meddelande-ID och enhets-ID.
+    \item[Data:] Här lagras den data som skickas med i meddelandet. Upp till 64 bitar av data kan lagras i ett meddelande.
+\end{description}
+
 \subsubsection{Centralenhet}
 Centralenheten lyssnar efter meddelanden kontinuerligt.
 Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det uppstått ett fel.
@@ -147,26 +156,6 @@ Rörelsesensorn uppgift är att upptäcka skillnader i avstånd.
 För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
 Sensorn svarar med att skriva en logisk etta på echo-pinnen.
 Längden av denna logiska etta motsvarar det uppmätta avståndet.
-
-Nedan presenteras systemets olika delar i djupare detalj.
-
-\subsubsection{centralenhet}
-
-\subsubsection{Dörrsensor}
-
-\subsubsection{Rörelsesensor}
-
-\subsubsection{Kommunikationsprotokoll}
-
-För kommunikation mellan dom anslutna enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är att så kallade CAN-meddelanden skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
-\begin{description}
-  \item[Riktning:] Detta fält syftar till hurvida meddelandet går till eller från centralenheten. Fältet sätts till ett om meddelandet går från centralenhet till periferienhet och noll om meddelandet går från periferienhet till centralenhet. Detta fält tillåter en minskning av antalet meddelandetyper då en generell meddelandetyp så som ALARM kan användas åt båda hållen.
-  \item[Meddelande-ID:] För varje möjligt meddelande som kan skickas finns en meddelandetyp, till exempel: ALARM och ERROR. Meddedelandetyperna är alla ordnade efter prioritet.
-  \item[Enhets-ID:] varje ansluten enhet tilldelas ett unikt enhets-ID, en binär siffra 0-15. Ett lägre värde på enhets-ID:t innebär högre prioritet, därför tilldelas alltid centralenheten ID noll. Efter centralen tilldelas enheterna ett ID som relaterar till ordningen dom anslöt sig i. Alltså den tredje enheten som ansluts får ID tre.
-  \item[Längd:] Längd är en indikation på hur mycket data som skickas med i meddelandets datafält. Många meddelanden skickas med längd noll då mycket information om meddelandet kan utläsas från meddelande-ID och enhets-ID.
-  \item[Data:] Här lagras den data som skickas med i meddelandet. Upp till 64 bitar av data kan lagras i ett meddelande.
-\end{description}
-
 
 \section{Resultat}
 
