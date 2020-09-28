@@ -143,6 +143,16 @@ För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll 
     \item[Data:] Här lagras den data som skickas med i meddelandet. Upp till 64 bitar av data kan lagras i ett meddelande.
 \end{description}
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \multicolumn{15}{|c|}{Exempel på ett larm från periferienhet ett}\\\hline
+        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{state.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+    \end{tabular}
+\end{table}
+
 \subsubsection{Centralenhet}
 Centralenheten lyssnar efter meddelanden kontinuerligt.
 Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det uppstått ett fel.
