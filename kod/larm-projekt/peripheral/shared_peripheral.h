@@ -19,7 +19,7 @@ void canmsg_init(CANMsg *msg);
 void alarm_raise();
 void alarm_lower();
 void poll_respond(CANMsg *msg);
-void request_id();
+void request_id(uchar type) ;
 void update_id(CANMsg *msg);
 void update_tolerance(CANMsg *msg);
 

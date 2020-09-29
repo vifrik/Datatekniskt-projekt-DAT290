@@ -8,10 +8,9 @@ extern State state;
 
 // Hanterar CAN-meddelanden
 void door_receiver(void) {
-	DUMP("CAN message received: ");
 
 	CANMsg msg;
-	can_receive(&msg);
+	can_receive(&msg);	
 
 	if (msg.nodeId == state.id) {
 		switch(msg.msgId) {
@@ -49,15 +48,14 @@ void door_peripheral_init(void) {
 	stk_init();
 	door_init();
 	can1_init(door_receiver);
-	request_id();
+	request_id(DOOR);
 }
 
 // Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
-		DUMP("loop");
-		uchar door_status = door_read();
-		DUMP_numeric(door_status);
+		char door_status = door_read();
+		//DUMP_numeric(door_status);
 		
 		if (!state.alarm && door_status) {
 			alarm_raise();
@@ -66,6 +64,6 @@ void door_peripheral_think(void) {
 		//DUMP_numeric(proximity_read());
 		
 		// Delay 10^6 us = 1s
-		//delay(1000000);
+		delay(1000000);
 	}
 }

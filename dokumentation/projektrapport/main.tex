@@ -75,14 +75,14 @@ Versionshantering har gjorts med hjälp av git. Ett gemensamt repository skapade
 
 Majoriteten av testningen utfördes direkt på hårdvaran i Chalmers lokaler. Viss testning har genomförts med hjälp av mjukvaran Simserver som tillåter att simulera MD407 kortet. Funktionaliteten hos Simserver är dock begränsad därför har den största delen av testningen behövts utföras i Chalmers laborationssalar.
 
-Arbetsgruppen delades inledningsvis upp i tre undergrupper som ansvarade över olika delar av utvecklingen. Därefter utvecklade undergrupperna mjukvaran som var grunden för deras specifika område för att sedan i små steg utöka funktionaliteten. Under utvecklingens gång suddades gränserna mellan grupperna ut då dom separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
+Arbetsgruppen delades inledningsvis upp i tre undergrupper som ansvarade över olika delar av utvecklingen. Därefter utvecklade undergrupperna mjukvaran som var grunden för deras specifika område för att sedan i små steg utöka funktionaliteten. Under utvecklingens gång suddades gränserna mellan grupperna ut då dem separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
 
 
 \section{Teknisk Beskrivning}
 I detta avsnitt ges en fördjupad inblick i hur systemet som utvecklats under projektet fungerar och hänger ihop. Den mjukvara och hårdvara som projektet baseras på beskrivs även i mer detalj.
 
 \subsection{Teknisk Bakgrund}
-Hårdvaran vilket system körs på är en MD407 mikrodator. All mjukvara är skriven i programspårket C. MD407 har begränsat med minne vilket gör att programmen som skrivs för den bör vara små och effektiva. C är ett lågt programspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet. C lämpar sig alltså väl för utveckling mot MD407.
+Hårdvaran vilket system körs på är en MD407 mikrodator. All mjukvara är skriven i programspårket C. MD407 har begränsat med minne vilket gör att programmen som skrivs för mikrodatorn bör vara små och effektiva. C är ett lågt programspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet. C lämpar sig alltså väl för utveckling mot MD407.
 
 Systemet kretsar kring att flera MD407 sammankopplas, en MD407 agerar då som centralenhet och resterande används för att ansluta periferienheter så som dörrlarm och rörelsesensorer. MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network),vilket är ett färdigutvecklat protokoll för kommunikation mellan datorer. Ett kommunikationsprotokoll har sedan byggts uppepå CAN som är anpassat för systemet.
 
@@ -92,12 +92,73 @@ Vid uppstart väljs en MD407 som centralenhet för systemet. Från denna enhet k
 
 Två olika periferienheter finns tillgängliga att ansluta till systemet. Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd, samt en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras. Om dörren är öppen längre än en förutbestämd tid eller om rörelsesensorn registrerar en stor avvikelse i avstånd kommer perifirienheterna larma. Om larmet fortsätter tillräcklig länge kommer perifirienheten i fråga skicka ett meddelande till centralenheten.
 
-\subsection{Delsystem}
+\subsubsection{CAN}
+CAN är det gemensamma protokollet som både periferienhet och centralenhet måste förstå.
+Koden är därför strukturerad utifrån att samma kod kan köras på valfri enhet oavsett typ.
+CAN ansvarar för kommunikation och hantering av meddelanden.
+Med hjälp av riktning och ID kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
+
+För hantering av kommunikationonen mellan enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är så kallade CAN-meddelanden som skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
+\begin{description}
+    \item[Riktning:] Detta fält anger om meddelandet går till eller från centralenheten.
+    Fältet sätts till TO\_PERIPHERAL, motsvarande noll om meddelandet går från centralenhet till periferienhet och TO\_CENTRAL, motsvarande ett om meddelandet går från periferienhet till centralenhet. 
+    Detta fält tillåter en minskning av antalet meddelandetyper då en generell meddelandetyp så som ALARM kan användas åt båda hållen.
+
+    \item[Meddelande-ID:] Meddelanden delas upp i meddelandetyper, till exempel: ALARM och ERROR.
+    Meddedelandetyperna är ordnade efter prioritet. Ju närmare noll, desto högre prioritet.
+    
+    \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0x0-0x14. Ox15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
+    Centralenheten tilldelar enheterna ett ID i ordningen de anslöt sig i.
+    
+    \item[Längd:] Längd är en indikation på hur mycket data som skickas med i meddelandets datafält.
+    Många meddelanden skickas med längd noll då mycket information om meddelandet kan utläsas från meddelande-ID och enhets-ID.
+
+    \item[Data:] Här lagras den data som skickas med i meddelandet. Ett meddelande kan lagra upp till 64 bitar av data.
+\end{description}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \multicolumn{15}{|c|}{Exempel på ett larm från periferienhet ett}\\\hline
+        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{state.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+    \end{tabular}
+\end{table}
+
+\subsubsection{Centralenhet}
+Centralenheten avlyssnar efter meddelanden kontinuerligt.
+Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det uppstått ett fel.
+Den anvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
+Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
+
+\subsubsection{Periferienhet}
+Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
+För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
+När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN.
+
+\subsubsubsection{Dörrsensor}
+Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
+Värdet på sensorn läses av från PE0 som är konfigurerad med en Pull-Up-resistor.
+Vid öppnad dörr bryts kretsen och det logiska värdet blir en etta.
+Vid sluten krets är det logiska värdet på kretsen en nolla.
+
+\subsubsubsection {Rörelsesensor}
+Rörelsesensorns uppgift är att upptäcka skillnader i avstånd.
+För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
+Sensorn svarar med att skriva en logisk etta på echo-pinnen.
+Längden av denna logiska etta motsvarar det uppmätta avståndet.
 
 \section{Resultat}
+Centralenheten fungerar som förväntat. Vid utsöndring av larm sickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via trminalen eller knappsatsen som är kopplad till centralenheten. Utöver detta larmar även centralenheten vid tappad kontakt av perifirienheterna. 
+
+Enheten för dörrlarmet motsvarar förväntningar. Enheten kan hålla upp till 16 olika dörrar under bevakning. Konstuktionen av enheten möjliggör för både ett lokalt larm och även ett larm som skickas till centralenheten. Primärt kommer perifirienheterna larma lokalt. Om dörrlarmet stått längre än ett förutbestämd tidsintervall kommer även centralenheten larmas. I centralenheten kan tidsintervaller konfigureras. 
+
+Rörelsesensorn funkar och uppfyller kraven. Genom använding av avståndsmätare bekräftar enheten om någon passerat en given yta. Rörelsesensorn observerar 5 seanste tiderna och tar medelvärdet av dessa för. Därefter jämförs medelvärdet med nästkommande medelvärde. Detta utför sensorn automatiskt och konstant. Om ett medelvärde skiljer sig en förutbestämd tid med ett marginal som sätts vid kundens begäran, kommer ett larm att utsöndras. 
+
+Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem. 
 
 \section{Slutsatser}
-
 
 \bibliographystyle{IEEEtran}
 
