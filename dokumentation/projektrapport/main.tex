@@ -82,7 +82,7 @@ Arbetsgruppen delades inledningsvis upp i tre undergrupper som ansvarade över o
 I detta avsnitt ges en fördjupad inblick i hur systemet som utvecklats under projektet fungerar och hänger ihop. Den mjukvara och hårdvara som projektet baseras på beskrivs även i mer detalj.
 
 \subsection{Teknisk Bakgrund}
-Hårdvaran vilket system körs på är en MD407 mikrodator. All mjukvara är skriven i programspårket C. MD407 har begränsat med minne vilket gör att programmen som skrivs för den bör vara små och effektiva. C är ett lågt programspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet. C lämpar sig alltså väl för utveckling mot MD407.
+Hårdvaran vilket system körs på är en MD407 mikrodator. All mjukvara är skriven i programspårket C. MD407 har begränsat med minne vilket gör att programmen som skrivs för mikrodatorn bör vara små och effektiva. C är ett lågt programspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet. C lämpar sig alltså väl för utveckling mot MD407.
 
 Systemet kretsar kring att flera MD407 sammankopplas, en MD407 agerar då som centralenhet och resterande används för att ansluta periferienheter så som dörrlarm och rörelsesensorer. MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network),vilket är ett färdigutvecklat protokoll för kommunikation mellan datorer. Ett kommunikationsprotokoll har sedan byggts uppepå CAN som är anpassat för systemet.
 
@@ -94,18 +94,18 @@ Två olika periferienheter finns tillgängliga att ansluta till systemet. Ett d�
 
 \subsubsection{CAN}
 CAN är det gemensamma protokollet som både periferienhet och centralenhet måste förstå.
-Koden är därför strukturerad så att samma kod kan köras på valfri enhet oavsett typ.
-CAN ansvarar för att meddelanden kan skickas och de hanteras.
+Koden är därför strukturerad utifrån att samma kod kan köras på valfri enhet oavsett typ.
+CAN ansvarar för kommunikation och hantering av meddelanden.
 Med hjälp av riktning och ID kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
 
-För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är att så kallade CAN-meddelanden skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
+För hantering av kommunikationonen mellan enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är så kallade CAN-meddelanden som skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
 \begin{description}
     \item[Riktning:] Detta fält anger om meddelandet går till eller från centralenheten.
     Fältet sätts till TO\_PERIPHERAL, motsvarande noll om meddelandet går från centralenhet till periferienhet och TO\_CENTRAL, motsvarande ett om meddelandet går från periferienhet till centralenhet. 
     Detta fält tillåter en minskning av antalet meddelandetyper då en generell meddelandetyp så som ALARM kan användas åt båda hållen.
 
-    \item[Meddelande-ID:] För varje typ av meddelande som finns en meddelandetyp, till exempel: ALARM och ERROR.
-    Meddedelandetyperna är ordnade efter prioritet, närmare noll innebär högre prioritet.
+    \item[Meddelande-ID:] Meddelanden delas upp i meddelandetyper, till exempel: ALARM och ERROR.
+    Meddedelandetyperna är ordnade efter prioritet. Ju närmare noll, desto högre prioritet.
     
     \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0x0-0x14. Ox15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
     Centralenheten tilldelar enheterna ett ID i ordningen de anslöt sig i.
@@ -113,7 +113,7 @@ För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll 
     \item[Längd:] Längd är en indikation på hur mycket data som skickas med i meddelandets datafält.
     Många meddelanden skickas med längd noll då mycket information om meddelandet kan utläsas från meddelande-ID och enhets-ID.
 
-    \item[Data:] Här lagras den data som skickas med i meddelandet. Upp till 64 bitar av data kan lagras i ett meddelande.
+    \item[Data:] Här lagras den data som skickas med i meddelandet. Ett meddelande kan lagra upp till 64 bitar av data.
 \end{description}
 
 \begin{table}[H]
@@ -127,7 +127,7 @@ För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll 
 \end{table}
 
 \subsubsection{Centralenhet}
-Centralenheten lyssnar efter meddelanden kontinuerligt.
+Centralenheten avlyssnar efter meddelanden kontinuerligt.
 Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det uppstått ett fel.
 Den anvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
 Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
@@ -140,11 +140,11 @@ När periferienheten initialiseras hämtas en identifierare från centralenheten
 \subsubsubsection{Dörrsensor}
 Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
 Värdet på sensorn läses av från PE0 som är konfigurerad med en Pull-Up-resistor.
-Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
-Vid sluten krets är det logiska värdet på kretsen noll.
+Vid öppnad dörr bryts kretsen och det logiska värdet blir en etta.
+Vid sluten krets är det logiska värdet på kretsen en nolla.
 
-\subsubsubsection{Rörelsesensor}
-Rörelsesensorn uppgift är att upptäcka skillnader i avstånd.
+\subsubsubsection {Rörelsesensor}
+Rörelsesensorns uppgift är att upptäcka skillnader i avstånd.
 För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
 Sensorn svarar med att skriva en logisk etta på echo-pinnen.
 Längden av denna logiska etta motsvarar det uppmätta avståndet.
