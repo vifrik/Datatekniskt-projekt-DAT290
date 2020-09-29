@@ -33,15 +33,13 @@ void keyboard_init(void) {
 
 }
 
-// Bug här?
-// Borde vi inte alltid resetta alla rader och sedan sätta en pin? Nu sätter vi bara en pin utan att nollställa de resterande eftersom default aldrig inträffar om row har ett giltigt värde
 void activate_row(unsigned int row) {
+	GPIO_WriteBit(GPIOD, GPIO_Pin_15 | GPIO_Pin_14 | GPIO_Pin_13 | GPIO_Pin_12, Bit_RESET);
     switch(row) {
         case 1: GPIO_WriteBit(GPIOD, GPIO_Pin_12, Bit_SET ); break;
         case 2: GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_SET ); break;
         case 3: GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_SET ); break;
         case 4: GPIO_WriteBit(GPIOD, GPIO_Pin_15, Bit_SET ); break;
-        default: GPIO_WriteBit(GPIOD, GPIO_Pin_15 | GPIO_Pin_14 | GPIO_Pin_13 | GPIO_Pin_12, Bit_RESET);
     }
 }
 

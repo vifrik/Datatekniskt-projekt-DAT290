@@ -183,11 +183,10 @@ void alarm_lower(void) {
 
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
-    //while(!state.devices);
+    while(!state.devices);
 
     uchar passcode[4] = {1,2,3,4};
-    uchar keypad[4] = {0,0,0,0};
-	while(!state.devices);
+    uchar keypad[4] = {0xFF,0xFF,0xFF,0xFF};
 
     while(1) {
 		// Keypad- och USART-logik här
@@ -196,11 +195,8 @@ void think(void) {
 		if (equal(keypad, passcode)) {
 			alarm_lower();
 			for (int i = 0; i < 4; i++)
-				keypad[i] = 0;
+				keypad[i] = 0xFF;
 		}
-		
-		//DUMP_numeric_list(keypad, 4);
-		//DUMP("\b\b\b\b");
 		
 		if (state.ready) {
 			uchar id = state.curr_poll++%state.devices;

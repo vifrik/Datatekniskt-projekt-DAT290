@@ -1,7 +1,7 @@
-#ifndef CENTRALENHET_H
-#define CENTRALENHET_H
+#ifndef KEYPAD_H
+#define KEYPAD_H
 
 void keyboard_init(void);
-void keyboard_input(unsigned char input[4]);
+void keyboard_input(unsigned char input[]);
 
 #endif
