@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "messages.h"
 #include "can.h"
 #include "usart.h"
@@ -9,14 +8,15 @@
 
 #define DEVICES_MAX 15
 
-void *_sbrk(int incr) { return (void *)-1; }
+//void *_sbrk(int incr) { return (void *)-1; }
 
 extern unsigned long sys_time;
-State state = {0, 0, 0, 0};
+State state = {0, 0, 0, 1};
 Peripheral peripherals[DEVICES_MAX];
 
 void peripheral_init(Peripheral *p, uchar type) {
 	p->type = type;
+	p->alarm = 0;
     for (int i = 0; i < 8; i++) {
         p->buff[i] = 0;
     }
@@ -24,40 +24,45 @@ void peripheral_init(Peripheral *p, uchar type) {
 
 // Genererar ett slumpmässigt 16-bitars tal med hjälp av standard c-funktioner.
 uchar random_gen(void) {
-    srand(sys_time); 
-    return (uchar)(rand() % 256); 
+    //srand(sys_time); 
+    //return (uchar)(rand() % 256);
+	return 10;
 }
 
 void raise_alarm(uchar id) {
 	Peripheral p = peripherals[id];
+	p.alarm = 1;
 	usart_send("###  ALARM  ###");
     usart_send("from:");
     switch (p.type) {
         case DOOR:
             usart_send("door with id:");
+			break;
         case PROXIMITY:
             usart_send("proximity with id:");
+			break;
     }
 
     usart_send_numeric(id);
 }
 
 void poll_request(uchar id) {
-    DUMP("POLL REQUEST SENT");
+    //DUMP("POLL REQUEST SENT");
     CANMsg msg;
     msg.msgId = POLL_REQUEST;
     msg.nodeId = id;
     msg.dir = TO_PERIPHERAL;
     msg.length = 8;
     for (int i = 0; i < msg.length; i++){
-        msg.buff[i] = random_gen();
+        msg.buff[i] = (sys_time & (0xFF << (8*i))) >> (8*i);
         peripherals[id].buff[i] = msg.buff[i];
     }
+	//DUMP("POLL SENT");
     can_send(&msg);
 }
 
 void poll_response_handler(CANMsg *msg) {
-	DUMP("POLL RESPONSE RECEIVED");
+	//DUMP("POLL RESPONSE RECEIVED");
 	Peripheral p = peripherals[msg->nodeId];	
     for (int i = 0; i >= msg->length; i++) {
         if (p.buff[i] != ~msg->buff[i]) {
@@ -86,6 +91,7 @@ void dicp_request_handler(CANMsg *msg) {
         state.devices++;
 
         can_send(&response);
+		DUMP("ID SENT");
     } else {
         error_send(msg->msgId, TO_PERIPHERAL, MAX_DEVICES);
     }
@@ -102,12 +108,13 @@ void active_toggle(uchar id, uchar active) {
 }
 
 void receiver(void) {
-	DUMP("CAN message received: ");
+	//DUMP("CAN message received: ");
 	
     CANMsg msg;
     can_receive(&msg);
-	DUMP_numeric(msg.msgId);
-	if (msg.dir == 1) {
+	//DUMP_numeric(msg.msgId);
+	//DUMP_numeric(POLL_RESPONSE);
+	if (msg.dir == TO_CENTRAL) {
 		switch (msg.msgId) {
 			case ALARM:
 				raise_alarm(msg.nodeId); //Fyll ut med dessa funktioner eftersom?
@@ -136,9 +143,42 @@ void receiver(void) {
 	}
 }
 
+void timeout_handler(void) {
+	uchar id = (state.curr_poll-1)%state.devices;
+	raise_alarm(id);
+	peripherals[id].alarm = 1;
+	state.ready = 1;
+}
+
 void init() {
-    //can1_init(receiver);
+    can1_init(receiver);
     keyboard_init();
+	stk_init();
+	callback_init(timeout_handler);
+}
+
+uchar equal(char input[], char passcode[]) {
+	for (int i = 0; i < 4; i++) {
+		if (input[i] != passcode[i])
+			return 0;
+	}
+	return 1;
+}
+
+void alarm_lower(void) {
+	for (int i = 0; i < state.devices; i++) {
+		CANMsg msg;
+		msg.msgId = ALARM_OFF;
+		msg.nodeId = i;
+		msg.dir = TO_PERIPHERAL;
+		msg.length = 0;	
+		
+		peripherals[i].alarm = 0;
+		
+		can_send(&msg);
+	}
+	
+	DUMP("ALARM off");
 }
 
 void think(void) {
@@ -147,16 +187,30 @@ void think(void) {
 
     uchar passcode[4] = {1,2,3,4};
     uchar keypad[4] = {0,0,0,0};
+	while(!state.devices);
 
     while(1) {
 		// Keypad- och USART-logik här
         keyboard_input(keypad);
 		
-		DUMP_numeric_list(keypad, 4);
+		if (equal(keypad, passcode)) {
+			alarm_lower();
+			for (int i = 0; i < 4; i++)
+				keypad[i] = 0;
+		}
 		
-		/*if (state.ready) {
-			poll_request(state.curr_poll++%state.devices);
+		//DUMP_numeric_list(keypad, 4);
+		//DUMP("\b\b\b\b");
+		
+		if (state.ready) {
+			uchar id = state.curr_poll++%state.devices;
+			if (peripherals[id].alarm) continue;
+			
+			delay_no_block(500000);
+		
+			poll_request(id);
 			state.ready = 0;
-		}*/
+			
+		}
 	}
 }

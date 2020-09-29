@@ -1,5 +1,6 @@
 #include "stm32f4xx_gpio.h"
 #include "usart.h"
+#include "stk.h"
 //#include "stm32f4xx_rcc.h"
 
 #define GPIO_Pin_Low               ((uint16_t)0x00FF)  /* All pins selected */
@@ -13,21 +14,21 @@ void keyboard_init(void) {
 	init.GPIO_Mode = GPIO_Mode_IN;
 	init.GPIO_OType = GPIO_OType_PP;
 	init.GPIO_PuPd = GPIO_PuPd_DOWN;
-	init.GPIO_Speed = GPIO_Speed_50MHz;
+	init.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD, &init);
 	
 	init.GPIO_Pin = GPIO_Pin_Low;
 	init.GPIO_Mode = GPIO_Mode_OUT;
 	init.GPIO_OType = GPIO_OType_PP;
 	init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	init.GPIO_Speed = GPIO_Speed_50MHz;
+	init.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD, &init);
 	
 	init.GPIO_Pin = GPIO_Pin_15 | GPIO_Pin_14 | GPIO_Pin_13 | GPIO_Pin_12 ;
 	init.GPIO_Mode = GPIO_Mode_OUT;
 	init.GPIO_OType = GPIO_OType_PP;
 	init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	init.GPIO_Speed = GPIO_Speed_50MHz;
+	init.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD, &init);
 
 }
@@ -46,8 +47,8 @@ void activate_row(unsigned int row) {
 
 int get_column(void) {
     unsigned char c;
-	c = GPIO_ReadInputData(GPIOD) >> 8 & 0xF;
-	//c = (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11))*8 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_10))*4 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9))*2 | GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_8);
+	//c = GPIO_ReadInputData(GPIOD) >> 8 & 0xF;
+	c = (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_11))*8 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_10))*4 | (GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_9))*2 | GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_8);
     if (c & 8) return 4;
     if (c & 4) return 3;
     if (c & 2) return 2;
@@ -78,13 +79,16 @@ void out7seg(unsigned char c) {
 	}
 }
 
-unsigned char released = 1;
+unsigned char pressed = 0;
+extern unsigned long sys_time;
+unsigned char key;
 
-void keyboard_input(unsigned char input[4]) {
-	unsigned char key =  keyb();
+void keyboard_input(unsigned char input[]) {
+	key = keyb();
+	out7seg(key);
 
-	if (released && key != 0xFF) {
-		released = 0;
+	if (!pressed && key <= 0xF && key >= 1) {
+		pressed = 1;
 
 		// Shift all values left
 		for (int i = 0; i < 3; i++) {
@@ -93,6 +97,6 @@ void keyboard_input(unsigned char input[4]) {
 
 		input[3] = key;
 	} else if (key == 0xFF) {
-		released = 1;
+		pressed = 0;
 	}
 }

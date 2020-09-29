@@ -12,6 +12,7 @@ typedef struct {
 
 typedef struct {
     uchar type;
+	uchar alarm;
     uchar buff[8];
 } Peripheral; 
 

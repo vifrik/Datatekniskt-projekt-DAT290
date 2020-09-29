@@ -3,16 +3,19 @@
 #include "core_cm4.h"
 #include <stdio.h>
 
-static volatile int delay_count;
+static volatile int delay_count = -1;
 unsigned long sys_time = 0;
 Callback cb;
 
-void systick_irc_handler(Callback cb) {
+void systick_irc_handler() {
 	sys_time++;
 	if (delay_count > 0)
 		delay_count--;
-	if (!delay_count && cb != NULL)
+	else if (delay_count == 0 && cb != NULL) {
+		delay_count = -1;
 		cb();
+	}
+		
 }
 
 // Fördröjning utan att hänga programmet
