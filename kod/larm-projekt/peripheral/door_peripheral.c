@@ -8,7 +8,6 @@ extern State state;
 
 // Hanterar CAN-meddelanden
 void door_receiver(void) {
-	DUMP("CAN message received: ");
 
 	CANMsg msg;
 	can_receive(&msg);	
@@ -55,9 +54,8 @@ void door_peripheral_init(void) {
 // Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
-		DUMP("loop");
 		char door_status = door_read();
-		DUMP_numeric(door_status);
+		//DUMP_numeric(door_status);
 		
 		if (!state.alarm && door_status) {
 			alarm_raise();

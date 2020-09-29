@@ -28,11 +28,11 @@ void alarm_raise() {
 }
 
 void alarm_lower() {
+	DUMP("Alarm off");
 	state.alarm = 0;
 }
 
 void poll_respond(CANMsg *msg) {
-	DUMP("INCOMMING POLL");
 	CANMsg response;
 	canmsg_init(&response);
 	response.msgId = POLL_RESPONSE;
@@ -43,7 +43,6 @@ void poll_respond(CANMsg *msg) {
 
 	can_send(&response);
 	
-	DUMP("POLL RESPONSE SENT");
 }
 
 void request_id(uchar type) {
