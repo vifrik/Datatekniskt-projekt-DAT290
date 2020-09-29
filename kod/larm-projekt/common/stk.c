@@ -7,7 +7,7 @@ static volatile int delay_count;
 unsigned long sys_time = 0;
 Callback cb;
 
-void systick_irc_handler(Callback cb) {
+void systick_irc_handler() {
 	sys_time++;
 	if (delay_count > 0)
 		delay_count--;

@@ -3,14 +3,14 @@
 
 void state_init() {
 	state.active = 0;
-	state.id = 0;
+	state.id = 0xF;
 	state.alarm = 0;
 	state.tolerance = 0;
 }
 
 void canmsg_init(CANMsg *msg) {
 	msg->nodeId = state.id;
-	msg->dir = 1;
+	msg->dir = TO_CENTRAL;
 	msg->length = 0;
 	for (int i = 0; i < 8; i++) {
 		msg->buff[i] = 0;
@@ -32,8 +32,9 @@ void alarm_lower() {
 }
 
 void poll_respond(CANMsg *msg) {
+	DUMP("INCOMMING POLL");
 	CANMsg response;
-	canmsg_init(&msg);
+	canmsg_init(&response);
 	response.msgId = POLL_RESPONSE;
 	response.length = 8;
 	for (int i = 0; i < 8; i++) {
@@ -41,14 +42,18 @@ void poll_respond(CANMsg *msg) {
 	}
 
 	can_send(&response);
+	
+	DUMP("POLL RESPONSE SENT");
 }
 
-void request_id() {
+void request_id(uchar type) {
 	DUMP("Requesting ID");
 
 	CANMsg msg;
 	canmsg_init(&msg);
 	msg.msgId = DICP_REQUEST;
+	msg.length = 1;
+	msg.buff[0] = type;
 
 	can_send(&msg);
 }
