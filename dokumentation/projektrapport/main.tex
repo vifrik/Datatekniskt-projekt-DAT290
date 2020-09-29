@@ -92,62 +92,7 @@ Vid uppstart väljs en MD407 som centralenhet för systemet. Från denna enhet k
 
 Två olika periferienheter finns tillgängliga att ansluta till systemet. Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd, samt en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras. Om dörren är öppen längre än en förutbestämd tid eller om rörelsesensorn registrerar en stor avvikelse i avstånd kommer perifirienheterna larma. Om larmet fortsätter tillräcklig länge kommer perifirienheten i fråga skicka ett meddelande till centralenheten. 
 
-\subsubsection{CAN}
-CAN är det gemensamma protokollet som både periferienhet och centralenhet måste förstå.
-Koden är därför strukturerad så att samma kod kan köras på valfri enhet oavsett typ.
-CAN ansvarar för att meddelanden kan skickas och de hanteras.
-Med hjälp av riktning och ID kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
-
-För kommunikation mellan de anslutna enheterna har ett kommunikationsprotokoll utvecklats. Basen till kommunikationsprotokollet är att så kallade CAN-meddelanden skickas mellan enheterna. Varje CAN-meddelande byggs upp av fem fält:
-\begin{description}
-    \item[Riktning:] Detta fält anger om meddelandet går till eller från centralenheten.
-    Fältet sätts till TO\_PERIPHERAL, motsvarande noll om meddelandet går från centralenhet till periferienhet och TO\_CENTRAL, motsvarande ett om meddelandet går från periferienhet till centralenhet. 
-    Detta fält tillåter en minskning av antalet meddelandetyper då en generell meddelandetyp så som ALARM kan användas åt båda hållen.
-
-    \item[Meddelande-ID:] För varje typ av meddelande som finns en meddelandetyp, till exempel: ALARM och ERROR.
-    Meddedelandetyperna är ordnade efter prioritet, närmare noll innebär högre prioritet.
-    
-    \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0x0-0x14. Ox15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
-    Centralenheten tilldelar enheterna ett ID i ordningen de anslöt sig i.
-    
-    \item[Längd:] Längd är en indikation på hur mycket data som skickas med i meddelandets datafält.
-    Många meddelanden skickas med längd noll då mycket information om meddelandet kan utläsas från meddelande-ID och enhets-ID.
-
-    \item[Data:] Här lagras den data som skickas med i meddelandet. Upp till 64 bitar av data kan lagras i ett meddelande.
-\end{description}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
-        \multicolumn{15}{|c|}{Exempel på ett larm från periferienhet ett}\\\hline
-        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
-        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
-        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{state.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
-    \end{tabular}
-\end{table}
-
-\subsubsection{Centralenhet}
-Centralenheten lyssnar efter meddelanden kontinuerligt.
-Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det uppstått ett fel.
-Den anvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
-Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
-
-\subsubsection{Periferienhet}
-Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
-För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
-När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN.
-
-\subsubsubsection{Dörrsensor}
-Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
-Värdet på sensorn läses av från PE0 som är konfigurerad med en Pull-Up-resistor.
-Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
-Vid sluten krets är det logiska värdet på kretsen noll.
-
-\subsubsubsection{Rörelsesensor}
-Rörelsesensorn uppgift är att upptäcka skillnader i avstånd.
-För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
-Sensorn svarar med att skriva en logisk etta på echo-pinnen.
-Längden av denna logiska etta motsvarar det uppmätta avståndet.
+\subsection{Delsystem}
 
 \section{Resultat}
 
