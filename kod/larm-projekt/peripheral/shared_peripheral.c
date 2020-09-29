@@ -5,7 +5,6 @@ void state_init() {
 	state.active = 0;
 	state.id = 0xF;
 	state.alarm = 0;
-	state.tolerance = 0;
 }
 
 void canmsg_init(CANMsg *msg) {
@@ -61,8 +60,4 @@ void update_id(CANMsg *msg) {
 	DUMP("Recieved ID");
 	DUMP_numeric(msg->buff[0]);
 	state.id = msg->buff[0];
-}
-
-void update_tolerance(CANMsg *msg) {
-	state.tolerance = msg->buff[0];
 }

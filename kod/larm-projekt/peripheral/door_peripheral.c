@@ -6,6 +6,43 @@
 
 extern State state;
 
+typedef struct {
+	unsigned char active;
+	unsigned char tolerance;
+} DoorState;
+
+DoorState door_states[7];
+unsigned char number_of_doors;
+
+void ndoors_handler(CANMsg *msg) {
+	number_of_doors = msg->buff[0];
+}
+
+void update_tolerance(CANMsg *msg) {
+	unsigned char door_id = msg->buff[0];
+	door_states[door_id].tolerance = msg->buff[1];
+}
+
+void activate_on_handler(CANMsg *msg) {
+	if (msg->length) {
+		unsigned char door_id = msg->buff[0];
+		door_states[door_id].active = 1;
+		green_lamp_disable(door_id);
+	} else {
+		state.active = 1;
+	}
+}
+
+void activate_off_handler(CANMsg *msg) {
+	if (msg->length) {
+		unsigned char door_id = msg->buff[0];
+		door_states[door_id].active = 1;
+		green_lamp_enable(door_id);
+	} else {
+		state.active = 0;
+	}
+}
+
 // Hanterar CAN-meddelanden
 void door_receiver(void) {
 
@@ -33,10 +70,10 @@ void door_receiver(void) {
 				update_tolerance(&msg);
 				break;
 			case ACTIVE_ON:
-				state.active = 1;
+				activate_on_handler(&msg);
 				break;
 			case ACTIVE_OFF:
-				state.active = 0;
+				activate_off_handler(&msg);
 				break;
 		}
 	}
@@ -54,7 +91,7 @@ void door_peripheral_init(void) {
 // Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
-		char door_status = door_read();
+		char door_status = door_read(0);
 		//DUMP_numeric(door_status);
 		
 		if (!state.alarm && door_status) {

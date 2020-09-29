@@ -9,7 +9,6 @@ typedef struct {
 	uchar active;
 	uchar id;
 	uchar alarm;
-	uchar tolerance;
 } State;
 
 State state;
@@ -21,6 +20,5 @@ void alarm_lower();
 void poll_respond(CANMsg *msg);
 void request_id(uchar type) ;
 void update_id(CANMsg *msg);
-void update_tolerance(CANMsg *msg);
 
 #endif
