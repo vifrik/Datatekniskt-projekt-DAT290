@@ -57,8 +57,7 @@ Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmc
 
 Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm.
 
-
-Dörrlarmet triggar ett larm då en dörr står öppen längre än ett givet tidsinterval. Inledningsvis sätts larmet igång lokalt på perifirienhete. Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten. Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst. När larmet väl har startat krävs det en manuell inmatning av kod på knapsatsen för att få det att stoppa.
+Dörrlarmet triggar ett larm då en dörr står öppen längre än ett givet tidsinterval. Inledningsvis sätts larmet igång lokalt på perifirienheten. Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten. Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst. När larmet väl har startat ska det krävas en manuell inmatning av fyrsiffrig kod på knapsatsen för att larma av.
 
 I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn, och ett inbyggt skydd mot ''replay attacker''.
 
@@ -162,6 +161,8 @@ Ett meddelande kan till exempel innefatta ett alarm, ny enhet eller att det upps
 Den anvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
 Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
 
+%skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
+
 \subsubsection{Periferienhet}
 Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
 För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
@@ -178,16 +179,37 @@ När periferienheten initialiseras hämtas en identifierare från centralenheten
 \end{description}
 
 \section{Resultat}
+Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av dom olika delsystemen. Resultat från utförda tester visas även upp i denna sektion.
+
+\subsection{Larmsystem}
+Systemet utför sin grundligaste uppgift, en sensor skickar vid upptäckt intrång signal till centralenheten som i sin tur larmar och på så vis uppmärksammar användaren om intrång. Möjlighet för användaren att ställa känslighet hos sensorerna samt på vilka grunder periferienheterna ska larma är implementerat.
+
+Systemet stödjer i teorin att upp till 16 periferienheter ansluts, detta har ej testats då den mängden hårdvara inte finns tillgänglig. (?)Systemet vidhåller sin funktionalitet även när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 16 anslutna enheter(?).
+
+\subsubsection{Centralenhet}
 Centralenheten fungerar som förväntat. Vid utsöndring av larm skickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. Utöver detta larmar även centralenheten vid tappad kontakt av perifirienheterna.
 
+Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt pollingmeddelanden till enheterna. Dessa pollingmeddelanden innehåller ett meddelande som periferienheten förväntas svara på, detta fyller sin funktion i att skydda från ´replay attacker´.
+
+\subsubsection{Dörrsensor}
 Enheten för dörrlarmet motsvarar förväntningar. Enheten kan hålla upp till 16 olika dörrar under bevakning. Konstuktionen av enheten möjliggör för både ett lokalt larm och även ett larm som skickas till centralenheten. Primärt kommer perifirienheterna larma lokalt. Om dörrlarmet stått längre än ett förutbestämd tidsintervall kommer även centralenheten larmas. I centralenheten kan tidsintervaller konfigureras.
 
+\subsubsection{Rörelsesensor}
 Rörelsesensorn funkar och uppfyller kraven. Genom använding av avståndsmätare bekräftar enheten om någon passerat en given yta. Rörelsesensorn observerar 5 seanste tiderna och tar medelvärdet av dessa för. Därefter jämförs medelvärdet med nästkommande medelvärde. Detta utför sensorn automatiskt och konstant. Om ett medelvärde skiljer sig en förutbestämd tid med ett marginal som sätts vid kundens begäran, kommer ett larm att utsöndras.
 
-Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
+\subsubsection{kommunikationsprotokoll}
+lorem ipsum
+
+\subsubsection{Exta funktionalitet}
+Ska vi ha med detta avsnitt?
+
+\subsection{Tester}
+Tester?
+
+%Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-Det var svårt och saker tog lång tid :(
+Det var svårt och saker tog lång tid.
 
 \bibliographystyle{IEEEtran}
 
