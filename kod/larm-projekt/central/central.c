@@ -7,6 +7,7 @@
 #include "keypad.h"
 
 #define DEVICES_MAX 15
+#define INPUT_BUFFER_SIZE 2
 
 //void *_sbrk(int incr) { return (void *)-1; }
 
@@ -181,15 +182,49 @@ void alarm_lower(void) {
 	DUMP("ALARM off");
 }
 
+uchar usart_has_input(unsigned char buffer[]) {
+	uchar input = _tstchar();
+	if(input != 0) {
+		for (uchar i = 0; i <= INPUT_BUFFER_SIZE; i++) {
+			if (buffer[i] == 0xFF) {
+				buffer[i] = input;
+				_outchar(input);
+				break;
+			}
+		}
+	}
+}
+
+void input_buffer_full(uchar buffer[]) {
+	for(uchar i=0; i <= INPUT_BUFFER_SIZE; i++) {
+		if(buffer[i] == 13 || buffer[1] != 0xFF) { //13 == \n av någon anledning
+			DUMP("\nHANDLE USER INPUT"); //kalla user_input_handler här
+			for(uchar i = 0; i <= 1; i++) {
+				buffer[i] = 0xFF;
+			}
+		}
+	}
+}
+
+void user_input_handler(uchar buffer[]) {
+	//Gör saker
+}
+
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
     while(!state.devices);
 
     uchar passcode[4] = {1,2,3,4};
     uchar keypad[4] = {0xFF,0xFF,0xFF,0xFF};
+	
+	uchar input_buffer[] = {0xFF,0xFF,0xFF};
 
     while(1) {
 		// Keypad- och USART-logik här
+		
+		input_buffer_full(input_buffer);
+		usart_has_input(input_buffer);
+		
         keyboard_input(keypad);
 		
 		if (equal(keypad, passcode)) {
