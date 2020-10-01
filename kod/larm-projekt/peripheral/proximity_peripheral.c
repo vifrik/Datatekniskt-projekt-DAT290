@@ -74,7 +74,7 @@ void proximity_peripheral_init(void) {
 	
 	proximity_init();
 	can1_init(proximity_receiver);
-	request_id(PROXIMITY);
+	request_id(PROXIMITY, 2);
 	
 	stk_init();
 }

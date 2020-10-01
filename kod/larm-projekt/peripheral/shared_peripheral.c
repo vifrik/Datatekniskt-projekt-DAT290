@@ -44,7 +44,7 @@ void poll_respond(CANMsg *msg) {
 	
 }
 
-void request_id(uchar type) {
+void request_id(uchar type, uchar units) {
 	DUMP("Requesting ID");
 
 	CANMsg msg;
@@ -52,6 +52,7 @@ void request_id(uchar type) {
 	msg.msgId = DICP_REQUEST;
 	msg.length = 1;
 	msg.buff[0] = type;
+	msg.buff[1] = units;
 
 	can_send(&msg);
 }
