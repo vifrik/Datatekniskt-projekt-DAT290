@@ -4,10 +4,13 @@
 /*
 
 // Triggers an alarm when recieved on the central device
+// Borde göra så att den skickar vilken dörr på dörrenheten / från vilken rörelse sensor?
 ALARM:
 msgId = ALARM
 nodeId = sender id
 dir = 0
+length = 1;
+data = door id / 
 
 ERROR:
 msgId = ERROR
@@ -39,12 +42,14 @@ length = 2
 data = bitwise complement of request data 
 
 // Dynamic ID Configuration Protocol request, request an ID from the central device
+// Borde skicka med underenheter också så att centralenhet kan lägga till dem.
 DICP_REQUEST:
 msgId = DICP_REQUEST
 nodeId = 0
 dir = 0
-length = 1
-data = PERIPHERAL_TYPE
+length = 2
+data[0] = PERIPHERAL_TYPE
+data[1] = amount of subunits
 
 // Respond to request with ID
 DICP_RESPONSE:

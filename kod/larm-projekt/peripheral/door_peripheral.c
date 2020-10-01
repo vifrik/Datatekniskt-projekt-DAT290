@@ -85,7 +85,7 @@ void door_peripheral_init(void) {
 	stk_init();
 	door_init();
 	can1_init(door_receiver);
-	request_id(DOOR);
+	request_id(DOOR, number_of_doors);
 }
 
 // Huvudslinga för periferienhet

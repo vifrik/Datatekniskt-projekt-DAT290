@@ -15,23 +15,35 @@ extern unsigned long sys_time;
 State state = {0, 0, 0, 1};
 Peripheral peripherals[DEVICES_MAX];
 
+CANMsg msg_create(uchar msgId, uchar nodeId, uchar dir, uchar length){
+	CANMsg msg;
+	msg.msgId = msgId;
+	msg.nodeId = nodeId;
+	msg.dir = dir;
+	msg.length = length;
+	
+}
+
 void peripheral_init(Peripheral *p, uchar type) {
 	p->type = type;
 	p->alarm = 0;
+	p->units = 0;
     for (int i = 0; i < 8; i++) {
         p->buff[i] = 0;
     }
 }
 
-// Genererar ett slumpmässigt 16-bitars tal med hjälp av standard c-funktioner.
+// Genererar ett slumpmässigt 16-bitars tal med hjälp av standard c-funktioner
 uchar random_gen(void) {
     //srand(sys_time); 
     //return (uchar)(rand() % 256);
 	return 10;
 }
 
-void raise_alarm(uchar id) {
-	Peripheral p = peripherals[id];
+// Ändrade så att den ger id för vilken dörr/rörelseenhet istället för id för periferienheten
+// Tänker mig att det skickas med i larmmeddelandet
+void raise_alarm(CANMsg *msg) {
+	Peripheral p = peripherals[msg->nodeId];
 	p.alarm = 1;
 	usart_send("###  ALARM  ###");
     usart_send("from:");
@@ -44,16 +56,13 @@ void raise_alarm(uchar id) {
 			break;
     }
 
-    usart_send_numeric(id);
+    usart_send_numeric(msg->buff[0]);
 }
 
 void poll_request(uchar id) {
     //DUMP("POLL REQUEST SENT");
     CANMsg msg;
-    msg.msgId = POLL_REQUEST;
-    msg.nodeId = id;
-    msg.dir = TO_PERIPHERAL;
-    msg.length = 8;
+	msg = msg_create(POLL_REQUEST, id, TO_PERIPHERAL, 8);
     for (int i = 0; i < msg.length; i++){
         msg.buff[i] = (sys_time & (0xFF << (8*i))) >> (8*i);
         peripherals[id].buff[i] = msg.buff[i];
@@ -64,14 +73,17 @@ void poll_request(uchar id) {
 
 void poll_response_handler(CANMsg *msg) {
 	//DUMP("POLL RESPONSE RECEIVED");
-	Peripheral p = peripherals[msg->nodeId];	
-    for (int i = 0; i >= msg->length; i++) {
-        if (p.buff[i] != ~msg->buff[i]) {
-			raise_alarm(msg->nodeId);
-			break;
-        }
-    }
-    state.ready = 1;
+	//Ignorera ifall enheten inte finns med i listan av enheter
+	if(msg->nodeId < state.devices){
+		Peripheral p = peripherals[msg->nodeId];	
+		for (int i = 0; i >= msg->length; i++) {
+			if (p.buff[i] != ~msg->buff[i]) {
+				raise_alarm(msg->nodeId);
+				break;
+			}
+		}
+		state.ready = 1;	
+	}
 }
 
 void dicp_request_handler(CANMsg *msg) {
@@ -80,13 +92,12 @@ void dicp_request_handler(CANMsg *msg) {
 
         Peripheral p;
         peripheral_init(&p, msg->buff[0]);
+		// Tänker mig att periferienheten även skickar med antalet underenheter
+		p.units = msg->buff[1];
         peripherals[state.devices] = p;
         
         CANMsg response;
-		response.msgId = DICP_RESPONSE;
-		response.nodeId = 0xF;
-        response.dir = TO_PERIPHERAL;
-        response.length = 1;
+		response = msg_create(DICP_RESPONSE, 0xF, TO_PERIPHERAL, 1);
         response.buff[0] = state.devices;
 
         state.devices++;
@@ -100,12 +111,18 @@ void dicp_request_handler(CANMsg *msg) {
 
 // active = ACTIVE_ON aktiverar periferienhet p
 // active = ACTIVE_OFF deaktiverar
-void active_toggle(uchar id, uchar active) {
+void active_toggle(uchar nodeId, uchar active) {
 	CANMsg msg;
-	msg.msgId = active;
-	msg.nodeId = id;
-	msg.dir = TO_PERIPHERAL;
-	msg.length = 0;
+	msg = msg_create(active, nodeId, TO_PERIPHERAL, 0);
+	can_send(&msg);
+}
+
+void set_tolerance(uchar tol, uchar nodeId, uchar unitId){
+	CANMsg msg;
+	msg_create(TOL_SET, nodeId, 0, 1);
+	msg.buff[0] = unitId;
+	msg.buff[1] = tol;
+	can_send(&msg);
 }
 
 void receiver(void) {
@@ -151,7 +168,7 @@ void timeout_handler(void) {
 	state.ready = 1;
 }
 
-void init() {
+void init(void) {
     can1_init(receiver);
     keyboard_init();
 	stk_init();

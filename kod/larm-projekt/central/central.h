@@ -14,9 +14,12 @@ typedef struct {
     uchar type;
 	uchar alarm;
     uchar buff[8];
+	// Antal dörrar/rörelsensorer.
+	uchar units;
 } Peripheral; 
 
 void init(void);
+void think(void);
 
 #endif
 
