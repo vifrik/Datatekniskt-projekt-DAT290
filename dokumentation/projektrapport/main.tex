@@ -154,11 +154,38 @@ CAN är ett protokoll för kommunikation och hantering av meddelanden mellan enh
 
 \end{table}
 
+Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
+För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
+Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
+
+För centralenhet och periferienhet finns unika mottagningsfunktioner.
+Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CAN-meddelande.
+Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
+Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
+För varje meddelandetyp finns en unik hanteringsfunktion.
+
 \subsubsection{Centralenhet}
-Centralenheten lyssnar efter meddelanden kontinuerligt.
-Ett meddelande kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
-Den ansvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
-Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
+Centralenheten sköter den stora delen av systemets funktionalitet.
+Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon av de anslutna enheterna.
+Om alarm uppstår kan det avvaktiveras genom att mata in en fyrsiffrig kod på ansluten knappsats.
+
+Centralenheten både lyssnar efter meddelanden från- och skickar meddelanden till periferienheterna kontinuerligt.
+Ett meddelande till centralenheten kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
+
+
+Centralenheten skickar kontinuerligt förfrågningar, även kallat pollingmeddelande, till periferienheterna.
+Detta för att undersöka så att inga enheter kopplas bort samt för att förebygga återupspelningsattacker.
+I varje pollingmeddelande skickas en tidsstämpel från centralenhetens drifttid.
+Enheten som mottager pollingmeddelandet förväntas svara centralenheten inom ett visst tidsinterval.
+I pollingsvaret ska tidsstämpeln återfinnas fast inverterad.
+När centralenheten mottager ett pollingsvar inom tidsramen med en korrekt inverterad tidstämpel skickas ett nytt pollingmeddelande till nästa anslutna enhet.
+Om korrekt pollingsvar ej mottages utsöndras alarm från centralenheten.
+
+De instruktioner som matas in av användare via ansluten konsol hanteras av centralenheten.
+För att inte störa programflödet kontrolleras inmatningen av tecken periodiskt istället för att systemet väntar på inmatning från användare.
+Inmatade tecken sparas i en buffer.
+Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
+Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
@@ -239,11 +266,13 @@ Kännsligheten för sensorn går att kalibrera på sensorn med hjälp av en skru
 \subsubsection{kommunikationsprotokoll}
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
 Tanken var att varje meddelandetyp skulle ha en egen struktur.
-Då ett meddelande skulle skickas skulle en funktion anropas som skapade ett meddelande av korrekt typ.
+Då ett meddelande behöver skickas skulle en funktion anropas för att skapade ett meddelande av korrekt typ.
 Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kunde läggas ut på bussen och skickas.
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
 Strukturen av det generella CAN-meddelandet, som kan ses i tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
+
+kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 
 
 \subsubsection{Exta funktionalitet}
@@ -255,11 +284,22 @@ Tester? Tester!
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-Larmsystemet består av en centralenhet och olika perferienheter. Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. För att larma av finns en knappsats för att slå in en förbestämd kod.
+%Larmsystemet består av en centralenhet och olika perferienheter. 
+%Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. 
+%Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. 
+%För att larma av finns en knappsats för att slå in en förbestämd kod. 
 
-Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
+Larmsystemet består av en centralenhet och olika perferienheter. 
+Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden. 
+Om centralenheten får ett larmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm. 
+Med hjälp av en knappsats och en kod kan alarm stängas av.
 
-Det finns en del utvecklingsmöjligheter för systemet. Men jag kommer inte på dem just nu.
+Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. 
+Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar. 
+
+Det finns en del utvecklingsmöjligheter för systemet. %Men jag kommer inte på dem just nu. 
+Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar. 
+Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
 
 \bibliographystyle{IEEEtran}
 
