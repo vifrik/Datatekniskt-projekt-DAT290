@@ -50,6 +50,7 @@
     \item[CAN:] Controller Area Network
     \item[IDE:] Integrated Development Environment
     \item[MD407:] Mikrodator av typen MD407
+    \item[DICP:] Dynamic Identification Configuration protocol 
 \end{description}
 \newpage
 
@@ -102,30 +103,18 @@ Två periferienheter finns tillgängliga att ansluta till systemet. Ett dörrlar
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|c|}
-    \hline
-    Prioritet & Meddelande-ID \\
-    \hline
-    0 & ALARM \\
-    \hline
-	  1 & ERROR \\
-    \hline
-	  2 & ALARM\_OFF \\
-    \hline
-	  3 & POLL\_REQUEST \\
-    \hline
-	  4 & POLL\_RESPONSE \\
-    \hline
-    5 & DICP\_REQUEST \\
-    \hline
-    6 & DICP\_RESPONSE \\
-    \hline
-    7 & TOL\_SET \\
-    \hline
-    8 & ACTIVE\_ON \\
-    \hline
-    9 & ACTIVE\_OFF \\
-    \hline
+  \begin{tabular}{|c|c|}\hline
+    Prioritet & Meddelande-ID \\\hline
+    0 & ALARM \\\hline
+    1 & ERROR \\\hline
+	2 & ALARM\_OFF \\\hline
+	3 & POLL\_REQUEST \\\hline
+	4 & POLL\_RESPONSE \\\hline
+    5 & DICP\_REQUEST \\\hline
+    6 & DICP\_RESPONSE \\\hline
+    7 & TOL\_SET \\\hline
+    8 & ACTIVE\_ON \\\hline
+    9 & ACTIVE\_OFF \\\hline
   \end{tabular}
   \caption{Samtliga meddelandetyper och deras prioritet.}
   \label{tab:meddelandetyper}
@@ -174,21 +163,37 @@ Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om r
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
 \subsubsection{Periferienhet}
-Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
+När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN.
+Detta görs genom att anta en standard-identifierare 15 och att skicka ett DICP(Dynamic Identification Configuration protocol)-meddelande.
+Centralenheten tilldelar periferienheten och besvarar DICP-meddelandet med den tilldelade identifikationen.
+Vid framtida kommunikation använder periferienhet sig av sin unika identifierare för att skicka meddelanden.
+
 För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
-När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN. Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor.
+Vid en förfrågan skickar centralenheten ett meddelande till en av periferienheterna som är uppkopplade.
+I meddelandet anger centralenheten den lokala tiden då förfrågningen skickades.
+Periferienhetens uppgift är att bitvis invertera tiden innan den besvarar meddelandet.
+
+Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
+Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor.
 
 \subsubsubsection{Dörrsensor}
-Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd. Värdet på sensorn läses av från PE0, en portpinne på MD407, som är konfigurerad med en Pull-Up-resistor. Vid öppnad dörr bryts kretsen och det logiska värdet blir ett. Vid sluten krets är det logiska värdet på kretsen noll.
+Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
+Värdet på sensorerna läses av från PE0-12, portpinnar på MD407, som är konfigurerade med en Pull-Up-resistorer.
+Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
+Vid sluten krets är det logiska värdet på kretsen noll.
 
 \subsubsubsection{Avståndssensor}
 Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
-För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
+För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10\textmu s.
 Sensorn svarar med att skriva en logisk etta på echo-pinnen.
 Längden av denna logiska etta motsvarar det uppmätta avståndet.
 
-\subsubsubsection{vibrationssensor}
-%Skriver när vi vet mer
+\subsubsubsection{Vibrationssensor}
+Vibrationssensors uppgift är att upptäcka vibrationer.
+En vibrationssensor används ofta för att mäta böjningar, berörning, vibration eller stötar.
+Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
+D0 används för att läsa det logiska värdet på sensorn.
+Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 
 \section{Resultat}
 Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av delsystemen. Resultat från utförda tester visas även upp i denna sektion.
@@ -206,15 +211,30 @@ Centralenheten lagrar det antal enheter som är anslutna till systemet och skick
 
 \subsubsection{Dörrperifirienhet}
 \todo{Motivera varför 7 dörrar används}
-Enheten för dörrlarmet uppnår förväntningar. Enheten kan hålla upp till 7 dörrar under bevakning. Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till en röd ljusdiod. 15 av 16 portpinnar används. Konstruktionen av enheten möjliggör för både ett lokalt alarm och även ett alarm som skickas till centralenheten. Primärt kommer perifirienheterna alarmera lokalt. Om dörrlarmet stått längre än ett bestämt tidsintervall kommer även centralenheten alarmera. I centralenheten kan tidsintervaller konfigureras.
+Enheten kan hålla upp till sju dörrar under bevakning. 
+Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till en röd ljusdiod.
+15 av 16 GPIOE-portpinnar används, sju dörrsensorer, sju gröna ljusdioder, en röd ljusdiod.
+Sju dörrar per periferienhet valdes för att reservera resterande GPIO-portar.
+
+Konstruktionen av enheten möjliggör för både ett lokalt alarm och även ett alarm som skickas till centralenheten.
+Primärt kommer perifirienheterna alarmera lokalt.
+Om dörrlarmet stått längre än ett bestämt tidsintervall kommer även centralenheten alarmera.
+I centralenheten kan tidsintervaller konfigureras.
 
 \subsubsection{Rörelseperifirienhet}
-Rörelseperifirienheten fungerar och uppfyller kraven. Rörelsesensorn observerar fem senaste avstånden och beräknar variansen av dessa. Om variansen är större än toleransen initieras ett arlarm. Detta gör perifirienheterna automatiskt och kontinuerligt. Toleransen för variansen går att bestämma på centralenheten.
+Rörelseperifirienheten kombinerar två olika typer av sensorer, avstånds- och vibrationssensorer.
+Avståndssensorn har möjligheten att upptäcka om något rör sig utan att det gör kontakt.
+Vid kontakt har vibrationssensorn möjlighet att alarmera.
 
 \subsubsubsection{Avståndssensor}
-\todo{}
+Avståndssensorn observerar fem senaste avstånden och beräknar variansen av dessa.
+Om variansen är större än toleransen initieras ett arlarm.
+Toleransen går att bestämma på centralenheten.
+\todo{Testa avståndssensorn, rapportera felmarginal etc här?}
 
 \subsubsubsection{Vibrationssensor}
+Vibrationssensorn läses av kontinuerligt.
+Kännsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
 
 \subsubsection{kommunikationsprotokoll}
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
@@ -236,8 +256,6 @@ Tester? Tester!
 
 \section{Slutsatser}
 Larmsystemet består av en centralenhet och olika perferienheter. Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. För att larma av finns en knappsats för att slå in en förbestämd kod.
-
-
 
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
