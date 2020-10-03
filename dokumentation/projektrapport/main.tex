@@ -177,14 +177,26 @@ För varje meddelandetyp finns en unik hanteringsfunktion.
 
 \subsubsection{Centralenhet}
 Centralenheten sköter den stora delen av systemets funktionalitet.
-Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon de anslutna enheterna.
+Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon av de anslutna enheterna.
+Om alarm uppstår kan det avvaktiveras genom att mata in en fyrsiffrig kod på ansluten knappsats.
 
 Centralenheten både lyssnar efter meddelanden från- och skickar meddelanden till periferienheterna kontinuerligt.
 Ett meddelande till centralenheten kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
-Centralenheten ansvarar även för att kontinuerligt skicka förfrågningar till periferienheterna.
-Detta görs för att undersöka så att inga enheter kopplas bort.
 
-Vid alarm hos periferienhet registrerar centralenheten alarmet och avaktiverar endast alarmet om rätt kod är inmatad från ansluten knappsats.
+
+Centralenheten skickar kontinuerligt förfrågningar, även kallat pollingmeddelande, till periferienheterna.
+Detta för att undersöka så att inga enheter kopplas bort samt för att förebygga återupspelningsattacker.
+I varje pollingmeddelande skickas en tidsstämpel från centralenhetens drifttid.
+Enheten som mottager pollingmeddelandet förväntas svara centralenheten inom ett visst tidsinterval.
+I pollingsvaret ska tidsstämpeln återfinnas fast inverterad.
+När centralenheten mottager ett pollingsvar inom tidsramen med en korrekt inverterad tidstämpel skickas ett nytt pollingmeddelande till nästa anslutna enhet.
+Om korrekt pollingsvar ej mottages utsöndras alarm från centralenheten.
+
+De instruktioner som matas in av användare via ansluten konsol hanteras av centralenheten.
+För att inte störa programflödet kontrolleras inmatningen av tecken periodiskt istället för att systemet väntar på inmatning från användare.
+Inmatade tecken sparas i en buffer.
+Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
+Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
