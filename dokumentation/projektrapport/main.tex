@@ -165,11 +165,26 @@ CAN är ett protokoll för kommunikation och hantering av meddelanden mellan enh
 
 \end{table}
 
+Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
+För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
+Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
+
+För centralenhet och periferienhet finns unika mottagningsfunktioner.
+Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CAN-meddelande.
+Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
+Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
+För varje meddelandetyp finns en unik hanteringsfunktion.
+
 \subsubsection{Centralenhet}
-Centralenheten lyssnar efter meddelanden kontinuerligt.
-Ett meddelande kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
-Den ansvarar även för förfrågningar till periferienheterna för att undersöka att inget kopplats bort.
-Vid alarm så registrerar centralenheten det och avaktiverar endast alarmet om rätt kod är inmatad på tangentbordet.
+Centralenheten sköter den stora delen av systemets funktionalitet.
+Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon de anslutna enheterna.
+
+Centralenheten både lyssnar efter meddelanden från- och skickar meddelanden till periferienheterna kontinuerligt.
+Ett meddelande till centralenheten kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
+Centralenheten ansvarar även för att kontinuerligt skicka förfrågningar till periferienheterna.
+Detta görs för att undersöka så att inga enheter kopplas bort.
+
+Vid alarm hos periferienhet registrerar centralenheten alarmet och avaktiverar endast alarmet om rätt kod är inmatad från ansluten knappsats.
 
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
@@ -219,11 +234,13 @@ Rörelseperifirienheten fungerar och uppfyller kraven. Rörelsesensorn observera
 \subsubsection{kommunikationsprotokoll}
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
 Tanken var att varje meddelandetyp skulle ha en egen struktur.
-Då ett meddelande skulle skickas skulle en funktion anropas som skapade ett meddelande av korrekt typ.
+Då ett meddelande behöver skickas skulle en funktion anropas för att skapade ett meddelande av korrekt typ.
 Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kunde läggas ut på bussen och skickas.
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
 Strukturen av det generella CAN-meddelandet, som kan ses i tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
+
+kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 
 
 \subsubsection{Exta funktionalitet}
