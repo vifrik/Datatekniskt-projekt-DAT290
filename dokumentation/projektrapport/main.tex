@@ -227,13 +227,22 @@ Tester? Tester!
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-Larmsystemet består av en centralenhet och olika perferienheter. Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. För att larma av finns en knappsats för att slå in en förbestämd kod. 
+%Larmsystemet består av en centralenhet och olika perferienheter. 
+%Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. 
+%Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. 
+%För att larma av finns en knappsats för att slå in en förbestämd kod. 
 
+Larmsystemet består av en centralenhet och olika perferienheter. 
+Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden. 
+Om centralenheten får ett larmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm. 
+Med hjälp av en knappsats och en kod kan alarm stängas av.
 
+Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. 
+Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar. 
 
-Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar. 
-
-Det finns en del utvecklingsmöjligheter för systemet. Men jag kommer inte på dem just nu. 
+Det finns en del utvecklingsmöjligheter för systemet. %Men jag kommer inte på dem just nu. 
+Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar. 
+Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
 
 \bibliographystyle{IEEEtran}
 
