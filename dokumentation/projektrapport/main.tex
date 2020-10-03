@@ -25,7 +25,7 @@
     \parskip=14pt
     \vspace*{3\parskip}
 
-    {\LARGE Projektrapport DAT290}
+    {\LARGE Modulärt larmsystemet}
 
     {\large \namn, grupp 11
 
@@ -50,6 +50,7 @@
     \item[CAN:] Controller Area Network
     \item[IDE:] Integrated Development Environment
     \item[MD407:] Mikrodator av typen MD407
+    \item[USART:] Universal Synchronous and Asynchronous Receiver-Transmitter 
 \end{description}
 \newpage
 
@@ -67,7 +68,7 @@ Grunden i systemet kommer vara en centralenhet till vilken användaren kan anslu
 
 Dörrlarmet triggar ett larm då en dörr står öppen längre än ett givet tidsinterval. Inledningsvis sätts larmet igång lokalt på perifirienheten. Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten. Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst. När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på knapsatsen för att larma av.
 
-I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
+I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett självlärande sytem, ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
 \subsection{Bakgrund}
 Ett larmsystem har i uppgift att varna för och att förebygga potentiella inbrott i exempelvis bil, fastighet eller ett område.
@@ -226,8 +227,21 @@ Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion ka
 Strukturen av det generella CAN-meddelandet, som kan ses i tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
 
 
-\subsubsection{Exta funktionalitet}
-Ska vi ha med detta avsnitt?
+\subsubsection{Extra funktionalitet}
+\subsubsubsection{Självlärande}
+Systemet fungerar enligt specifikationerna för självrandet. 
+När en periferienhet ansluter sig till systemet skickar den en förfrågan om ett enhets-ID till centralenheten.
+Detta meddelande innehåller även information om periferienheten för centralenhet.
+Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via USART att den mottagit en förfrågan för ett ID och periferienheten skrev att den tilldalades ett ID.
+\subsubsubsection{Skydd mot återuppspelningsattacker}
+Systemets skydd mot denna typ av attacker var effektivt. 
+Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på ett eller annat sätt. 
+Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden. 
+Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på meddelanted.
+Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln. 
+
+\subsubsubsection{Testläge}
+\subsubsubsection{Lokalt larm}
 
 \subsection{Tester}
 Tester? Tester!
