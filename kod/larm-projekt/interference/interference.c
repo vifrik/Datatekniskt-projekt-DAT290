@@ -39,10 +39,10 @@ void interference_receiver(void) {
 	//return output;
 }
 
-uchar *delayDone;
+uchar delayDone;
 
 void delay_done(void) {
-	*delayDone = 0;
+	delayDone = 0;
 }
 
 void interference_think(void) {
@@ -59,27 +59,15 @@ void interference_think(void) {
 	uchar c;
 	unsigned int usDelay = 1000000;
 	while(1) {
-		/*c = _tstchar();
-		if(c) {
-			//DUMP("Yup");
-			//DUMP_numeric(c);
-			/**s*///*sAddress = '\0';
-			/*s = *///get_string(c, sAddress);
-			//s = sAddress;
-			//DUMP("After get");
-			//usDelay = atoi(s);
-			//DUMP_numeric(usDelay);
-		//}*/
-		//usDelay = atoi(s);
-		//DUMP("One");
-		//DUMP_numeric_list(s, 1);//sizeof(s));
-		//DUMP("Two");
 		DUMP_numeric(usDelay);
 		can_send(msg);
 		//delay(usDelay);
-		*delayDone = 1;
+		delayDone = 1;
+		//DUMP_numeric(delayDone);
 		delay_no_block(usDelay);
-		while(*delayDone) {
+		//DUMP_numeric(delayDone);
+		while(delayDone) {
+			//DUMP_numeric(delayDone);
 			c = _tstchar();
 			if(c) {
 				get_string(c, sAddress);
