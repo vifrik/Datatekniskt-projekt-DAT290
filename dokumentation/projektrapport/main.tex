@@ -172,7 +172,7 @@ Varje CAN-meddelande byggs upp av fem fält:
     Alla meddelandetyper finns samlade i en uppräkningstyp.
     Ordningen i uppräkningstypen bestämmer meddelandets prioritet.
     Ju närmare noll, desto högre prioritet.
-    Samtliga meddelandetyper finns samlade i tabell \ref{tab:meddelandetyper}.
+    Samtliga meddelandetyper finns samlade i Tabell \ref{tab:meddelandetyper}.
 
     \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0-14.
     15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
@@ -246,24 +246,25 @@ Periferienhetens uppgift är att bitvis invertera tiden innan den besvarar medde
 Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
 Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor.
 
-\subsubsubsection{Dörrsensor}
-Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
-Värdet på sensorerna läses av från PE0-12, portpinnar på MD407, som är konfigurerade med en Pull-Up-resistorer.
-Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
-Vid sluten krets är det logiska värdet på kretsen noll.
+\begin{description}
+    \item[Dörrsensor:] Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
+    Värdet på sensorerna läses av från PE0-12, portpinnar på MD407, som är konfigurerade med en Pull-Up-resistorer.
+    Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
+    Vid sluten krets är det logiska värdet på kretsen noll.
 
-\subsubsubsection{Avståndssensor}
-Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
-För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10\textmu s.
-Sensorn svarar med att skriva en logisk etta på echo-pinnen.
-Längden av denna logiska etta motsvarar det uppmätta avståndet.
+    \item[Avståndssensor:] Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
+    För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10\textmu s.
+    Sensorn svarar med att skriva en logisk etta på echo-pinnen.
+    Längden av denna logiska etta motsvarar det uppmätta avståndet.
 
-\subsubsubsection{Vibrationssensor}
-Vibrationssensors uppgift är att upptäcka vibrationer.
-En vibrationssensor används ofta för att mäta böjningar, berörning, vibration eller stötar.
-Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
-D0 används för att läsa det logiska värdet på sensorn.
-Noll motsvarar en vibration och ett motsvarar standardtillståndet.
+    \item[Vibrationssensor:] Vibrationssensors uppgift är att upptäcka vibrationer.
+    En vibrationssensor används ofta för att mäta böjningar, berörning, vibration eller stötar.
+    Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
+    D0 används för att läsa det logiska värdet på sensorn.
+    Noll motsvarar en vibration och ett motsvarar standardtillståndet.
+
+\end{description}
+
 
 \section{Resultat}
 Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av delsystemen. Resultat från utförda tester visas även upp i denna sektion.
@@ -313,7 +314,7 @@ Då ett meddelande behöver skickas skulle en funktion anropas för att skapade 
 Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kunde läggas ut på bussen och skickas.
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
-Strukturen av det generella CAN-meddelandet, som kan ses i tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
+Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
 
 kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 
