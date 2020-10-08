@@ -74,7 +74,7 @@ Grunden i systemet kommer vara en centralenhet till vilken användaren kan anslu
 Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm.
 
 Dörrlarmet triggar ett larm då en dörr står öppen längre än ett givet tidsinterval.
-Inledningsvis sätts larmet igång lokalt på perifirienheten.
+Inledningsvis sätts larmet igång lokalt på periferienheten.
 Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
 Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst.
 När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på knapsatsen för att larma av.
@@ -130,8 +130,8 @@ Centralenheten registrerar och håller koll på vilka periferienheter som är an
 
 Två periferienheter finns tillgängliga att ansluta till systemet.
 Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras.
-Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer perifirienheterna larma.
-Om larmet fortsätter tillräcklig länge kommer perifirienheten i fråga skicka ett meddelande till centralenheten.
+Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
+Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
 \begin{table}[H]
   \centering
@@ -275,11 +275,11 @@ Systemets uppgift är att meddela användaren om avvikelse uppstår vid någon a
 Systemet stödjer i teorin att upp till 15 enheter ansluts. Systemet vidhåller sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
 \subsubsection{Centralenhet}
-Centralenheten fungerar som förväntat. Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av perifirienheterna.
+Centralenheten fungerar som förväntat. Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
 
 Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna. Förfrågningarna innehåller ett meddelande som periferienheten förväntas besvara vilket skyddar från återuppspelningsattacker.
 
-\subsubsection{Dörrperifirienhet}
+\subsubsection{Dörrperiferienhet}
 \todo{Motivera varför 7 dörrar används}
 Enheten kan hålla upp till sju dörrar under bevakning. 
 Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till en röd ljusdiod.
@@ -287,12 +287,12 @@ Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till 
 Sju dörrar per periferienhet valdes för att reservera resterande GPIO-portar.
 
 Konstruktionen av enheten möjliggör för både ett lokalt alarm och även ett alarm som skickas till centralenheten.
-Primärt kommer perifirienheterna alarmera lokalt.
+Primärt kommer periferienheterna alarmera lokalt.
 Om dörrlarmet stått längre än ett bestämt tidsintervall kommer även centralenheten alarmera.
 I centralenheten kan tidsintervaller konfigureras.
 
-\subsubsection{Rörelseperifirienhet}
-Rörelseperifirienheten kombinerar två olika typer av sensorer, avstånds- och vibrationssensorer.
+\subsubsection{Rörelseperiferienhet}
+Rörelseperiferienheten kombinerar två olika typer av sensorer, avstånds- och vibrationssensorer.
 Avståndssensorn har möjligheten att upptäcka om något rör sig utan att det gör kontakt.
 Vid kontakt har vibrationssensorn möjlighet att alarmera.
 
