@@ -52,11 +52,21 @@ void usart_send(char* s){
        _outchar(*(s++));
 }
 
+void usart_sendl(char*s) {
+	usart_send(s);
+	_outchar('\n');
+}
+
 // Översätter char till int så det synns på Eterm8
 void usart_send_numeric(int n) {
 	char buffer[20];
 	itoa(n,buffer,10);
 	usart_send(buffer);
+}
+
+void usart_send_numericl(int n) {
+	usart_send_numeric(n);
+	_outchar('\n');
 }
 
 void DUMP(char *s) {
