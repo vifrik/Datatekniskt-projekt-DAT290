@@ -5,6 +5,7 @@
 #include "central.h"
 #include "error.h"
 #include "keypad.h"
+#include "command.h"
 
 #define DEVICES_MAX 15
 #define INPUT_BUFFER_SIZE 2
@@ -125,6 +126,25 @@ void set_tolerance(uchar tol, uchar nodeId, uchar unitId){
 	can_send(&msg);
 }
 
+void help_msg(void) {
+	usart_send("\nEnter commands into the console to configure system, press 'enter' to submit command\n");
+	usart_send("These are the available options:\n");
+	usart_send("Activate or Deactivate unit:\n Type 'active nodeId 0/1'\n");
+	usart_send("Set Tolerance:\n Type 'tol time nodeId unitId'\n");
+	usart_send("Set number of doors:\n Type 'nDoors nodeId numberOfDoors'\n");
+	usart_send("Show connected units:\n Type 'show'\n");
+	usart_send("Type 'help' for more help!\n");
+}
+
+void show_units(void) {
+	usart_send("\nConnected units are:\n");
+	for(uchar i = 0; i < state.devices; i++) {
+		Peripheral unit = peripherals[i];
+		usart_send("\n");
+		usart_send_numeric(unit.units);
+	}
+}
+
 void receiver(void) {
 	//DUMP("CAN message received: ");
 	
@@ -199,48 +219,44 @@ void alarm_lower(void) {
 	DUMP("ALARM off");
 }
 
-uchar usart_has_input(unsigned char buffer[]) {
-	uchar input = _tstchar();
-	if(input != 0) {
-		for (uchar i = 0; i <= INPUT_BUFFER_SIZE; i++) {
-			if (buffer[i] == 0xFF) {
-				buffer[i] = input;
-				_outchar(input);
-				break;
-			}
-		}
-	}
-}
 
-void input_buffer_full(uchar buffer[]) {
-	for(uchar i=0; i <= INPUT_BUFFER_SIZE; i++) {
-		if(buffer[i] == 13 || buffer[1] != 0xFF) { //13 == \n av någon anledning
-			DUMP("\nHANDLE USER INPUT"); //kalla user_input_handler här
-			for(uchar i = 0; i <= 1; i++) {
-				buffer[i] = 0xFF;
-			}
-		}
+void command_parser(Command cmd) {
+	switch(cmd.command) {
+		case ACTIVE:
+			active_toggle(cmd.arg0, cmd.arg1);
+		case TOL:
+			set_tolerance(cmd.arg0, cmd.arg1, cmd.arg2);
+			break;
+		case TEST1:
+			break;
+		case UNKNOWN:
+			usart_sendl("Unknown command!");
+			break;
+		case HELP:
+			help_msg();
+			break;
+		case SHOW:
+			show_units();
+			break;
 	}
-}
-
-void user_input_handler(uchar buffer[]) {
-	//Gör saker
 }
 
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
-    while(!state.devices);
+    //while(!state.devices);
+	command_init();
 
     uchar passcode[4] = {1,2,3,4};
     uchar keypad[4] = {0xFF,0xFF,0xFF,0xFF};
 	
-	uchar input_buffer[] = {0xFF,0xFF,0xFF};
+	//uchar input_buffer[] = {0xFF,0xFF,0xFF};
 
     while(1) {
 		// Keypad- och USART-logik här
 		
-		input_buffer_full(input_buffer);
-		usart_has_input(input_buffer);
+		//input_buffer_full(input_buffer);
+		//usart_has_input(input_buffer);
+		command_parser(command_handler());
 		
         keyboard_input(keypad);
 		

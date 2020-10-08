@@ -22,7 +22,7 @@ void extract_arguments(uchar buffer[], Command *cmd) {
 	char arg_temp_buffer[4];
 	
 	for (int i = 0; i < BUFFER_LENGTH; i++) {
-		if (buffer[i] == 32 || buffer[i] == 10) {		
+		if (buffer[i] == 32 || buffer[i] == 13) {		
 			if (current_argument == 0)
 				cmd->arg0 = atoi(arg_temp_buffer);
 			if (current_argument == 1)
@@ -56,15 +56,21 @@ Command command_handler() {
 		_outchar(c);
 		
 		// Om enter är nedtryckt
-		if (command_buffer[BUFFER_LENGTH-1] == 10) {
+		if (command_buffer[BUFFER_LENGTH-1] == 13) { //13 == '\n' ???
 			extract_arguments(command_buffer, &cmd);
 			
 			// Om command_buffer innehåller strängen test1
-			if (buffer_contains(command_buffer, "tol")) {
+			if (buffer_contains(command_buffer, "active")) {
+				cmd.command = ACTIVE;
+			} else if (buffer_contains(command_buffer, "tol")) {
 				cmd.command = TOL;
 			} else if (buffer_contains(command_buffer, "test1")) {
 				cmd.command = TEST1;
-			} else {
+			}else if (buffer_contains(command_buffer, "help")) {
+				cmd.command = HELP;
+			}else if (buffer_contains(command_buffer, "show")) {
+				cmd.command = SHOW;
+			}else {
 				cmd.command = UNKNOWN;
 			}
 			
