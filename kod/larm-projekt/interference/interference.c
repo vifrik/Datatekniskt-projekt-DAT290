@@ -7,6 +7,7 @@
 
 void interference_init(void) {
 	state_init();
+	//state.id = 1;
 	stk_init();
 	can1_init(interference_receiver());
 	//mer? inte helt säker på vad som behövs
@@ -38,11 +39,18 @@ void interference_receiver(void) {
 	//return output;
 }
 
+uchar delayDone;
+
+void delay_done(void) {
+	delayDone = 0;
+}
+
 void interference_think(void) {
 	CANMsg *msg;
 	canmsg_init(msg);
 	msg->msgId = POLL_RESPONSE;
 	//DUMP("\nBegin");
+	callback_init(delay_done);
 	
 	uchar *s;
 	uchar *sAddress;
@@ -51,32 +59,22 @@ void interference_think(void) {
 	uchar c;
 	unsigned int usDelay = 1000000;
 	while(1) {
-		/*c = _tstchar();
-		if(c) {
-			//DUMP("Yup");
-			//DUMP_numeric(c);
-			/**s*///*sAddress = '\0';
-			/*s = *///get_string(c, sAddress);
-			//s = sAddress;
-			//DUMP("After get");
-			//usDelay = atoi(s);
-			//DUMP_numeric(usDelay);
-		//}*/
-		//usDelay = atoi(s);
-		//DUMP("One");
-		//DUMP_numeric_list(s, 1);//sizeof(s));
-		//DUMP("Two");
 		DUMP_numeric(usDelay);
 		can_send(msg);
-		delay(usDelay);
-		//delay_no_block(usDelay);
-		//while(/*väntar på delayen*/) {
+		//delay(usDelay);
+		delayDone = 1;
+		//DUMP_numeric(delayDone);
+		delay_no_block(usDelay);
+		//DUMP_numeric(delayDone);
+		while(delayDone) {
+			//DUMP_numeric(delayDone);
 			c = _tstchar();
 			if(c) {
 				get_string(c, sAddress);
 				s = sAddress;
 				usDelay = atoi(s);
+				break;
 			}
-		//}
+		}
 	}
 }

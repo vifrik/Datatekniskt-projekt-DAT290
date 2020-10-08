@@ -4,10 +4,13 @@
 typedef unsigned char uchar;
 
 enum COMMAND {
+	ACTIVE,
 	TOL,
 	NDOORS,
 	TEST1,
-	UNKNOWN
+	UNKNOWN,
+	HELP,
+	SHOW
 };
 
 typedef struct {
