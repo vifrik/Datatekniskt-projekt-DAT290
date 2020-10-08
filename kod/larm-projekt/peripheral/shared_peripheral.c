@@ -16,12 +16,14 @@ void canmsg_init(CANMsg *msg) {
 	}
 }
 
-void alarm_raise() {
+void alarm_raise(uchar unitId) {
 	state.alarm = 1;
 
 	CANMsg msg;
 	canmsg_init(&msg);
 	msg.msgId = ALARM;
+	msg.length = 1;
+	msg.buff[0] = unitId;
 
 	can_send(&msg);
 }

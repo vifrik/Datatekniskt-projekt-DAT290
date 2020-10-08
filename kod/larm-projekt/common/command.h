@@ -5,6 +5,7 @@ typedef unsigned char uchar;
 
 enum COMMAND {
 	TOL,
+	NDOORS,
 	TEST1,
 	UNKNOWN
 };

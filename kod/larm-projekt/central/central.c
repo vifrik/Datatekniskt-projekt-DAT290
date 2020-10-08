@@ -5,6 +5,7 @@
 #include "central.h"
 #include "error.h"
 #include "keypad.h"
+#include "command.h"
 
 #define DEVICES_MAX 15
 #define INPUT_BUFFER_SIZE 2
@@ -21,7 +22,7 @@ CANMsg msg_create(uchar msgId, uchar nodeId, uchar dir, uchar length){
 	msg.nodeId = nodeId;
 	msg.dir = dir;
 	msg.length = length;
-	
+	return msg;
 }
 
 void peripheral_init(Peripheral *p, uchar type) {
@@ -57,6 +58,12 @@ void raise_alarm(CANMsg *msg) {
     }
 
     usart_send_numeric(msg->buff[0]);
+}
+
+void timeout_alarm(uchar id){
+	usart_send("###  TIMEOUT ALARM  ###");
+	usart_send("from:");
+	usart_send_numeric(id);
 }
 
 void poll_request(uchar id) {
@@ -118,11 +125,35 @@ void active_toggle(uchar nodeId, uchar active) {
 }
 
 void set_tolerance(uchar tol, uchar nodeId, uchar unitId){
-	CANMsg msg;
-	msg_create(TOL_SET, nodeId, 0, 1);
+	CANMsg msg = msg_create(TOL_SET, nodeId, TO_PERIPHERAL, 1);
 	msg.buff[0] = unitId;
 	msg.buff[1] = tol;
 	can_send(&msg);
+}
+
+void set_ndoors(uchar nodeId, uchar ndoors){
+	CANMsg msg = msg_create(DOORS_SET, nodeId, TO_PERIPHERAL, 1);
+	msg.buff[0] = ndoors;
+	DUMP_numeric(ndoors);
+	can_send(&msg);
+}
+
+void command_parser(Command cmd) {
+	switch(cmd.command) {
+		case TOL:
+			usart_sendl("TOL command with arguments:");
+			usart_send_numeric(cmd.arg0);
+			usart_send_numeric(cmd.arg1);
+			usart_send_numericl(cmd.arg2);
+			break;
+		case NDOORS:
+			usart_sendl("NDOORS command with arguments:");
+			set_ndoors(cmd.arg0, cmd.arg1);
+		case TEST1:
+			break;
+		case UNKNOWN:
+			usart_sendl("Unknown command!");
+	}
 }
 
 void receiver(void) {
@@ -163,7 +194,7 @@ void receiver(void) {
 
 void timeout_handler(void) {
 	uchar id = (state.curr_poll-1)%state.devices;
-	raise_alarm(id);
+	timeout_alarm(id);
 	peripherals[id].alarm = 1;
 	state.ready = 1;
 }
@@ -173,6 +204,7 @@ void init(void) {
     keyboard_init();
 	stk_init();
 	callback_init(timeout_handler);
+	command_init();
 }
 
 uchar equal(char input[], char passcode[]) {
@@ -239,10 +271,11 @@ void think(void) {
     while(1) {
 		// Keypad- och USART-logik här
 		
-		input_buffer_full(input_buffer);
-		usart_has_input(input_buffer);
+		//input_buffer_full(input_buffer);
+		//usart_has_input(input_buffer);
 		
         keyboard_input(keypad);
+		command_parser(command_handler());
 		
 		if (equal(keypad, passcode)) {
 			alarm_lower();

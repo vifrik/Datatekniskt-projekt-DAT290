@@ -105,7 +105,7 @@ void proximity_peripheral_think(void) {
 		
 		// Om vi har räknat fem värden och vi inte har larmat och urvalsvariansen är större än tio -> larma
 		if (!counter && !state.alarm && sampleVar > 10) {
-			alarm_raise();
+			alarm_raise(1);
 		}
 		
 		if (counter)

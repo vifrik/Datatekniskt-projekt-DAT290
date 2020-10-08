@@ -5,17 +5,34 @@
 #include "shared_peripheral.h"
 
 extern State state;
+extern unsigned long sys_time;
 
 typedef struct {
 	unsigned char active;
 	unsigned char tolerance;
+	unsigned char alarm;
+	unsigned long opened;
 } DoorState;
 
 DoorState door_states[7];
-unsigned char number_of_doors;
+unsigned char number_of_doors = 0;
 
 void ndoors_handler(CANMsg *msg) {
 	number_of_doors = msg->buff[0];
+	DUMP_numeric(number_of_doors);
+	for(int i = 0; i < 7; i++){
+		door_states[i].active = 0;
+	}
+	for(int i = 0; i < number_of_doors; i++){
+		door_states[i].active = 1;
+	}
+}
+
+void init_doors(){
+	DoorState ds = {0,0,0,0};
+	for(int i = 0; i < 7; i++){
+		door_states[i] = ds;
+	}
 }
 
 void update_tolerance(CANMsg *msg) {
@@ -45,9 +62,8 @@ void activate_off_handler(CANMsg *msg) {
 
 // Hanterar CAN-meddelanden
 void door_receiver(void) {
-
 	CANMsg msg;
-	can_receive(&msg);	
+	can_receive(&msg);
 
 	if (msg.nodeId == state.id) {
 		switch(msg.msgId) {
@@ -68,6 +84,9 @@ void door_receiver(void) {
 				break;
 			case TOL_SET:
 				update_tolerance(&msg);
+				break;
+			case DOORS_SET:
+				ndoors_handler(&msg);
 				break;
 			case ACTIVE_ON:
 				activate_on_handler(&msg);
@@ -91,16 +110,23 @@ void door_peripheral_init(void) {
 // Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
-		char door_status = door_read(0);
-		//DUMP_numeric(door_status);
-		
-		if (!state.alarm && door_status) {
-			alarm_raise();
+		for(int i = 0; i < number_of_doors; i++ ){
+			char door_status = door_read(i);
+			//DUMP_numeric(door_status);
+			if(door_states[i].opened){
+				if(sys_time - door_states[i].opened > door_states[i].tolerance * 1000000){
+					alarm_raise(i);
+					door_states[i].alarm = 1;
+				}
+			}
+			if (!door_states[i].alarm && door_status) {
+				door_states[i].opened = sys_time;
+			}	
 		}
 		
 		//DUMP_numeric(proximity_read());
 		
 		// Delay 10^6 us = 1s
-		delay(1000000);
+		//delay(1000000);
 	}
 }
