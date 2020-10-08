@@ -7,6 +7,7 @@
 
 void interference_init(void) {
 	state_init();
+	//state.id = 1;
 	stk_init();
 	can1_init(interference_receiver());
 	//mer? inte helt säker på vad som behövs
@@ -38,11 +39,18 @@ void interference_receiver(void) {
 	//return output;
 }
 
+uchar *delayDone;
+
+void delay_done(void) {
+	*delayDone = 0;
+}
+
 void interference_think(void) {
 	CANMsg *msg;
 	canmsg_init(msg);
 	msg->msgId = POLL_RESPONSE;
 	//DUMP("\nBegin");
+	callback_init(delay_done);
 	
 	uchar *s;
 	uchar *sAddress;
@@ -68,15 +76,17 @@ void interference_think(void) {
 		//DUMP("Two");
 		DUMP_numeric(usDelay);
 		can_send(msg);
-		delay(usDelay);
-		//delay_no_block(usDelay);
-		//while(/*väntar på delayen*/) {
+		//delay(usDelay);
+		*delayDone = 1;
+		delay_no_block(usDelay);
+		while(*delayDone) {
 			c = _tstchar();
 			if(c) {
 				get_string(c, sAddress);
 				s = sAddress;
 				usDelay = atoi(s);
+				break;
 			}
-		//}
+		}
 	}
 }
