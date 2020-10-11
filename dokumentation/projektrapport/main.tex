@@ -50,8 +50,8 @@
     \item[CAN:] Controller Area Network
     \item[IDE:] Integrated Development Environment
     \item[MD407:] Mikrodator av typen MD407
-    \item[USART:] Universal Synchronous and Asynchronous Receiver-Transmitter 
-    \item[DICP:] Dynamic Identification Configuration protocol 
+    \item[USART:] Universal Synchronous and Asynchronous Receiver-Transmitter
+    \item[DICP:] Dynamic Identification Configuration protocol
 \end{description}
 \newpage
 
@@ -133,24 +133,6 @@ Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd och e
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
-\begin{table}[H]
-  \centering
-  \begin{tabular}{|c|c|}\hline
-    Prioritet & Meddelande-ID \\\hline
-    0 & ALARM \\\hline
-    1 & ERROR \\\hline
-	2 & ALARM\_OFF \\\hline
-	3 & POLL\_REQUEST \\\hline
-	4 & POLL\_RESPONSE \\\hline
-    5 & DICP\_REQUEST \\\hline
-    6 & DICP\_RESPONSE \\\hline
-    7 & TOL\_SET \\\hline
-    8 & ACTIVE\_ON \\\hline
-    9 & ACTIVE\_OFF \\\hline
-  \end{tabular}
-  \caption{Samtliga meddelandetyper och deras prioritet.}
-  \label{tab:meddelandetyper}
-\end{table}
 
 
 \subsubsection{CAN}
@@ -186,15 +168,22 @@ Varje CAN-meddelande byggs upp av fem fält:
 \end{description}
 
 \begin{table}[H]
-    \centering
-    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
-        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
-        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
-        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{Node.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
-    \end{tabular}}
-    \caption{Diagram över CAN-meddelandets uppbyggnad samt ett exemepl på hur ett alarm-meddelande från en periferienhet ser ut.}
-    \label{tab:meddelandestruktur}
-
+  \centering
+  \begin{tabular}{|c|c|}\hline
+    Prioritet & Meddelande-ID \\\hline
+    0 & ALARM \\\hline
+    1 & ERROR \\\hline
+	2 & ALARM\_OFF \\\hline
+	3 & POLL\_REQUEST \\\hline
+	4 & POLL\_RESPONSE \\\hline
+    5 & DICP\_REQUEST \\\hline
+    6 & DICP\_RESPONSE \\\hline
+    7 & TOL\_SET \\\hline
+    8 & ACTIVE\_ON \\\hline
+    9 & ACTIVE\_OFF \\\hline
+  \end{tabular}
+  \caption{Samtliga meddelandetyper och deras prioritet.}
+  \label{tab:meddelandetyper}
 \end{table}
 
 Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
@@ -206,6 +195,18 @@ Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CA
 Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
 Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
 För varje meddelandetyp finns en unik hanteringsfunktion.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{Node.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+    \end{tabular}}
+    \caption{Diagram över CAN-meddelandets uppbyggnad samt ett exemepl på hur ett alarm-meddelande från en periferienhet ser ut.}
+    \label{tab:meddelandestruktur}
+
+\end{table}
 
 \subsubsection{Centralenhet}
 Centralenheten sköter den stora delen av systemets funktionalitet.
@@ -282,7 +283,7 @@ Centralenheten lagrar det antal enheter som är anslutna till systemet och skick
 
 \subsubsection{Dörrperiferienhet}
 \todo{Motivera varför 7 dörrar används}
-Enheten kan hålla upp till sju dörrar under bevakning. 
+Enheten kan hålla upp till sju dörrar under bevakning.
 Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till en röd ljusdiod.
 15 av 16 GPIOE-portpinnar används, sju dörrsensorer, sju gröna ljusdioder, en röd ljusdiod.
 Sju dörrar per periferienhet valdes för att reservera resterande GPIO-portar.
@@ -321,16 +322,16 @@ kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot åte
 
 \subsubsection{Extra funktionalitet}
 \subsubsubsection{Självlärande}
-Systemet fungerar enligt specifikationerna för självrandet. 
+Systemet fungerar enligt specifikationerna för självrandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
 Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via USART att den mottagit en förfrågan för ett ID och periferienheten skrev att den tilldalades ett ID.
 \subsubsubsection{Skydd mot återuppspelningsattacker}
-Systemets skydd mot denna typ av attacker var effektivt. 
-Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på ett eller annat sätt. 
-Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden. 
+Systemets skydd mot denna typ av attacker var effektivt.
+Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på ett eller annat sätt.
+Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på meddelanted.
-Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln. 
+Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
 \subsubsubsection{Testläge}
 \subsubsubsection{Lokalt larm}
@@ -369,21 +370,21 @@ Tester? Tester!
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-%Larmsystemet består av en centralenhet och olika perferienheter. 
-%Centralenheten hanterar meddelanden från perferienheterna för att larma på/av. 
-%Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm. 
-%För att larma av finns en knappsats för att slå in en förbestämd kod. 
+%Larmsystemet består av en centralenhet och olika perferienheter.
+%Centralenheten hanterar meddelanden från perferienheterna för att larma på/av.
+%Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm.
+%För att larma av finns en knappsats för att slå in en förbestämd kod.
 
-Larmsystemet består av en centralenhet och olika perferienheter. 
-Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden. 
-Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm. 
+Larmsystemet består av en centralenhet och olika perferienheter.
+Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden.
+Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm.
 Med hjälp av en knappsats och en kod kan alarm stängas av.
 
-Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort. 
-Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar. 
+Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
+Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
-Det finns en del utvecklingsmöjligheter för systemet. %Men jag kommer inte på dem just nu. 
-Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar. 
+Det finns en del utvecklingsmöjligheter för systemet. %Men jag kommer inte på dem just nu.
+Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
 Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
 
 \bibliographystyle{IEEEtran}
