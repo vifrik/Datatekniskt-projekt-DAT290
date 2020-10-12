@@ -3,6 +3,7 @@
 #include "messages.h"
 #include "door_sensor.h"
 #include "shared_peripheral.h"
+#include "debug.h"
 
 extern State state;
 extern unsigned long sys_time;
@@ -19,12 +20,32 @@ unsigned char number_of_doors = 0;
 
 void ndoors_handler(CANMsg *msg) {
 	number_of_doors = msg->buff[0];
-	DUMP_numeric(number_of_doors);
-	for(int i = 0; i < 7; i++){
-		door_states[i].active = 0;
-	}
+	usart_send("Enabling ");
+	usart_send_numeric(number_of_doors);
+	usart_sendl(" doors");
 	for(int i = 0; i < number_of_doors; i++){
 		door_states[i].active = 1;
+	}
+}
+
+void door_alarm_lower(void){
+	usart_sendl("Lowering alarm");
+	red_lamp_disable();
+	for(int i = 0; i < number_of_doors; i++){
+		door_states[i].alarm = 0;
+		door_states[i].opened = 0;
+	}
+	state.alarm = 0;
+}
+
+void door_set_active(CANMsg *msg){
+	print_can_msg(*msg);
+	uchar id = msg->buff[0];
+	door_states[id].active = msg->buff[1];
+	if(door_states[id].active){
+		green_lamp_disable(id);
+	} else {
+		green_lamp_enable(id);
 	}
 }
 
@@ -36,28 +57,27 @@ void init_doors(){
 }
 
 void update_tolerance(CANMsg *msg) {
+	print_can_msg(*msg);
 	unsigned char door_id = msg->buff[0];
 	door_states[door_id].tolerance = msg->buff[1];
 }
 
 void activate_on_handler(CANMsg *msg) {
-	if (msg->length) {
+	/*if (msg->length) {
 		unsigned char door_id = msg->buff[0];
 		door_states[door_id].active = 1;
-		green_lamp_disable(door_id);
 	} else {
 		state.active = 1;
-	}
+	}*/
 }
 
 void activate_off_handler(CANMsg *msg) {
-	if (msg->length) {
+	/*if (msg->length) {
 		unsigned char door_id = msg->buff[0];
 		door_states[door_id].active = 1;
-		green_lamp_enable(door_id);
 	} else {
 		state.active = 0;
-	}
+	}*/
 }
 
 // Hanterar CAN-meddelanden
@@ -70,7 +90,7 @@ void door_receiver(void) {
 			case ALARM:
 				break;
 			case ALARM_OFF:
-				alarm_lower();
+				door_alarm_lower();
 				break;
 			case POLL_REQUEST:
 				poll_respond(&msg);
@@ -88,12 +108,8 @@ void door_receiver(void) {
 			case DOORS_SET:
 				ndoors_handler(&msg);
 				break;
-			case ACTIVE_ON:
-				activate_on_handler(&msg);
-				break;
-			case ACTIVE_OFF:
-				activate_off_handler(&msg);
-				break;
+			case ACTIVATE:
+				door_set_active(&msg);
 		}
 	}
 }
@@ -110,16 +126,23 @@ void door_peripheral_init(void) {
 // Huvudslinga för periferienhet
 void door_peripheral_think(void) {	
 	while(1) {
+		//DUMP_numeric(door_read(1));
 		for(int i = 0; i < number_of_doors; i++ ){
+			if(!door_states[i].active) {
+				continue;
+			}
+			
 			char door_status = door_read(i);
 			//DUMP_numeric(door_status);
 			if(door_states[i].opened){
-				if(sys_time - door_states[i].opened > door_states[i].tolerance * 1000000){
+				if(sys_time - door_states[i].opened > door_states[i].tolerance * 1000000 && !door_states[i].alarm){
 					alarm_raise(i);
+					red_lamp_enable();
 					door_states[i].alarm = 1;
+				} else if (sys_time - door_states[i].opened > door_states[i].tolerance * 1000000) {
+					door_states[i].opened = 0;
 				}
-			}
-			if (!door_states[i].alarm && door_status) {
+			} else if (!door_states[i].alarm && door_status) {
 				door_states[i].opened = sys_time;
 			}	
 		}

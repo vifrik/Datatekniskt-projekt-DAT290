@@ -47,7 +47,7 @@ void poll_respond(CANMsg *msg) {
 }
 
 void request_id(uchar type, uchar units) {
-	DUMP("Requesting ID");
+	usart_sendl("Requesting ID");
 
 	CANMsg msg;
 	canmsg_init(&msg);
@@ -60,7 +60,7 @@ void request_id(uchar type, uchar units) {
 }
 
 void update_id(CANMsg *msg) {
-	DUMP("Recieved ID");
-	DUMP_numeric(msg->buff[0]);
+	usart_send("Recieved ID:");
+	usart_send_numericl(msg->buff[0]);
 	state.id = msg->buff[0];
 }

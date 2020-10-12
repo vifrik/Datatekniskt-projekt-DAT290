@@ -47,17 +47,19 @@ void raise_alarm(CANMsg *msg) {
 	Peripheral p = peripherals[msg->nodeId];
 	p.alarm = 1;
 	usart_send("###  ALARM  ###");
-    usart_send("from:");
+    usart_sendl(" from:");
     switch (p.type) {
         case DOOR:
-            usart_send("door with id:");
+            usart_send("Door with id:");
 			break;
         case PROXIMITY:
-            usart_send("proximity with id:");
+            usart_send("Proximity with id:");
 			break;
     }
-
-    usart_send_numeric(msg->buff[0]);
+	usart_send_numeric(msg->nodeId);
+	usart_send("from subdevice");
+    usart_send_numericl(msg->buff[0]);
+	
 }
 
 void timeout_alarm(uchar id){
@@ -118,14 +120,16 @@ void dicp_request_handler(CANMsg *msg) {
 
 // active = ACTIVE_ON aktiverar periferienhet p
 // active = ACTIVE_OFF deaktiverar
-void active_toggle(uchar nodeId, uchar active) {
+void active_toggle(uchar nodeId, uchar unitId, uchar active) {
 	CANMsg msg;
-	msg = msg_create(active, nodeId, TO_PERIPHERAL, 0);
+	msg = msg_create(ACTIVATE, nodeId, TO_PERIPHERAL, 2);
+	msg.buff[0] = unitId;
+	msg.buff[1] = active;
 	can_send(&msg);
 }
 
-void set_tolerance(uchar tol, uchar nodeId, uchar unitId){
-	CANMsg msg = msg_create(TOL_SET, nodeId, TO_PERIPHERAL, 1);
+void set_tolerance(uchar nodeId, uchar unitId, uchar tol){
+	CANMsg msg = msg_create(TOL_SET, nodeId, TO_PERIPHERAL, 2);
 	msg.buff[0] = unitId;
 	msg.buff[1] = tol;
 	can_send(&msg);
@@ -134,26 +138,14 @@ void set_tolerance(uchar tol, uchar nodeId, uchar unitId){
 void set_ndoors(uchar nodeId, uchar ndoors){
 	CANMsg msg = msg_create(DOORS_SET, nodeId, TO_PERIPHERAL, 1);
 	msg.buff[0] = ndoors;
+	peripherals[nodeId].units = ndoors;
 	DUMP_numeric(ndoors);
 	can_send(&msg);
 }
 
-void command_parser(Command cmd) {
-	switch(cmd.command) {
-		case TOL:
-			usart_sendl("TOL command with arguments:");
-			usart_send_numeric(cmd.arg0);
-			usart_send_numeric(cmd.arg1);
-			usart_send_numericl(cmd.arg2);
-			break;
-		case NDOORS:
-			usart_sendl("NDOORS command with arguments:");
-			set_ndoors(cmd.arg0, cmd.arg1);
-		case TEST1:
-			break;
-		case UNKNOWN:
-			usart_sendl("Unknown command!");
-			
+
+
+
 void help_msg(void) {
 	usart_send("\nEnter commands into the console to configure system, press 'enter' to submit command\n");
 	usart_send("These are the available options:\n");
@@ -167,10 +159,25 @@ void help_msg(void) {
 void show_units(void) {
 	usart_send("\nConnected units are:\n");
 	for(uchar i = 0; i < state.devices; i++) {
-		Peripheral unit = peripherals[i];
+		Peripheral p = peripherals[i];
 		usart_send("\n");
-		usart_send_numeric(unit.units);
-	}
+		switch (p.type) {
+        case DOOR:
+            usart_send("Door with id: ");
+			usart_send_numeric(i);
+			usart_send(" and ");
+			usart_send_numeric(p.units);
+			usart_send(" connected doors\n");
+			break;
+        case PROXIMITY:
+            usart_send("Proximity with id: ");
+			usart_send_numeric(i);
+			usart_send(" and ");
+			usart_send_numeric(p.units);
+			usart_send(" connected sensors\n");
+			break;
+		}
+    }
 }
 
 void receiver(void) {
@@ -183,7 +190,7 @@ void receiver(void) {
 	if (msg.dir == TO_CENTRAL) {
 		switch (msg.msgId) {
 			case ALARM:
-				raise_alarm(msg.nodeId); //Fyll ut med dessa funktioner eftersom?
+				raise_alarm(&msg); //Fyll ut med dessa funktioner eftersom?
 				break;
             case ERROR:
                 break;
@@ -200,10 +207,6 @@ void receiver(void) {
 			case DICP_RESPONSE:
 				break;
 			case TOL_SET:
-				break;
-			case ACTIVE_ON:
-				break;
-			case ACTIVE_OFF:
 				break;
 		}
 	}
@@ -252,14 +255,20 @@ void alarm_lower(void) {
 void command_parser(Command cmd) {
 	switch(cmd.command) {
 		case ACTIVE:
-			active_toggle(cmd.arg0, cmd.arg1);
+			active_toggle(cmd.arg0, cmd.arg1, cmd.arg2);
+			break;
 		case TOL:
+			usart_sendl("TOL command\n");
 			set_tolerance(cmd.arg0, cmd.arg1, cmd.arg2);
+			break;
+		case NDOORS:
+			usart_sendl("NDOORS command:\n");
+			set_ndoors(cmd.arg0, cmd.arg1);
 			break;
 		case TEST1:
 			break;
 		case UNKNOWN:
-			usart_sendl("Unknown command!");
+			usart_sendl("Unknown command!\n");
 			break;
 		case HELP:
 			help_msg();
@@ -272,7 +281,7 @@ void command_parser(Command cmd) {
 
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
-    //while(!state.devices);
+    while(!state.devices);
 	command_init();
 
     uchar passcode[4] = {1,2,3,4};

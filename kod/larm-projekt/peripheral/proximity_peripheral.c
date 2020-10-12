@@ -5,6 +5,7 @@
 #include "shared_peripheral.h"
 
 extern State state;
+uchar tolerance;
 
 // Hanterar CAN-meddelanden
 void proximity_receiver(void) {
@@ -73,8 +74,9 @@ void proximity_peripheral_init(void) {
 	state_init();
 	
 	proximity_init();
-	can1_init(proximity_receiver);
-	request_id(PROXIMITY, 2);
+	vibration_init();
+	//can1_init(proximity_receiver);
+	//request_id(PROXIMITY, 2);
 	
 	stk_init();
 }
@@ -84,6 +86,8 @@ unsigned char counter = 5;
 // Huvudslinga för periferienhet
 void proximity_peripheral_think(void) {	
 	while(1) {
+		
+		uchar vibration = vibration_read();
 		
 		// Flyttar fram alla värden ett steg
 		for (int i = 0; i < 4; i++) {
@@ -96,22 +100,12 @@ void proximity_peripheral_think(void) {
 		unsigned char sampleMean = sample_mean(sample);
 		unsigned char sampleVar = sample_variance(sample, sampleMean);
 		
-		DUMP("Reading:");
-		DUMP_numeric(sampleMean);
-		DUMP_numeric(sampleVar);
-		DUMP_numeric(sample[4]);
-		DUMP("");
-
-		
 		// Om vi har räknat fem värden och vi inte har larmat och urvalsvariansen är större än tio -> larma
-		if (!counter && !state.alarm && sampleVar > 10) {
+		if (!counter && !state.alarm && sampleVar > tolerance) {
 			alarm_raise(1);
 		}
 		
 		if (counter)
 			counter--;
-		
-		// Fördröj med 10^-6s = 1s
-		delay(1000000);
 	}
 }

@@ -28,6 +28,7 @@ void replay_think(void){
 		if(count == MAX_BUFF_SIZE){
 			for(int i = 0; i < MAX_BUFF_SIZE; i++){
 				can_send(&busTraffic[i]);
+				delay(500000);
 			}
 			count = 0;
 		}

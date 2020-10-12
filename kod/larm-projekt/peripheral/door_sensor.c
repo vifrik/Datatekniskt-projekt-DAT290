@@ -26,15 +26,15 @@ void door_init() {
 
 // Läser av PE0-PE9 beroende på door_id
 unsigned char door_read(unsigned char door_id) {
-	return GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0 + door_id*2);
+	return GPIO_ReadInputDataBit(GPIOE, 1 << (door_id * 2));
 }
 
 void green_lamp_enable(unsigned char door_id) {
-	GPIO_WriteBit(GPIOE, door_id*2, Bit_SET);
+	GPIO_WriteBit(GPIOE, 2 << (door_id * 2), Bit_SET);
 }
 
 void green_lamp_disable(unsigned char door_id) {
-	GPIO_WriteBit(GPIOE, door_id*2, Bit_RESET);
+	GPIO_WriteBit(GPIOE, 2 << (door_id * 2), Bit_RESET);
 }
 
 void red_lamp_enable(void) {

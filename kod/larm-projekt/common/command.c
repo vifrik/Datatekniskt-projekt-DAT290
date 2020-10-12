@@ -78,6 +78,7 @@ Command command_handler() {
 			
 			// Återställ command_buffer
 			memset(command_buffer, 0, sizeof(command_buffer));
+			_outchar('\n');
 		}
 	}
 	
