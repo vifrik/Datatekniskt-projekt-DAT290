@@ -51,7 +51,7 @@
     \item[IDE:] Integrated Development Environment
     \item[MD407:] Mikrodator av typen MD407
     \item[USART:] Universal Synchronous and Asynchronous Receiver-Transmitter
-    \item[DICP:] Dynamic Identification Configuration protocol
+    \item[DICP:] Dynamic Identification Configuration Protocol
 \end{description}
 \newpage
 
@@ -64,10 +64,11 @@ Inbrott är ett vanligt problem i Sverige.
 En minskning med 14\% från året innan \cite{brastold}.
 Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
 Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
+Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska därför utvecklas.
 
 \subsection{Mål}
 
-Produkten ska erbjuda flertal larmkomponenter som kan anslutas till en larmcentral och konfigureras för att passa kundens specifika situation.
+Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral. Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
 Dessutom skall systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
 Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter.
@@ -81,18 +82,19 @@ När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på 
 
 I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett självlärande sytem, ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
-\subsection{Bakgrund}
-Ett larmsystem har i uppgift att varna för och att förebygga potentiella inbrott i exempelvis bil, fastighet eller ett område.
+%\subsection{Bakgrund}
+%Ett larmsystem har i uppgift att varna för- och förebygga potentiella inbrott i exempelvis bil, fastighet eller ett område.
 
-Beståndsdelarna i larmsystemet är en centralenhet och periferienheter.
-Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman enheter eller inställning av befintliga enheter.
-Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
+%Beståndsdelarna i larmsystemet är en centralenhet och periferienheter.
+%Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman enheter eller inställning av befintliga enheter.
+%Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
+
+%Tror vi kan skippa detta bakgrundsstycke helt och bara köra teknisk bakgrund?
 
 \subsection{Arbetsmetod}
 
-Mjukvaran för projektet är skriven i programspråket C.
-C är ett lågnivåprogrammeringsspråk vilket är lämpligt för utveckling av mjukvara till mikrodatorn MD407.
-Utvecklingen av mjukvaran har skett i CodeLite som är ett IDE (Integrated Development Environment).
+Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodator MD407.
+%Utvecklingen av mjukvaran har skett i CodeLite som är ett IDE (Integrated Development Environment).
 
 Versionshantering har gjorts med hjälp av git.
 Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlades.
@@ -101,9 +103,12 @@ Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
 Funktionaliteten hos Simserver är begränsad därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
 
-Arbetsgruppen delades upp i tre undergrupper som ansvarade över olika delar av projektet.
-Därefter utvecklade grupperna mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
+Projektarbetet inledes med att tänka igenom systemet som skulle konstrueras.
+En plan lades upp över vilka beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman.
+Arbetsgruppen delades därefter upp i tre undergrupper som ansvarade över olika delar av projektet.
+Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
 Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
+
 
 
 \section{Teknisk Beskrivning}
@@ -117,7 +122,7 @@ MD407 har begränsat med minne vilket gör att programmen som skrivs för mikrod
 C är ett lågnivå-programmeringsspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet.
 C lämpar sig alltså för utveckling mot MD407.
 
-Systemet kretsar kring att flera MD407 sammankopplas, en MD407 agerar som centralenhet och resterande används för att ansluta periferienheter.
+Systemet kretsar kring att flera MD407 sammankopplas, en av dessa mikrodatorer agerar som centralenhet och resterande används för att ansluta periferienheter.
 MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network), ett protokoll för kommunikation mellan datorer.
 % Ett kommunikationsprotokoll har sedan byggts ovanpå CAN som är anpassat för systemet.
 
@@ -128,7 +133,7 @@ Från denna enhet körs huvudprogrammet.
 Centralenheten sköter den stora delen av systemets funktion.
 Centralenheten registrerar och håller koll på vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna samt läser inmatning från en ansluten dator för att styra systemet.
 
-Två periferienheter finns tillgängliga att ansluta till systemet.
+Två typer av periferienhet finns tillgängliga att ansluta till systemet.
 Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras.
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
@@ -168,6 +173,28 @@ Varje CAN-meddelande byggs upp av fem fält:
 \end{description}
 
 \begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+    \end{tabular}}
+    \caption{Diagram över CAN-meddelandets uppbyggnad samt ett exemepl på hur ett alarm-meddelande från en periferienhet ser ut.}
+    \label{tab:meddelandestruktur}
+
+\end{table}
+
+Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
+För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
+Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
+
+För centralenhet och periferienhet finns unika mottagningsfunktioner.
+Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CAN-meddelande.
+Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
+Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
+För varje meddelandetyp finns en unik hanteringsfunktion som utför de instruktioner meddelandet medförde.
+
+\begin{table}[H]
   \centering
   \begin{tabular}{|c|c|}\hline
     Prioritet & Meddelande-ID \\\hline
@@ -186,28 +213,6 @@ Varje CAN-meddelande byggs upp av fem fält:
   \label{tab:meddelandetyper}
 \end{table}
 
-Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
-För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
-Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
-
-För centralenhet och periferienhet finns unika mottagningsfunktioner.
-Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CAN-meddelande.
-Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
-Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
-För varje meddelandetyp finns en unik hanteringsfunktion.
-
-\begin{table}[H]
-    \centering
-    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
-        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
-        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
-        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{Node.id} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
-    \end{tabular}}
-    \caption{Diagram över CAN-meddelandets uppbyggnad samt ett exemepl på hur ett alarm-meddelande från en periferienhet ser ut.}
-    \label{tab:meddelandestruktur}
-
-\end{table}
-
 \subsubsection{Centralenhet}
 Centralenheten sköter den stora delen av systemets funktionalitet.
 Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon av de anslutna enheterna.
@@ -215,7 +220,6 @@ Om alarm uppstår kan det avvaktiveras genom att mata in en fyrsiffrig kod på a
 
 Centralenheten både lyssnar efter meddelanden från- och skickar meddelanden till periferienheterna kontinuerligt.
 Ett meddelande till centralenheten kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
-
 
 Centralenheten skickar kontinuerligt förfrågningar, även kallat pollingmeddelande, till periferienheterna.
 Detta för att undersöka så att inga enheter kopplas bort samt för att förebygga återupspelningsattacker.
@@ -268,11 +272,15 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
 
 
 \section{Resultat}
-Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av delsystemen. Resultat från utförda tester visas även upp i denna sektion.
+Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av delsystemen.
+Resultat från utförda tester visas även upp i denna sektion.
 
 \subsection{Larmsystem}
 %Systemet utför sin grundligaste uppgift
-Systemets uppgift är att meddela användaren om avvikelse uppstår vid någon av sensorerna. En sensor skickar vid upptäckt intrång en signal till centralenheten som i sin tur larmar och på så vis uppmärksammar användaren om intrång. Möjligheten för användaren att ställa in känsligheten hos sensorerna och på vilka grunder periferienheterna ska larma är implementerat.
+Systemets uppgift är att meddela användaren om avvikelse uppstår vid någon av sensorerna.
+En sensor skickar vid upptäckt intrång en signal till centralenheten som i sin tur larmar och på så vis uppmärksammar användaren om intrång.
+Möjlighet finns för användaren att ansluta just de sensorer han eller hon behöver.
+Att sedan ställa in känsligheten hos sensorerna och på vilka grunder periferienheterna ska larma är implementerat.
 
 Systemet stödjer i teorin att upp till 15 enheter ansluts. Systemet vidhåller sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
@@ -373,9 +381,9 @@ Tester? Tester!
 
 \item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
 
-\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten. 
+\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
 
-\item[Resultat] Resultatet av testet. 
+\item[Resultat] Resultatet av testet.
 
 \item[Analys] Vad testresultatet innebär; om komponenten fungerar som planerat, behöver testas ytterligare eller om vidare utveckling krävs.
 \end{description}
