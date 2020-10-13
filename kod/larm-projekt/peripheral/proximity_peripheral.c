@@ -69,12 +69,19 @@ unsigned char sample_variance(unsigned char data[], unsigned char sum) {
 
 unsigned char sample[5];
 
+void vibration_callback(void) {
+	if (!state.alarm) {
+		alarm_raise(1);
+	}
+}
+
 // Initialisering av rörelsesensor och CAN
 void proximity_peripheral_init(void) {
 	state_init();
 	
 	proximity_init();
 	vibration_init();
+	vibration_callback_init(vibration_callback);
 	//can1_init(proximity_receiver);
 	//request_id(PROXIMITY, 2);
 	
@@ -87,7 +94,7 @@ unsigned char counter = 5;
 void proximity_peripheral_think(void) {	
 	while(1) {
 		
-		uchar vibration = vibration_read();
+		//uchar vibration = vibration_read();
 		
 		// Flyttar fram alla värden ett steg
 		for (int i = 0; i < 4; i++) {

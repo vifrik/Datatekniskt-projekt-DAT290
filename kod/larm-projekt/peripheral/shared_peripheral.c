@@ -17,6 +17,8 @@ void canmsg_init(CANMsg *msg) {
 }
 
 void alarm_raise(uchar unitId) {
+	DUMP("alarm");
+	
 	state.alarm = 1;
 
 	CANMsg msg;
