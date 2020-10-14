@@ -62,12 +62,14 @@ Command command_handler() {
 			// Om command_buffer innehåller strängen test1
 			if (buffer_contains(command_buffer, "active")) {
 				cmd.command = ACTIVE;
-			} else if (buffer_contains(command_buffer, "tol")) {
+			}else if (buffer_contains(command_buffer, "tol")) {
 				cmd.command = TOL;
-			} else if(buffer_contains(command_buffer, "ndoors")){
+			}else if(buffer_contains(command_buffer, "ndoors")) {
 				cmd.command = NDOORS;
-			} else if (buffer_contains(command_buffer, "test1")) {
+			}else if (buffer_contains(command_buffer, "test1")) {
 				cmd.command = TEST1;
+			}else if (buffer_contains(command_buffer, "passcode")) {
+				cmd.command = PASSCODE;
 			}else if (buffer_contains(command_buffer, "help")) {
 				cmd.command = HELP;
 			}else if (buffer_contains(command_buffer, "show")) {

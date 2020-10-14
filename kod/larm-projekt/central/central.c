@@ -14,6 +14,7 @@
 
 extern unsigned long sys_time;
 State state = {0, 0, 0, 1};
+uchar passcode[4] = {1,2,3,4};
 Peripheral peripherals[DEVICES_MAX];
 
 CANMsg msg_create(uchar msgId, uchar nodeId, uchar dir, uchar length){
@@ -143,16 +144,36 @@ void set_ndoors(uchar nodeId, uchar ndoors){
 	can_send(&msg);
 }
 
-
+uchar set_passcode(uchar currpass, uchar newpass, uchar newpass1) { //ingen aning om detta funkar
+	char curbuff[20];
+	char newbuff[20];
+	char newbuff1[20];
+	itoa(currpass,curbuff,10);
+	itoa(newpass,newbuff,10);
+	itoa(newpass1,newbuff1,10);
+	
+	for(uchar i; i<4; i++) {
+		if(curbuff[i] != newbuff[i] || curbuff[i] != newbuff1[i]) {
+			usart_sendl("Wrong passcode, try again!");
+			return 0;
+		}
+		for (uchar i; i < 4; i++) {
+			passcode[i] = newbuff[i];
+		}
+		usart_sendl("Newpasscode is set!");
+		return 1;
+		}
+}
 
 
 void help_msg(void) {
 	usart_send("\nEnter commands into the console to configure system, press 'enter' to submit command\n");
 	usart_send("These are the available options:\n");
 	usart_send("Activate or Deactivate unit:\n Type 'active nodeId 0/1'\n");
-	usart_send("Set Tolerance:\n Type 'tol time nodeId unitId'\n");
+	usart_send("Set Tolerance:\n Type 'tol nodeId unitId time'\n");
 	usart_send("Set number of doors:\n Type 'nDoors nodeId numberOfDoors'\n");
 	usart_send("Show connected units:\n Type 'show'\n");
+	usart_sendl("Change passcode:\n Type 'passcode oldcode newcode newcode'");
 	usart_send("Type 'help' for more help!\n");
 }
 
@@ -270,6 +291,9 @@ void command_parser(Command cmd) {
 		case UNKNOWN:
 			usart_sendl("Unknown command!\n");
 			break;
+		case PASSCODE:
+			set_passcode(cmd.arg0, cmd.arg1, cmd.arg2);
+			break;
 		case HELP:
 			help_msg();
 			break;
@@ -284,17 +308,11 @@ void think(void) {
     while(!state.devices);
 	command_init();
 
-    uchar passcode[4] = {1,2,3,4};
     uchar keypad[4] = {0xFF,0xFF,0xFF,0xFF};
 	
-	//uchar input_buffer[] = {0xFF,0xFF,0xFF};
 
     while(1) {
 		// Keypad- och USART-logik här
-		
-		//input_buffer_full(input_buffer);
-		//usart_has_input(input_buffer);
-
         keyboard_input(keypad);
 		command_parser(command_handler());
 		

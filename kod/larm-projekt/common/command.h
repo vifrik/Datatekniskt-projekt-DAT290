@@ -9,6 +9,7 @@ enum COMMAND {
 	NDOORS,
 	TEST1,
 	UNKNOWN,
+	PASSCODE,
 	HELP,
 	SHOW
 };
