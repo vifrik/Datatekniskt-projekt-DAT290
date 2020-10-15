@@ -69,32 +69,29 @@ Ett modulärt larmsystem som informerar dess användare om oönskade intrång sk
 \subsection{Mål}
 
 Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral. Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
-Dessutom skall systemet ska vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
 Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter.
 Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm.
 
-Dörrlarmet triggar ett larm då en dörr står öppen längre än ett givet tidsinterval.
-Inledningsvis sätts larmet igång lokalt på periferienheten.
+Dörrlarmet ska trigga ett larm då en dörr står öppen längre än ett givet tidsinterval.
+Inledningsvis ska larmet sättas igång lokalt på periferienheten.
 Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
 Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst.
-När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på knapsatsen för att larma av.
+När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
 
-I mån av tid kommer extra funktionalitet implementeras. Denna extra funktionalitet är ett självlärande sytem, ett testläge för pereferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
+I mån av tid kommer extra funktionalitet implementeras.
+Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
-%\subsection{Bakgrund}
-%Ett larmsystem har i uppgift att varna för- och förebygga potentiella inbrott i exempelvis bil, fastighet eller ett område.
-
-%Beståndsdelarna i larmsystemet är en centralenhet och periferienheter.
-%Komponenterna skapar tillsammans möjligheten att till exempel, larma på/av, koppla samman enheter eller inställning av befintliga enheter.
-%Koppling sker via instruktioner som kan skickas både manuellt eller automatiskt via en av komponenterna.
-
-%Tror vi kan skippa detta bakgrundsstycke helt och bara köra teknisk bakgrund?
 
 \subsection{Arbetsmetod}
 
-Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodator MD407.
-%Utvecklingen av mjukvaran har skett i CodeLite som är ett IDE (Integrated Development Environment).
+Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
+En skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman togs fram.
+I nästa steg delades arbetsgruppen upp i tre undergrupper  som ansvarade över olika delar av projektet. Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
+Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
+
+Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodator MD407 vilket är den hårdvara som driver systemet.
 
 Versionshantering har gjorts med hjälp av git.
 Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlades.
@@ -102,14 +99,6 @@ Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlad
 Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
 Funktionaliteten hos Simserver är begränsad därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
-
-Projektarbetet inledes med att tänka igenom systemet som skulle konstrueras.
-En plan lades upp över vilka beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman.
-Arbetsgruppen delades därefter upp i tre undergrupper som ansvarade över olika delar av projektet.
-Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
-Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
-
-
 
 \section{Teknisk Beskrivning}
 I detta avsnitt ges en fördjupad inblick i hur systemet fungerar och hänger ihop.
@@ -275,14 +264,15 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
 Denna sektion inleds med en presentation av reslutatet av systemet i sin helhet föjt av djupare granskning av delsystemen.
 Resultat från utförda tester visas även upp i denna sektion.
 
-\subsection{Larmsystem}
+\subsection{Larmsystemet}
 %Systemet utför sin grundligaste uppgift
-Systemets uppgift är att meddela användaren om avvikelse uppstår vid någon av sensorerna.
+%Systemets uppgift är att meddela användaren om avvikelse uppstår vid någon av sensorerna.
 En sensor skickar vid upptäckt intrång en signal till centralenheten som i sin tur larmar och på så vis uppmärksammar användaren om intrång.
 Möjlighet finns för användaren att ansluta just de sensorer han eller hon behöver.
 Att sedan ställa in känsligheten hos sensorerna och på vilka grunder periferienheterna ska larma är implementerat.
 
-Systemet stödjer i teorin att upp till 15 enheter ansluts. Systemet vidhåller sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
+Systemet stödjer i teorin att upp till 15 enheter ansluts.
+Systemet vidhåller sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
 \subsubsection{Centralenhet}
 Centralenheten fungerar som förväntat. Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
@@ -385,7 +375,7 @@ Tester? Tester!
 
 \item[Utförande] Testet ska utföras så att en enhet skickar meddelanden till centralenheten som visar när den tar emot dem.
 
-\item[Resultat] Centralenheten tog emot meddelanden.
+\item[Resultat] Centralenheten tog emot meddelanden skickade från periferienhet.
 
 \item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
 \end{description}
@@ -398,9 +388,10 @@ Tester? Tester!
 
 \item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
 
-\item[Resultat] Resultatet av testet.
+\item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
 
-\item[Analys] Vad testresultatet innebär; om komponenten fungerar som planerat, behöver testas ytterligare eller om vidare utveckling krävs.
+\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som väntat.
+Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
 \end{description}
 
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
