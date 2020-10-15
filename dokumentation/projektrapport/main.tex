@@ -306,15 +306,17 @@ Rörelseperiferienheten kombinerar två olika typer av sensorer, avstånds- och 
 Avståndssensorn har möjligheten att upptäcka om något rör sig utan att det gör kontakt.
 Vid kontakt har vibrationssensorn möjlighet att alarmera.
 
-\subsubsubsection{Avståndssensor}
-Avståndssensorn observerar fem senaste avstånden och beräknar variansen av dessa.
-Om variansen är större än toleransen initieras ett arlarm.
-Toleransen går att bestämma på centralenheten.
-\todo{Testa avståndssensorn, rapportera felmarginal etc här?}
+\begin{description}
+  \item[Avståndsensor] Avståndssensorn observerar fem senaste avstånden och beräknar variansen av dessa.
+  Om variansen är större än toleransen initieras ett arlarm.
+  Toleransen går att bestämma på centralenheten.
 
-\subsubsubsection{Vibrationssensor}
-Vibrationssensorn läses av kontinuerligt.
-Kännsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
+  \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
+  Kännsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
+
+  \end{description}
+
+\todo{Testa avståndssensorn, rapportera felmarginal etc här?}
 
 \subsubsection{Kommunikationsprotokoll}
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
@@ -328,21 +330,34 @@ Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:medde
 kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 
 
-\subsubsection{Extra funktionalitet}
-\subsubsubsection{Självlärande}
-Systemet fungerar enligt specifikationerna för självrandet.
+\subsection{Extra funktionalitet}
+I målsättningen presenterades viss funktionalitet som skulle implementeras utöver larmsystemets grundligaste funktioner.
+I detta stycke presenteras resultaten av detta.
+
+\subsubsection{Självlärande}
+Systemet fungerar enligt specifikationerna för självlärandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
 Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via USART att den mottagit en förfrågan för ett ID och periferienheten skrev att den tilldalades ett ID.
-\subsubsubsection{Skydd mot återuppspelningsattacker}
+
+\subsubsection{Skydd mot återuppspelningsattacker}
 Systemets skydd mot denna typ av attacker var effektivt.
 Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på ett eller annat sätt.
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på meddelanted.
 Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
-\subsubsubsection{Testläge}
-\subsubsubsection{Lokalt larm}
+\subsubsection{Testläge}
+Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
+Då centralenheten körs i detta testläge skrivs information om de meddelanden som tas emot och skickas från centralen ut till ansluten konsol.
+Detta underlättar vid felsökning och installation av systemet.
+
+\subsubsection{Lokalt larm}
+Från ansluten konsol finns möjlighet för användaren att konfigurera precis hur och när varje periferienhet ska alarmera.
+Om användaren vill att ett lokalt larm ska akiveras vid den enhet som larmar finns den möjligheten.
+Vid larm tänds då en rödlampa på enheten som indikerar att ett lokalt larm har gått.
+Efter en tid som specificeras av användaren utsöndras även ett larm från centralenheten så vida det lokala larmet inte har avvaktiverats av användaren.
+Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användaren via ansluten konsol.
 
 \subsection{Tester}
 Tester? Tester!
@@ -391,22 +406,34 @@ Tester? Tester!
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-%Larmsystemet består av en centralenhet och olika perferienheter.
-%Centralenheten hanterar meddelanden från perferienheterna för att larma på/av.
-%Perferienheterna avlyssnar sina sensorer för att rapportera till centralenhet för alarm.
-%För att larma av finns en knappsats för att slå in en förbestämd kod.
+En reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
+\subsection{Slutprodukt}
 
 Larmsystemet består av en centralenhet och olika perferienheter.
 Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden.
 Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm.
 Med hjälp av en knappsats och en kod kan alarm stängas av.
+De beståndsdelar och den grundligaste funktionalitet som lades fram i projektets målsättning har alltså implementerats och fungerar som tänkt.
 
+Extra funktionalitet, mer specifikt ett testläge, ett självlärande systemte, lokalt larm för periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
+
+Systemet kan till exempel installeras i ett kontor.
+Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
+Systemets användare skulle i så fall ha ett gott skydd mot stöld och oänskade intrång.
+
+\subsection{Förbättringsmöjligheter}
+Det finns fortfarande utvecklingsmöjligheter för systemet.
+Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
+Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
+Möjlighet att utöka med fler periferienheter finns också.
+Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
+Förbättringsmöjligheter för testläget i den slutgiltiga produkten finns då mer felsökningsverktyg alltid är uppskattat.
+Inom ramarna för detta projekt fyller testläget däremot sin funktion.
+
+\subsection{Projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
 Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
-Det finns en del utvecklingsmöjligheter för systemet. %Men jag kommer inte på dem just nu.
-Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
-Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
 
 \bibliographystyle{IEEEtran}
 
