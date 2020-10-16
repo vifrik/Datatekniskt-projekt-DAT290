@@ -1,12 +1,14 @@
 #include "proximity_peripheral.h"
 #include "door_peripheral.h"
+#include "replay.h"
 
 void main() {
 	//door_peripheral_init();
 	//door_peripheral_think();
 	proximity_peripheral_init();
 	proximity_peripheral_think();
-
+	//replay_init();
+	//replay_think();
 	return;
 }
 

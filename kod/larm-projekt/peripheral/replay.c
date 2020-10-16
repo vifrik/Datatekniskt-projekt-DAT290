@@ -1,7 +1,8 @@
 #include "stk.h"
 #include "can.h"
+#include "replay.h"
 
-#define MAX_BUFF_SIZE 64
+#define MAX_BUFF_SIZE 32
 
 CANMsg busTraffic[MAX_BUFF_SIZE];
 unsigned char count = 0;
@@ -9,12 +10,13 @@ unsigned char count = 0;
 
 // Enheten tar emot all busstrafik och sparar alla meddelanden i en array
 void replay_receiver(void) {
+	if(count < MAX_BUFF_SIZE){
+		CANMsg msg;
+		can_receive(&msg);	
 
-	CANMsg msg;
-	can_receive(&msg);	
-
-	busTraffic[count] = msg;
-	count++;
+		busTraffic[count++] = msg;
+	}
+	
 }
 
 void replay_init(void){
@@ -28,9 +30,8 @@ void replay_think(void){
 		if(count == MAX_BUFF_SIZE){
 			for(int i = 0; i < MAX_BUFF_SIZE; i++){
 				can_send(&busTraffic[i]);
-				delay(500000);
+				delay(50000);
 			}
-			count = 0;
 		}
 	}
 }

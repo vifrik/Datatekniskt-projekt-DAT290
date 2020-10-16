@@ -14,7 +14,6 @@ typedef struct {
     uchar type;
 	uchar alarm;
     uchar buff[8];
-	// Antal dörrar/rörelsensorer.
 	uchar units;
 } Peripheral; 
 

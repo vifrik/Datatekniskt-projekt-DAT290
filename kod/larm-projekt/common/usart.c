@@ -58,13 +58,13 @@ void usart_sendl(char*s) {
 }
 
 // Översätter char till int så det synns på Eterm8
-void usart_send_numeric(int n) {
-	char buffer[20];
+void usart_send_numeric(uchar n) {
+	uchar buffer[20];
 	itoa(n,buffer,10);
 	usart_send(buffer);
 }
 
-void usart_send_numericl(int n) {
+void usart_send_numericl(uchar n) {
 	usart_send_numeric(n);
 	_outchar('\n');
 }
