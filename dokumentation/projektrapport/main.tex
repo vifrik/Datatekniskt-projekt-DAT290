@@ -267,6 +267,20 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
 \end{description}
 
 
+\section{Metod}
+Denna sektion beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts. 
+Varje delsystem gås igenom för sig, men det har ofta varit samarbete mellan de olika delarna då det de olika delarna måste vara kompatibla med varandra.
+
+\subsection{Utveckling av CAN}
+Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
+
+\subsection{Utveckling av Centralenheten}
+
+
+\subsection{Utveckling av Periferienheterna}
+
+
+
 \section{Resultat}
 Denna sektion syftar till att presentera det slutgiltiga resultatet av systemet samt att reflektera och diskutera kring utfallet utifrån de mål och syfte som ställts upp i rapportens inledning.
 Sektionen inleds med resultaten från systemet i sin helhet föjt av djupare granskning av delsystemen.
@@ -412,8 +426,21 @@ Tester? Tester!
 
 \item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
 
-\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som väntat.
+\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som förväntat.
 Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
+\end{description}
+
+\subsubsection{Skydd mot återuppspelningsattacker}
+\begin{description}
+\item[Komponent] Centralenheten och dörrenheten.
+
+\item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. Alla enheter kopplas in och startas. En enhet får spela in meddelanden mellan centralenheten och en dörrenhet. När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den. Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
+
+\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig. Då något uppenbart är fel larmar centralenheten.
+
+\item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
 \end{description}
 
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.

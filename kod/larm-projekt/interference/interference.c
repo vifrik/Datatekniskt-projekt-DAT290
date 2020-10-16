@@ -17,7 +17,7 @@ void interference_receiver(void) {
 }
 
 //Läser in en sträng från USART tills det kommer en ny rad.
-//Tar in det första avlästa värdet from konsolen och adressen till var strängen skall ligga.
+//Tar in det första avlästa värdet från konsolen och adressen till var strängen skall ligga.
 //Returnerar längden på den inlästa strängen
 uchar get_string(uchar c, uchar *address) {
 	uchar *s;
@@ -32,6 +32,7 @@ uchar get_string(uchar c, uchar *address) {
 		_outchar(input);
 		input = _getchar();
 	}
+	*s = '\0';
 	_outchar('\n');
 	
 	return length;
@@ -44,9 +45,10 @@ void delay_done(void) {
 }
 
 void clear_string(uchar *address, uchar length) {
-	//uchar i = 0;
+	uchar *iAddress;
+	iAddress = address;
 	for(uchar i = 0; i < length; i++) {
-		*(address+i) = '\0';
+		*iAddress++ = '\0';
 	}
 }
 
@@ -64,14 +66,14 @@ void interference_think(void) {
 	unsigned int usDelay = 1000000;
 	while(1) {
 		DUMP_numeric(usDelay);
-		can_send(msg);
+		//can_send(msg);
 		delayDone = 1;
 		delay_no_block(usDelay);
 		while(delayDone) {
 			c = _tstchar();
 			if(c) {
 				//*sAddress = '\0';
-				clear_string(sAddress, length);
+				//clear_string(sAddress, length);
 				length = get_string(c, sAddress);
 				s = sAddress;
 				usDelay = atoi(s);
