@@ -7,6 +7,7 @@
 #include "keypad.h"
 #include "command.h"
 #include "debug.h"
+#include "lamp.h"
 
 #define DEVICES_MAX 15
 #define INPUT_BUFFER_SIZE 2
@@ -46,6 +47,7 @@ uchar random_gen(void) {
 // Ändrade så att den ger id för vilken dörr/rörelseenhet istället för id för periferienheten
 // Tänker mig att det skickas med i larmmeddelandet
 void raise_alarm(CANMsg *msg) {
+	red_lamp_enable();
 	Peripheral p = peripherals[msg->nodeId];
 	p.alarm = 1;
 	usart_send("###  ALARM  ###");
@@ -59,7 +61,7 @@ void raise_alarm(CANMsg *msg) {
 			break;
     }
 	usart_send_numeric(msg->nodeId);
-	usart_send("from subdevice");
+	usart_send(" from subdevice ");
     usart_send_numericl(msg->buff[0]);
 	
 }
@@ -72,6 +74,7 @@ void poll_alarm(uchar id){
 
 
 void timeout_alarm(uchar id){
+	red_lamp_enable();
 	usart_send("###  TIMEOUT ALARM  ###");
 	usart_send("from:");
 	usart_send_numeric(id);
@@ -110,7 +113,6 @@ void poll_response_handler(CANMsg *msg) {
 void dicp_request_handler(CANMsg *msg) {
     if (state.devices < DEVICES_MAX) {
         DUMP("RECEIVED REQUEST");
-		print_can_msg(*msg);
         Peripheral p;
         peripheral_init(&p, msg->buff[0]);
 		// Tänker mig att periferienheten även skickar med antalet underenheter
@@ -151,29 +153,21 @@ void set_ndoors(uchar nodeId, uchar ndoors){
 	CANMsg msg = msg_create(DOORS_SET, nodeId, TO_PERIPHERAL, 1);
 	msg.buff[0] = ndoors;
 	peripherals[nodeId].units = ndoors;
-	DUMP_numeric(ndoors);
 	can_send(&msg);
 }
 
-uchar set_passcode(uchar currpass, uchar newpass, uchar newpass1) { //ingen aning om detta funkar
-	char curbuff[20];
-	char newbuff[20];
-	char newbuff1[20];
-	itoa(currpass,curbuff,10);
-	itoa(newpass,newbuff,10);
-	itoa(newpass1,newbuff1,10);
+void set_passcode(unsigned int newpass, unsigned int newpass1) {
+	int tempPass = newpass;
 	
-	for(uchar i; i<4; i++) {
-		if(curbuff[i] != newbuff[i] || curbuff[i] != newbuff1[i]) {
-			usart_sendl("Wrong passcode, try again!");
-			return 0;
+	if (newpass == newpass1) {
+		// nya lösen stämmer överrens
+		for (int i = 3; i >= 0; i--) {
+			passcode[i] = tempPass % 10;
+			tempPass /= 10;
 		}
-		for (uchar i; i < 4; i++) {
-			passcode[i] = newbuff[i];
-		}
-		usart_sendl("Newpasscode is set!");
-		return 1;
-		}
+		
+		usart_sendl("Passcode is set!");
+	}
 }
 
 
@@ -255,6 +249,7 @@ void init(void) {
     can1_init(receiver);
     keyboard_init();
 	stk_init();
+	lamp_init();
 	callback_init(timeout_handler);
 	command_init();
 }
@@ -268,6 +263,7 @@ uchar equal(char input[], char passcode[]) {
 }
 
 void alarm_lower(void) {
+	red_lamp_disable();
 	for (int i = 0; i < state.devices; i++) {
 		CANMsg msg;
 		msg.msgId = ALARM_OFF;
@@ -285,16 +281,23 @@ void alarm_lower(void) {
 
 
 void command_parser(Command cmd) {
+	if (!cmd.active) return;
+	cmd.active = 0;
+	
+	unsigned int pass = passcode[0]*1000+passcode[1]*100+passcode[2]*10+passcode[3];
+	if (pass != cmd.pass && cmd.command != HELP) {
+		usart_sendl("Wrong passcode, use help");
+		return;
+	}
+
 	switch(cmd.command) {
 		case ACTIVE:
 			active_toggle(cmd.arg0, cmd.arg1, cmd.arg2);
 			break;
 		case TOL:
-			usart_sendl("TOL command\n");
 			set_tolerance(cmd.arg0, cmd.arg1, cmd.arg2);
 			break;
 		case NDOORS:
-			usart_sendl("NDOORS command:\n");
 			set_ndoors(cmd.arg0, cmd.arg1);
 			break;
 		case TEST1:
@@ -303,7 +306,7 @@ void command_parser(Command cmd) {
 			usart_sendl("Unknown command!\n");
 			break;
 		case PASSCODE:
-			set_passcode(cmd.arg0, cmd.arg1, cmd.arg2);
+			set_passcode(cmd.arg0, cmd.arg1);
 			break;
 		case HELP:
 			help_msg();

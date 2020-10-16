@@ -2,13 +2,22 @@
 #include "door_peripheral.h"
 #include "replay.h"
 
+#define proximityUnit
+
 void main() {
-	//door_peripheral_init();
-	//door_peripheral_think();
-	proximity_peripheral_init();
-	proximity_peripheral_think();
-	//replay_init();
-	//replay_think();
+	
+	#ifdef doorUnit
+		door_peripheral_init();
+		door_peripheral_think();
+	#endif
+	#ifdef proximityUnit
+		proximity_peripheral_init();
+		proximity_peripheral_think();
+	#endif
+	#ifdef replayUnit
+		replay_init();
+		replay_think();
+	#endif
 	return;
 }
 

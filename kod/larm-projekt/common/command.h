@@ -16,9 +16,11 @@ enum COMMAND {
 
 typedef struct {
 	uchar command;
-	uchar arg0;
-	uchar arg1;
-	uchar arg2;
+	uchar active;
+	unsigned int pass;
+	unsigned int arg0;
+	unsigned int arg1;
+	unsigned int arg2;
 } Command;
 
 void command_init();

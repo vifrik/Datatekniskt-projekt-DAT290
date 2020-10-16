@@ -24,10 +24,12 @@ void extract_arguments(uchar buffer[], Command *cmd) {
 	for (int i = 0; i < BUFFER_LENGTH; i++) {
 		if (buffer[i] == 32 || buffer[i] == 13) {		
 			if (current_argument == 0)
-				cmd->arg0 = atoi(arg_temp_buffer);
+				cmd->pass = atoi(arg_temp_buffer);
 			if (current_argument == 1)
-				cmd->arg1 = atoi(arg_temp_buffer);
+				cmd->arg0 = atoi(arg_temp_buffer);
 			if (current_argument == 2)
+				cmd->arg1 = atoi(arg_temp_buffer);
+			if (current_argument == 3)
 				cmd->arg2 = atoi(arg_temp_buffer);
 			
 			// 48 is ascii for 0
@@ -48,7 +50,7 @@ void command_init() {
 
 Command command_handler() {
 	uchar c;
-	Command cmd = {0xF,0xF,0xF,0xF};
+	Command cmd = {0xF,0,0xF,0xF,0xF,0xF};
 	
 	// Om en symbol har matats in i USART
 	if (c = _tstchar()) {
@@ -77,6 +79,8 @@ Command command_handler() {
 			}else {
 				cmd.command = UNKNOWN;
 			}
+			
+			cmd.active = 1;
 			
 			// Återställ command_buffer
 			memset(command_buffer, 0, sizeof(command_buffer));

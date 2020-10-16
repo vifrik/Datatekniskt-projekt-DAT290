@@ -1,5 +1,6 @@
 #include "shared_peripheral.h"
 #include "messages.h"
+#include "lamp.h"
 
 void state_init() {
 	state.active = 0;
@@ -17,7 +18,8 @@ void canmsg_init(CANMsg *msg) {
 }
 
 void alarm_raise(uchar unitId) {
-	DUMP("alarm");
+	usart_send("Alarm");
+	red_lamp_enable();
 	
 	state.alarm = 1;
 
@@ -31,7 +33,8 @@ void alarm_raise(uchar unitId) {
 }
 
 void alarm_lower() {
-	DUMP("Alarm off");
+	red_lamp_disable();
+	usart_send("Alarm off");
 	state.alarm = 0;
 }
 

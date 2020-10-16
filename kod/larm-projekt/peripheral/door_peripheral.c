@@ -4,6 +4,7 @@
 #include "door_sensor.h"
 #include "shared_peripheral.h"
 #include "debug.h"
+#include "lamp.h"
 
 extern State state;
 extern unsigned long sys_time;
@@ -39,7 +40,6 @@ void door_alarm_lower(void){
 }
 
 void door_set_active(CANMsg *msg){
-	print_can_msg(*msg);
 	uchar id = msg->buff[0];
 	door_states[id].active = msg->buff[1];
 	if(door_states[id].active){
@@ -57,7 +57,6 @@ void init_doors(){
 }
 
 void update_tolerance(CANMsg *msg) {
-	print_can_msg(*msg);
 	unsigned char door_id = msg->buff[0];
 	door_states[door_id].tolerance = msg->buff[1];
 }
@@ -119,6 +118,7 @@ void door_peripheral_init(void) {
 	DUMP("Door");
 	state_init();
 	stk_init();
+	lamp_init();
 	door_init();
 	can1_init(door_receiver);
 	request_id(DOOR, number_of_doors);
@@ -138,7 +138,6 @@ void door_peripheral_think(void) {
 			if(door_states[i].opened){
 				if(sys_time - door_states[i].opened > door_states[i].tolerance * 1000000 && !door_states[i].alarm){
 					alarm_raise(i);
-					red_lamp_enable();
 					door_states[i].alarm = 1;
 				} else if (sys_time - door_states[i].opened > door_states[i].tolerance * 1000000) {
 					door_states[i].opened = 0;

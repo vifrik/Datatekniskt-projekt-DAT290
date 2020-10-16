@@ -4,11 +4,31 @@
 #include "proximity_sensor.h"
 #include "vibration_sensor.h"
 #include "shared_peripheral.h"
+#include "lamp.h"
 
 #define SAMPLE_SIZE 128
 
 extern State state;
 unsigned long tolerance = 10;
+
+uchar distance_active = 1;
+uchar vibration_active = 1;
+
+void update_tolerance_proximity(CANMsg *msg) {
+	tolerance = msg->buff[1];
+}
+
+void proximity_set_active(CANMsg *msg) {
+	print_can_msg(*msg);
+	msg->buff[1] ? usart_send("Enabled ") : usart_send("Disabled ");
+	msg->buff[0] ? usart_sendl("vibration sensor") : usart_sendl("distance sensor");
+	
+	if (msg->buff[0]) {
+		vibration_active = msg->buff[1];
+	} else {
+		distance_active = msg->buff[1];
+	}
+}
 
 // Hanterar CAN-meddelanden
 void proximity_receiver(void) {
@@ -36,14 +56,10 @@ void proximity_receiver(void) {
 				update_id(&msg);
 				break;
 			case TOL_SET:
-				update_tolerance(&msg);
+				update_tolerance_proximity(&msg);
 				break;
-			case ACTIVE_ON:
-				state.active = 1;
-				break;
-			case ACTIVE_OFF:
-				state.active = 0;
-				break;
+			case ACTIVATE:
+				proximity_set_active(&msg);
 		}
 	}
 }
@@ -73,8 +89,7 @@ unsigned int sample_variance(unsigned int data[], unsigned int sampleMean) {
 unsigned int sample[SAMPLE_SIZE];
 
 void vibration_callback(void) {
-	if (!state.alarm && state.id != 0xF) {
-		DUMP("abc123");
+	if (!state.alarm && state.id != 0xF && vibration_active) {
 		alarm_raise(1);
 	}
 }
@@ -83,6 +98,7 @@ void vibration_callback(void) {
 void proximity_peripheral_init(void) {
 	DUMP("Proximity");
 	state_init();
+	lamp_init();
 	proximity_init();
 	vibration_init();
 	vibration_callback_init(vibration_callback);
@@ -128,7 +144,7 @@ void proximity_peripheral_think(void) {
 		unsigned int sampleVar = sample_variance(sample, sampleMean);
 		
 		// Om vi har räknat fem värden och vi inte har larmat och urvalsvariansen är större än tio -> larma
-		if (!state.alarm && all_nonzero(sample, SAMPLE_SIZE) && sampleVar > tolerance) {
+		if (!state.alarm && all_nonzero(sample, SAMPLE_SIZE) && sampleVar > tolerance && distance_active) {
 			DUMP_numeric(sampleVar);
 			DUMP_numeric(sampleMean);
 			alarm_raise(0);
