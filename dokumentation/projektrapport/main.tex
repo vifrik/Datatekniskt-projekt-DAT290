@@ -134,6 +134,11 @@ Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd och e
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{canbuss-pp.png}
+    \caption{Översikt över systemet}
+\end{figure}
 
 
 \subsubsection{CAN}
@@ -231,6 +236,12 @@ Inmatade tecken sparas i en buffer.
 Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
 Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{central-oversikt-pp.png}
+    \caption{Översikt över centralenheten och dess komponenter}
+\end{figure}
+
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
 \subsubsection{Periferienhet}
@@ -265,6 +276,12 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 
 \end{description}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{periferi-oversikt-pp.png}
+    \caption{Översikt över periferienheterna och dess komponenter}
+\end{figure}
 
 
 \section{Metod}
