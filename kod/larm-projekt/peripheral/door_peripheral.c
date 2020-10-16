@@ -116,6 +116,7 @@ void door_receiver(void) {
 
 // Initialisering av dörrenhet
 void door_peripheral_init(void) {
+	DUMP("Door");
 	state_init();
 	stk_init();
 	door_init();

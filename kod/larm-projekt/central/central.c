@@ -6,6 +6,7 @@
 #include "error.h"
 #include "keypad.h"
 #include "command.h"
+#include "debug.h"
 
 #define DEVICES_MAX 15
 #define INPUT_BUFFER_SIZE 2
@@ -63,6 +64,13 @@ void raise_alarm(CANMsg *msg) {
 	
 }
 
+void poll_alarm(uchar id){
+	usart_send("###  POLL ALARM  ###");
+	usart_send("from:");
+	usart_send_numeric(id);
+}
+
+
 void timeout_alarm(uchar id){
 	usart_send("###  TIMEOUT ALARM  ###");
 	usart_send("from:");
@@ -86,9 +94,12 @@ void poll_response_handler(CANMsg *msg) {
 	//Ignorera ifall enheten inte finns med i listan av enheter
 	if(msg->nodeId < state.devices){
 		Peripheral p = peripherals[msg->nodeId];	
-		for (int i = 0; i >= msg->length; i++) {
-			if (p.buff[i] != ~msg->buff[i]) {
-				raise_alarm(msg->nodeId);
+		for (int i = 0; i < msg->length; i++) {
+			if (p.buff[i] != (uchar)~msg->buff[i]) {
+				usart_send_numeric(p.buff[i]);
+				usart_send(" ");
+				usart_send_numericl(~msg->buff[i]);
+				poll_alarm(msg->nodeId);
 				break;
 			}
 		}
@@ -99,7 +110,7 @@ void poll_response_handler(CANMsg *msg) {
 void dicp_request_handler(CANMsg *msg) {
     if (state.devices < DEVICES_MAX) {
         DUMP("RECEIVED REQUEST");
-
+		print_can_msg(*msg);
         Peripheral p;
         peripheral_init(&p, msg->buff[0]);
 		// Tänker mig att periferienheten även skickar med antalet underenheter

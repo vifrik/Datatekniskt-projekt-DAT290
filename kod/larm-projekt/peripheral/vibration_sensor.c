@@ -7,14 +7,16 @@
 
 #define EXTI2_IRQVEC		((void (**)(void)) 0x2001C060)
 
-Callback cb;
+Callback vibCB;
 
 // Avbrottshanterare
-void irq_handler_exti2(void) {	
+void irq_handler_exti2(void) {
+	
 	if(EXTI_GetITStatus(EXTI_Line2) != RESET) {
-		if (cb != NULL) {
-			cb();
+		if (vibCB != NULL) {
+			vibCB();
 		}
+		DUMP("Vibration");
 		
 		EXTI_ClearITPendingBit(EXTI_Line2);
 	}
@@ -32,10 +34,10 @@ void vibration_init(void) {
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOE, &GPIO_InitStructure);
     
-    /* Tell system that you will use PB2 for EXTI_Line2 */
+	
+    /* Tell system that you will use PE2 for EXTI_Line2 */
     SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource2);
 	
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     
     /* PE2 is connected to EXTI_Line2 */
     EXTI_InitStructure.EXTI_Line = EXTI_Line2;
@@ -43,12 +45,12 @@ void vibration_init(void) {
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
     EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
     EXTI_Init(&EXTI_InitStructure);
- 
+
     /* Add IRQ vector to NVIC */
-    /* PB2 is connected to EXTI_Line2, which has EXTI2_IRQn vector */
+    /* PE2 is connected to EXTI_Line2, which has EXTI2_IRQn vector */
     NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0E;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0E;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 	
@@ -57,7 +59,7 @@ void vibration_init(void) {
 }
 
 void vibration_callback_init(Callback callback) {
-	cb = callback;
+	vibCB = callback;
 }
 
 unsigned char vibration_read(void) {

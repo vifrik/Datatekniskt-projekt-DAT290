@@ -2,14 +2,17 @@
 #include "can.h"
 #include "messages.h"
 #include "proximity_sensor.h"
+#include "vibration_sensor.h"
 #include "shared_peripheral.h"
 
+#define SAMPLE_SIZE 128
+
 extern State state;
-uchar tolerance;
+unsigned long tolerance = 10;
 
 // Hanterar CAN-meddelanden
 void proximity_receiver(void) {
-	DUMP("CAN message received: ");
+	//DUMP("CAN message received: ");
 
 	CANMsg msg;
 	can_receive(&msg);
@@ -46,73 +49,91 @@ void proximity_receiver(void) {
 }
 
 // Urvalsmedelvärde
-unsigned char sample_mean(unsigned char data[]) {
-	unsigned char sum = 0;
+unsigned int sample_mean(unsigned int data[]) {
+	unsigned long sum = 0;
 	
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < SAMPLE_SIZE; i++) {
 		sum += data[i];
 	}
 	
-	return sum/5;
+	return sum/SAMPLE_SIZE;
 }
 
 // Urvalsvarians
-unsigned char sample_variance(unsigned char data[], unsigned char sum) {
-	unsigned char variance = 0;
+unsigned int sample_variance(unsigned int data[], unsigned int sampleMean) {
+	unsigned long variance = 0;
 	
-	for (int i = 0; i < 5; i++) {
-		variance += ((data[i]-sum)*(data[i]-sum));
+	for (int i = 0; i < SAMPLE_SIZE; i++) {
+		variance += ((data[i]-sampleMean)*(data[i]-sampleMean));
 	}
 	
-	return variance/4;
+	return variance/(SAMPLE_SIZE - 1);
 }
 
-unsigned char sample[5];
+unsigned int sample[SAMPLE_SIZE];
 
 void vibration_callback(void) {
-	if (!state.alarm) {
+	if (!state.alarm && state.id != 0xF) {
+		DUMP("abc123");
 		alarm_raise(1);
 	}
 }
 
 // Initialisering av rörelsesensor och CAN
 void proximity_peripheral_init(void) {
+	DUMP("Proximity");
 	state_init();
-	
 	proximity_init();
 	vibration_init();
 	vibration_callback_init(vibration_callback);
-	//can1_init(proximity_receiver);
-	//request_id(PROXIMITY, 2);
+	can1_init(proximity_receiver);
+	request_id(PROXIMITY, 2);
 	
 	stk_init();
 }
 
-unsigned char counter = 5;
+uchar all_nonzero(unsigned int values[], uchar length){
+	for(int i = 0; i < length; i++){
+		if(values[i] == 0) return 0;
+	}
+	return 1;
+}
+
+void set_all_zero(unsigned int values[], uchar length){
+	for(int i = 0; i < length; i++){
+		values[i] = 0;
+	}
+}
+
+//unsigned char counter = SAMPLE_SIZE * 10;
 
 // Huvudslinga för periferienhet
-void proximity_peripheral_think(void) {	
+void proximity_peripheral_think(void) {
+	while(state.id == 0xF);
+	set_all_zero(sample, SAMPLE_SIZE);
 	while(1) {
 		
-		//uchar vibration = vibration_read();
 		
 		// Flyttar fram alla värden ett steg
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < SAMPLE_SIZE - 1; i++) {
 			sample[i] = sample[i+1];
 		}
 		
-		// Uppdaterar sista värdet i sample
-		sample[4] = proximity_read();
 		
-		unsigned char sampleMean = sample_mean(sample);
-		unsigned char sampleVar = sample_variance(sample, sampleMean);
+		// Uppdaterar sista värdet i sample
+		sample[SAMPLE_SIZE - 1] = proximity_read();
+		//if(!state.alarm) DUMP_numeric(sample[SAMPLE_SIZE - 1]);
+		
+		unsigned int sampleMean = sample_mean(sample);
+		unsigned int sampleVar = sample_variance(sample, sampleMean);
 		
 		// Om vi har räknat fem värden och vi inte har larmat och urvalsvariansen är större än tio -> larma
-		if (!counter && !state.alarm && sampleVar > tolerance) {
-			alarm_raise(1);
+		if (!state.alarm && all_nonzero(sample, SAMPLE_SIZE) && sampleVar > tolerance) {
+			DUMP_numeric(sampleVar);
+			DUMP_numeric(sampleMean);
+			alarm_raise(0);
 		}
+		delay(2500);
 		
-		if (counter)
-			counter--;
 	}
 }

@@ -54,7 +54,7 @@ void request_id(uchar type, uchar units) {
 	CANMsg msg;
 	canmsg_init(&msg);
 	msg.msgId = DICP_REQUEST;
-	msg.length = 1;
+	msg.length = 2;
 	msg.buff[0] = type;
 	msg.buff[1] = units;
 
