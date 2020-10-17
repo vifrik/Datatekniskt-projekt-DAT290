@@ -7,8 +7,9 @@
 
 #define EXTI0_IRQVEC		((void (**)(void)) 0x2001C058)
 
-unsigned volatile long time_start = 0;
-unsigned volatile int distance = 0;
+ProximityCallback proximityCallback;
+
+unsigned long time_start = 0;
 extern unsigned long sys_time;
 
 // Avbrottshanterare
@@ -20,7 +21,7 @@ void irq_handler_exti0(void) {
 			time_start = sys_time;
 		} else {				
 			long delta_time = sys_time - time_start;
-			distance = delta_time*3.4/100;
+			proximityCallback(delta_time*3.4/100);
 		}
 		
 		EXTI_ClearITPendingBit(EXTI_Line0);
@@ -69,11 +70,13 @@ void proximity_init(void) {
     *((void (**) (void)) EXTI0_IRQVEC) = irq_handler_exti0;
 }
 
+void proximity_callback_init(ProximityCallback pc) {
+	proximityCallback = pc;
+}
+
 // Skriver 1 och sedan 0 på trig med 10us fördröjning, returnerar avstånd
-unsigned int proximity_read(void) {		
+void proximity_read(void) {		
 	GPIO_WriteBit(GPIOE, GPIO_Pin_1, Bit_SET);
 	delay(10);
 	GPIO_WriteBit(GPIOE, GPIO_Pin_1, Bit_RESET);
-	
-	return distance;
 }
