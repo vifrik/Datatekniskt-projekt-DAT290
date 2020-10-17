@@ -270,7 +270,7 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Längden av denna logiska etta motsvarar det uppmätta avståndet.
 
     \item[Vibrationssensor:] Vibrationssensors uppgift är att upptäcka vibrationer.
-    En vibrationssensor används ofta för att mäta böjningar, berörning, vibration eller stötar.
+    En vibrationssensor används ofta för att mäta böjningar, beröring, vibration eller stötar.
     Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
     D0 används för att läsa det logiska värdet på sensorn.
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
@@ -290,17 +290,60 @@ Varje delsystem gås igenom för sig, men det har ofta varit samarbete mellan de
 
 \subsection{Utveckling av CAN}
 Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
+När en standard för meddelandestruktur var definierad påbörjades arbetet med att ta fram de olika meddelandetyperna.
+Alla typer av meddelanden, dess funktion och dess parametrar dokumenterades och gjordes lätttillgängligt i kodbasen.
+En gemensam mottagar-funktion för meddelanden utvecklades som kom att bli standarden för alla enheter i systemet.
+Mottagaren hanterar meddelandet och tar reda på vilken typ det genom att bryta ner meddelandet.
+Beroende på meddelandetyp kallas den korresponderande funktionen.
+
+CAN-protokollet samlar datan från ett inkommande data in ett RX-meddelande.
+Logiken och koden för att göra om ett sådant meddelande till ett CANMsg var sedan tidigare given.
+Tidigare nämnd mottagar-funktionens uppgift är att hantera dessa meddelanden och att kalla den tillhörande funktionen till meddelandetypen.
+Metoder för att till exempel uppdatera tolerans eller sätta antalet dörrar utvecklades.
+När funktionerna var färdiga och testade så lades de till i mottagarfunktionen.
+
+För att skicka ett meddelande via CAN måste det initialiseras.
+Funktioner togs fram för att på ett kompakt sätt kunna initialisera meddelanden utan behovet av att upprepa kod.
+Efter att ett meddelande har initialiserats med den förväntade datan skickas det ut på bussen med hjälp av CAN-protokollet.
+Detta görs genom att ett CANmsg fylls med data.
+Sedan gör CAN-protokollet om meddelandet till ett TX-meddelande för att sedan automatiskt skicka det på bussen.
 
 \subsection{Utveckling av Centralenheten}
+Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och agerade som centrum i kommunikationen.
 
+Centralenhetens pollingsystem utvecklades i syfte att stoppa återuppspelningsattacker och att upptäcka eventuella bortfall av periferienheter.
+Pollingsystemet började som en idé på papper där teoretiska meddelanden ritades ut och manuellt stegades fram.
+Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
+TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
 
 \subsection{Utveckling av Periferienheterna}
+Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
+Eftersom gruppen sen tidigare saknade erfarenhet med hårdvaran uppstod en del motstånd under arbetet.
+När periferienheterna fick förmågan att läsa av sina sensorer upptäcktes det att det inte fanns något sätt att förmedla detta till utvecklaren.
+För att lösa detta utvecklades ett antal funktioner som gjorde det möjligt att skriva ut olika typer av data till USART.
 
+För identifiering av periferienheterna krävs en identifikation.
+Tilldelningen av identifikationen sker automatiskt vid uppkoppling av periferienheten med hjälp av DICP.
+DICP är ett protokoll baserat på DHCP (Dynamic Host Controller Protocol).
+DHCP tilldelar automatiskt IP(Internet Protocol)-adresser på ett nätverk.
+Tilldelningen sker via att skicka ett meddelande på en generisk adress så kallad \textit{Broadcast Adress} på engelska.
+DICP använder sig av adressen 15 som den generiska adressen för att anropa centralenheten i en ID-förfrågan.
+Centralenheten svarar på ett DICP-meddelande med ett ledigt ID och periferienheten antar detta ID.
+
+Med hjälp av identifikationer hade nu periferienheterna möjlighet att skicka meddelanden.
+Meddelanden av typen ALARM utvecklades och kod för att väcka dessa meddelanden skrevs.
+Tillsammans med funktionen att väcka ett ALARM utvecklades funktionalitet för att till exempel avlarma och ändra antalet underenheter.
+
+Under projektet gång upptäcktes en miss i periferienheterna.
+Dörrperiferienheten hade endast stöd för en dörr och saknade funktionalitet för lampor.
+Samtidigt hade rörelseperiferienheten endast stöd för avståndssensorn.
+Detta ledde till att många typer av meddelande behövde skrivas om och orsakade extra arbete.
+Hade specifikationen för periferienheterna studerats noggrannare hade detta kunnat undvikas.
 
 
 \section{Resultat}
 Denna sektion syftar till att presentera det slutgiltiga resultatet av systemet samt att reflektera och diskutera kring utfallet utifrån de mål och syfte som ställts upp i rapportens inledning.
-Sektionen inleds med resultaten från systemet i sin helhet föjt av djupare granskning av delsystemen.
+Sektionen inleds med resultaten från systemet i sin helhet följt av djupare granskning av delsystemen.
 Resultat från utförda tester visas även upp i denna sektion.
 
 \subsection{Larmsystemet}
@@ -342,11 +385,11 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
 
 \begin{description}
   \item[Avståndsensor] Avståndssensorn observerar fem senaste avstånden och beräknar variansen av dessa.
-  Om variansen är större än toleransen initieras ett arlarm.
+  Om variansen är större än toleransen initieras ett alarm.
   Toleransen går att bestämma på centralenheten.
 
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
-  Kännsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
+  Känsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
 
