@@ -423,7 +423,7 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
 \todo{Testa avståndssensorn, rapportera felmarginal etc här?}
 
 \subsubsection{Kommunikationsprotokoll}
-kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
+Kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 Protokollet är designat för att så få meddelanden som möjligt ska behöva skickas.
 I och med det har funktionalitet så som meddelandebekräftelser inte implementerats.
 Funktionalitet som potentiellt skulle göra systemet stabilare och mer motståndskraftigt mot attacker.
@@ -454,6 +454,9 @@ Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på et
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på pollingmeddelandet.
 Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
+
+Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
+Detta gör att en angripare inte kan byta ut systemets periferienheter med sina egna enheter.
 
 \subsubsection{Testläge}
 Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
@@ -590,7 +593,7 @@ För att förebygga inbrott kan även informationen att det finns ett larmsystem
 \subsection{Förbättringsmöjligheter}
 Det finns fortfarande utvecklingsmöjligheter för systemet.
 Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
-Detta skulle kunna förebyggas med ett mer avancerat pollingsystem.
+Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterade nycklar.
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 
