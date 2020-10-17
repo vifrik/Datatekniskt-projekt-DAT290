@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{comment}
 
 \newcommand\namn{Larmsystem}
 \newcommand{\todo}[1]{\marginpar{TODO: #1}\vspace{1cm}}
@@ -299,7 +300,8 @@ Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
 
 \section{Metod}
 Denna sektion beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts. 
-Varje delsystem gås igenom för sig, men det har ofta varit samarbete mellan de olika delarna då det de olika delarna måste vara kompatibla med varandra. 
+Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar. 
+Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
 För att förenkla arbetet i början delades det in i tre olika delar: CAN, centralenheten och periferienheterna. 
 I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
@@ -377,9 +379,14 @@ Systemet stödjer i teorin att upp till 15 enheter ansluts. Detta är inget som 
 Systemet vidhåller däremot sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
 \subsubsection{Centralenhet}
-Centralenheten fungerar som förväntat. Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. I terminalen skrivs detaljer om larmet ut. Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
+Centralenheten fungerar som förväntat. 
+Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. 
+I terminalen skrivs detaljer om larmet ut. 
+Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. 
+Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
 
-Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna. Förfrågningarna innehåller ett meddelande som periferienheten förväntas besvara vilket skyddar från återuppspelningsattacker.
+Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna. 
+Förfrågningarna innehåller ett meddelande som periferienheten förväntas besvara vilket skyddar från återuppspelningsattacker.
 
 Gränsnittet som tillåter användaren att göra inställningar i systemet fungerar men är minimalt.
 Gränsnittet är effektivt då endast ett fåtal knapptryckningar behövs för att justera en inställning.
@@ -471,8 +478,9 @@ En mall för genomförelse och dokumentation av tester utvecklades.
 I denna sektion finns det flera exempel på utförda tester. 
 
 
-%Mall för tester. Copy paste och kom ihåg att ta bort innan inlämning!
+%Mall för tester. 
 %Vi vill nog också lägga många tester i en bilaga.
+\begin{comment}
 \subsubsection{Sak som testas}
 \begin{description}
 \item[Komponent] Den del av systemet som ska testas.
@@ -485,6 +493,7 @@ I denna sektion finns det flera exempel på utförda tester.
 
 \item[Analys] Vad testresultatet innebär; om komponenten fungerar som planerat, behöver testas ytterligare eller om vidare utveckling krävs.
 \end{description}
+\end{comment}
 
 \subsubsection{CAN test}
 \begin{description}
@@ -513,17 +522,42 @@ I denna sektion finns det flera exempel på utförda tester.
 Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
 \end{description}
 
-\subsubsection{Skydd mot återuppspelningsattacker}
+\subsubsection{Test av skydd mot återuppspelningsattacker}
 \begin{description}
 \item[Komponent] Centralenheten och dörrenheten.
 
 \item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
 
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. Alla enheter kopplas in och startas. En enhet får spela in meddelanden mellan centralenheten och en dörrenhet. När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den. Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. 
+Alla enheter kopplas in och startas. 
+En enhet får spela in meddelanden mellan centralenheten och en dörrenhet. 
+När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den. 
+Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
 
-\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig. Då något uppenbart är fel larmar centralenheten.
+\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig. 
+Då något uppenbart är fel larmar centralenheten.
 
 \item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
+\end{description}
+
+\subsubsection{Test av hela systemet}
+\begin{description}
+\item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
+
+\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas. 
+Det ska även testas om larmet aktiveras om en periferienhet tas bort. 
+Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. 
+Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr. 
+Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd. 
+När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras. 
+Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
+
+\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras. 
+Kommandon från centralenheten gör det dem ska.
+
+\item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
 \end{description}
 
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
