@@ -4,9 +4,6 @@
 #include "stm32f4xx_can.h"
 #include "stm32f4xx_rcc.h"
 
-//#define	__CAN_TxAck		// Uncomment this to make transmission block (wait) until another node is connected
-#define __DUMP_ENABLED      // Comment out to disable deubug messages over USART
-
 #define __IRQ_PRIORITY		2
 #define	CAN1_IRQ_VECTOR		(0x2001C000+0x90)
 #define __ENABLED_PRIORITY	3
@@ -36,7 +33,7 @@ void can1_init(VoidFunction interrupt) {
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);	
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;	
@@ -50,7 +47,7 @@ void can1_init(VoidFunction interrupt) {
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);	
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;	

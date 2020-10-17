@@ -1,9 +1,6 @@
 #include "debug.h"
 #include "usart.h"
 
-
-
-
 void print_can_msg(CANMsg msg){
 	usart_sendl("#############################");
 	usart_send("Message id:");

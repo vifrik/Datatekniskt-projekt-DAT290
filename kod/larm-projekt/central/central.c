@@ -12,11 +12,9 @@
 #define DEVICES_MAX 15
 #define INPUT_BUFFER_SIZE 2
 
-//void *_sbrk(int incr) { return (void *)-1; }
-
 extern unsigned long sys_time;
-State state = {0, 0, 0, 1};
-uchar passcode[4] = {1,2,3,4};
+State state	= {0, 0, 0, 1};
+uchar passcode[4] = {1, 2, 3, 4};
 Peripheral peripherals[DEVICES_MAX];
 
 CANMsg msg_create(uchar msgId, uchar nodeId, uchar dir, uchar length){
@@ -37,13 +35,6 @@ void peripheral_init(Peripheral *p, uchar type) {
     }
 }
 
-// Genererar ett slumpmässigt 16-bitars tal med hjälp av standard c-funktioner
-uchar random_gen(void) {
-    //srand(sys_time); 
-    //return (uchar)(rand() % 256);
-	return 10;
-}
-
 // Ändrade så att den ger id för vilken dörr/rörelseenhet istället för id för periferienheten
 // Tänker mig att det skickas med i larmmeddelandet
 void raise_alarm(CANMsg *msg) {
@@ -60,10 +51,28 @@ void raise_alarm(CANMsg *msg) {
             usart_send("Proximity with id:");
 			break;
     }
+
 	usart_send_numeric(msg->nodeId);
 	usart_send(" from subdevice ");
     usart_send_numericl(msg->buff[0]);
 	
+}
+
+void alarm_lower(void) {
+	red_lamp_disable();
+	for (int i = 0; i < state.devices; i++) {
+		CANMsg msg;
+		msg.msgId = ALARM_OFF;
+		msg.nodeId = i;
+		msg.dir = TO_PERIPHERAL;
+		msg.length = 0;	
+		
+		peripherals[i].alarm = 0;
+		
+		can_send(&msg);
+	}
+	
+	DUMP("ALARM off");
 }
 
 void poll_alarm(uchar id){
@@ -81,19 +90,16 @@ void timeout_alarm(uchar id){
 }
 
 void poll_request(uchar id) {
-    //DUMP("POLL REQUEST SENT");
     CANMsg msg;
 	msg = msg_create(POLL_REQUEST, id, TO_PERIPHERAL, 8);
     for (int i = 0; i < msg.length; i++){
         msg.buff[i] = (sys_time & (0xFF << (8*i))) >> (8*i);
         peripherals[id].buff[i] = msg.buff[i];
     }
-	//DUMP("POLL SENT");
     can_send(&msg);
 }
 
 void poll_response_handler(CANMsg *msg) {
-	//DUMP("POLL RESPONSE RECEIVED");
 	//Ignorera ifall enheten inte finns med i listan av enheter
 	if(msg->nodeId < state.devices){
 		Peripheral p = peripherals[msg->nodeId];	
@@ -112,10 +118,10 @@ void poll_response_handler(CANMsg *msg) {
 
 void dicp_request_handler(CANMsg *msg) {
     if (state.devices < DEVICES_MAX) {
-        DUMP("RECEIVED REQUEST");
+        usart_sendl("RECEIVED REQUEST");
         Peripheral p;
         peripheral_init(&p, msg->buff[0]);
-		// Tänker mig att periferienheten även skickar med antalet underenheter
+
 		p.units = msg->buff[1];
         peripherals[state.devices] = p;
         
@@ -126,14 +132,12 @@ void dicp_request_handler(CANMsg *msg) {
         state.devices++;
 
         can_send(&response);
-		DUMP("ID SENT");
+		usart_sendl("ID SENT");
     } else {
         error_send(msg->msgId, TO_PERIPHERAL, MAX_DEVICES);
     }
 }
 
-// active = ACTIVE_ON aktiverar periferienhet p
-// active = ACTIVE_OFF deaktiverar
 void active_toggle(uchar nodeId, uchar unitId, uchar active) {
 	CANMsg msg;
 	msg = msg_create(ACTIVATE, nodeId, TO_PERIPHERAL, 2);
@@ -159,8 +163,8 @@ void set_ndoors(uchar nodeId, uchar ndoors){
 void set_passcode(unsigned int newpass, unsigned int newpass1) {
 	int tempPass = newpass;
 	
+	// nya lösen stämmer överrens
 	if (newpass == newpass1) {
-		// nya lösen stämmer överrens
 		for (int i = 3; i >= 0; i--) {
 			passcode[i] = tempPass % 10;
 			tempPass /= 10;
@@ -175,11 +179,10 @@ void help_msg(void) {
 	usart_send("\nEnter commands into the console to configure system, press 'enter' to submit command\n");
 	usart_send("These are the available options:\n");
 	usart_send("Activate or Deactivate unit:\n Type 'active nodeId 0/1'\n");
-	usart_send("Set Tolerance:\n Type 'tol nodeId unitId time'\n");
-	usart_send("Set number of doors:\n Type 'nDoors nodeId numberOfDoors'\n");
-	usart_send("Show connected units:\n Type 'show'\n");
-	usart_sendl("Change passcode:\n Type 'passcode oldcode newcode newcode'");
-	usart_send("Type 'help' for more help!\n");
+	usart_send("Set Tolerance:\n Type 'tol passcode nodeId unitId time'\n");
+	usart_send("Set number of doors:\n Type 'nDoors passcode nodeId numberOfDoors'\n");
+	usart_send("Show connected units:\n Type 'show passcode'\n");
+	usart_send("Change passcode:\n Type 'passcode oldcode newcode newcode'\n");
 }
 
 void show_units(void) {
@@ -188,31 +191,28 @@ void show_units(void) {
 		Peripheral p = peripherals[i];
 		usart_send("\n");
 		switch (p.type) {
-        case DOOR:
-            usart_send("Door with id: ");
-			usart_send_numeric(i);
-			usart_send(" and ");
-			usart_send_numeric(p.units);
-			usart_send(" connected doors\n");
-			break;
-        case PROXIMITY:
-            usart_send("Proximity with id: ");
-			usart_send_numeric(i);
-			usart_send(" and ");
-			usart_send_numeric(p.units);
-			usart_send(" connected sensors\n");
-			break;
+			case DOOR:
+				usart_send("Door with id: ");
+				usart_send_numeric(i);
+				usart_send(" and ");
+				usart_send_numeric(p.units);
+				usart_send(" connected doors\n");
+				break;
+			case PROXIMITY:
+				usart_send("Proximity with id: ");
+				usart_send_numeric(i);
+				usart_send(" and ");
+				usart_send_numeric(p.units);
+				usart_send(" connected sensors\n");
+				break;
 		}
     }
 }
 
 void receiver(void) {
-	//DUMP("CAN message received: ");
-	
     CANMsg msg;
     can_receive(&msg);
-	//DUMP_numeric(msg.msgId);
-	//DUMP_numeric(POLL_RESPONSE);
+
 	if (msg.dir == TO_CENTRAL) {
 		switch (msg.msgId) {
 			case ALARM:
@@ -245,38 +245,12 @@ void timeout_handler(void) {
 	state.ready = 1;
 }
 
-void init(void) {
-    can1_init(receiver);
-    keyboard_init();
-	stk_init();
-	lamp_init();
-	callback_init(timeout_handler);
-	command_init();
-}
-
 uchar equal(char input[], char passcode[]) {
 	for (int i = 0; i < 4; i++) {
 		if (input[i] != passcode[i])
 			return 0;
 	}
 	return 1;
-}
-
-void alarm_lower(void) {
-	red_lamp_disable();
-	for (int i = 0; i < state.devices; i++) {
-		CANMsg msg;
-		msg.msgId = ALARM_OFF;
-		msg.nodeId = i;
-		msg.dir = TO_PERIPHERAL;
-		msg.length = 0;	
-		
-		peripherals[i].alarm = 0;
-		
-		can_send(&msg);
-	}
-	
-	DUMP("ALARM off");
 }
 
 
@@ -317,13 +291,20 @@ void command_parser(Command cmd) {
 	}
 }
 
+void init(void) {
+    can1_init(receiver);
+    keyboard_init();
+	stk_init();
+	lamp_init();
+	callback_init(timeout_handler);
+	command_init();
+}
+
 void think(void) {
     // Vänta tills minst en enhet är uppkopplad
     while(!state.devices);
-	command_init();
 
     uchar keypad[4] = {0xFF,0xFF,0xFF,0xFF};
-	
 
     while(1) {
 		// Keypad- och USART-logik här
@@ -344,7 +325,6 @@ void think(void) {
 		
 			poll_request(id);
 			state.ready = 0;
-			
 		}
 	}
 }

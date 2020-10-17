@@ -148,7 +148,7 @@ Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas 
 
 CAN är ett protokoll för kommunikation och hantering av meddelanden mellan enheter.
 CAN-protokollet måste därför finnas hos både periferienhet och centralenhet.
-Koden är därför strukturerad utifrån att samma kod kan köras på valfri enhet oavsett typ.
+Koden är därför strukturerad så att samma kod kan köras på valfri enhet oavsett typ.
 Med hjälp av riktning och enhets-ID (enhets-identifikation) kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
 Varje CAN-meddelande byggs upp av fem fält:
 
@@ -249,12 +249,14 @@ Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN.
 Detta görs genom att anta en standard-identifierare 15 och att skicka ett DICP(Dynamic Identification Configuration protocol)-meddelande.
 Centralenheten tilldelar periferienheten och besvarar DICP-meddelandet med den tilldelade identifikationen.
-Vid framtida kommunikation använder periferienhet sig av sin unika identifierare för att skicka meddelanden.
+Vid framtida kommunikation använder periferienheten sig av sin unika identifierare för att skicka meddelanden.
 
 För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
-Vid en förfrågan skickar centralenheten ett meddelande till en av periferienheterna som är uppkopplade.
+Vid en förfrågan skickar centralenheten ett meddelande till en uppkopplad periferienhet.
 I meddelandet anger centralenheten den lokala tiden då förfrågningen skickades.
 Periferienhetens uppgift är att bitvis invertera tiden innan den besvarar meddelandet.
+Centralenheten verifierar att den inverterade tiden stämmer överrens med tiden då den skickade meddelandet.
+Om en avvikelse i tiden uppstår så larmar centralenheten med ett alarm.
 
 Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
 Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor.
@@ -275,8 +277,19 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
     D0 används för att läsa det logiska värdet på sensorn.
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
-
 \end{description}
+
+Dörrsensors tröskel justeras genom att sätta det antal tillåtna sekunder som en dörr kan vara öppen.
+När en dörr öpnnas sparar periferienheten den nuvarande tiden.
+Överskrider tiden som dörren varit öppen den tillåtna tiden skapar periferienheten ett alarm.
+
+Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
+Genom att beräkna variansen på dessa mätvärden har avståndssensorn möjligheten att upptäcka en rörelse.
+En varians större än tröskeln innebär ett alarm.
+En lägre tröskel används för att lokalt kunna alarmera.
+
+Vibrationssensorns känslighet justeras direkt på sensorn.
+Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
 
 \begin{figure}[H]
     \centering
@@ -298,15 +311,15 @@ Senare i projektet när systemet närmade sig färdigställning återgick gruppe
 Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
 När en standard för meddelandestruktur var definierad påbörjades arbetet med att ta fram de olika meddelandetyperna.
 Alla typer av meddelanden, dess funktion och dess parametrar dokumenterades och gjordes lätttillgängligt i kodbasen.
-En gemensam mottagar-funktion för meddelanden utvecklades som kom att bli standarden för alla enheter i systemet.
-Mottagaren hanterar meddelandet och tar reda på vilken typ det genom att bryta ner meddelandet.
+En gemensam mottagar-funktion utvecklades som kom att bli standarden för alla enheter i systemet.
+Mottagaren hanterar meddelandet och tar reda på vilken typ det är genom att bryta ner meddelandet.
 Beroende på meddelandetyp kallas den korresponderande funktionen.
+När mottagaren var på plats påbörjades implementeringen av diverse funktionalitet.
 
-CAN-protokollet samlar datan från ett inkommande data in ett RX-meddelande.
+CAN-protokollet samlar datan från en inkommande sänding in ett RX-meddelande.
 Logiken och koden för att göra om ett sådant meddelande till ett CANMsg var sedan tidigare given.
-Tidigare nämnd mottagar-funktionens uppgift är att hantera dessa meddelanden och att kalla den tillhörande funktionen till meddelandetypen.
 Metoder för att till exempel uppdatera tolerans eller sätta antalet dörrar utvecklades.
-När funktionerna var färdiga och testade så lades de till i mottagarfunktionen.
+När funktionerna var testade så lades de till i mottagarfunktionen.
 
 För att skicka ett meddelande via CAN måste det initialiseras.
 Funktioner togs fram för att på ett kompakt sätt kunna initialisera meddelanden utan behovet av att upprepa kod.
@@ -316,6 +329,9 @@ Sedan gör CAN-protokollet om meddelandet till ett TX-meddelande för att sedan 
 
 \subsection{Utveckling av Centralenheten}
 Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och agerade som centrum i kommunikationen.
+När alla enheter i systemet hade en unik identifikation kunde periferienheten nu skicka olika kommandon till de olika enheterna.
+Kommandon utvecklades för att konfigurera de olika enheterna.
+För att skydda systemet mot attacker implementerades ett lösenordsskydd i centralenhetens USART.
 
 Centralenhetens pollingsystem utvecklades i syfte att stoppa återuppspelningsattacker och att upptäcka eventuella bortfall av periferienheter.
 Pollingsystemet började som en idé på papper där teoretiska meddelanden ritades ut och manuellt stegades fram.

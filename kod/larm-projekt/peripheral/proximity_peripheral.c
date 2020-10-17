@@ -6,11 +6,12 @@
 #include "shared_peripheral.h"
 #include "lamp.h"
 
-#define SAMPLE_SIZE 128
+#define SAMPLE_SIZE 10
+
+unsigned int sample[SAMPLE_SIZE];
 
 extern State state;
-unsigned long tolerance = 10;
-
+uchar tolerance = 10;
 uchar distance_active = 1;
 uchar vibration_active = 1;
 
@@ -86,7 +87,15 @@ unsigned int sample_variance(unsigned int data[], unsigned int sampleMean) {
 	return variance/(SAMPLE_SIZE - 1);
 }
 
-unsigned int sample[SAMPLE_SIZE];
+void proximity_callback(unsigned int distance) {
+	// Flyttar fram alla värden ett steg
+	for (int i = 0; i < SAMPLE_SIZE - 1; i++) {
+		sample[i] = sample[i+1];
+	}
+	
+	// Uppdaterar sista värdet i sample
+	sample[SAMPLE_SIZE - 1] = distance;
+}
 
 void vibration_callback(void) {
 	if (!state.alarm && state.id != 0xF && vibration_active) {
@@ -94,18 +103,31 @@ void vibration_callback(void) {
 	}
 }
 
+// Called after no blocking delay
+void systick_callback(void) {
+	proximity_read();
+	delay_no_block(25000);
+}
+
 // Initialisering av rörelsesensor och CAN
 void proximity_peripheral_init(void) {
 	DUMP("Proximity");
 	state_init();
+
 	lamp_init();
+
 	proximity_init();
+	proximity_callback_init(proximity_callback);
+
 	vibration_init();
 	vibration_callback_init(vibration_callback);
+	
 	can1_init(proximity_receiver);
 	request_id(PROXIMITY, 2);
 	
 	stk_init();
+	callback_init(systick_callback);
+	systick_callback();
 }
 
 uchar all_nonzero(unsigned int values[], uchar length){
@@ -128,18 +150,6 @@ void proximity_peripheral_think(void) {
 	while(state.id == 0xF);
 	set_all_zero(sample, SAMPLE_SIZE);
 	while(1) {
-		
-		
-		// Flyttar fram alla värden ett steg
-		for (int i = 0; i < SAMPLE_SIZE - 1; i++) {
-			sample[i] = sample[i+1];
-		}
-		
-		
-		// Uppdaterar sista värdet i sample
-		sample[SAMPLE_SIZE - 1] = proximity_read();
-		//if(!state.alarm) DUMP_numeric(sample[SAMPLE_SIZE - 1]);
-		
 		unsigned int sampleMean = sample_mean(sample);
 		unsigned int sampleVar = sample_variance(sample, sampleMean);
 		

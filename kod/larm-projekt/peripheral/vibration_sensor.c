@@ -11,7 +11,6 @@ Callback vibCB;
 
 // Avbrottshanterare
 void irq_handler_exti2(void) {
-	
 	if(EXTI_GetITStatus(EXTI_Line2) != RESET) {
 		if (vibCB != NULL) {
 			vibCB();
@@ -33,11 +32,9 @@ void vibration_init(void) {
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOE, &GPIO_InitStructure);
-    
 	
     /* Tell system that you will use PE2 for EXTI_Line2 */
     SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource2);
-	
     
     /* PE2 is connected to EXTI_Line2 */
     EXTI_InitStructure.EXTI_Line = EXTI_Line2;
@@ -60,8 +57,4 @@ void vibration_init(void) {
 
 void vibration_callback_init(Callback callback) {
 	vibCB = callback;
-}
-
-unsigned char vibration_read(void) {
-	return 0;
 }

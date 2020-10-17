@@ -5,7 +5,6 @@
 #define proximityUnit
 
 void main() {
-	
 	#ifdef doorUnit
 		door_peripheral_init();
 		door_peripheral_think();

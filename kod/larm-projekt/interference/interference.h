@@ -1,7 +1,6 @@
-#ifndef USART_H
-#define USART_H
+#ifndef INTERFERENCE_H
+#define INTERFERENCE_H
 
-typedef unsigned char uchar;
 void interference_init(void);
 void interference_think(void);
 
