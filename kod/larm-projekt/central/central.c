@@ -294,9 +294,11 @@ void command_parser(Command cmd) {
 void init(void) {
     can1_init(receiver);
     keyboard_init();
-	stk_init();
 	lamp_init();
+	
+	stk_init();
 	systick_callback_init(timeout_handler);
+	
 	command_init();
 }
 

@@ -16,6 +16,5 @@ __asm volatile(
 void main(void)
 {
 	interference_init();
-	interference_think();
 }
 

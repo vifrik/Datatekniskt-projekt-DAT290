@@ -91,7 +91,7 @@ void door_receiver(void) {
 
 // Initialisering av dörrenhet
 void door_peripheral_init(void) {
-	DUMP("Door");
+	usart_send("Door");
 	state_init();
 	
 	lamp_init();
@@ -110,10 +110,11 @@ void door_peripheral_think(void) {
 			char door_status = door_read(i);
 			
 			if(!door_states[i].active) continue;
-			if (!door_status){
-				if(!state.alarm) red_lamp_disable();
-				door_states[i].opened = 0;
+			for(int j = 0; j < number_of_doors; j++){
+				if(door_read(j)) break;
+				if(j == number_of_doors - 1 && !state.alarm) red_lamp_disable();
 			}
+			if (!door_status) door_states[i].opened = 0;
 			
 			if(door_states[i].opened && (sys_time - door_states[i].opened > door_states[i].tolerance * 1000000)){
 				if(!door_states[i].alarm){
