@@ -6,6 +6,6 @@ typedef void (*Callback)(void);
 void delay_no_block(unsigned int count);
 void delay(unsigned int count);
 void stk_init(void);
-void callback_init(Callback callback);
+void systick_callback_init(Callback callback);
 
 #endif

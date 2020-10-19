@@ -296,7 +296,7 @@ void init(void) {
     keyboard_init();
 	stk_init();
 	lamp_init();
-	callback_init(timeout_handler);
+	systick_callback_init(timeout_handler);
 	command_init();
 }
 

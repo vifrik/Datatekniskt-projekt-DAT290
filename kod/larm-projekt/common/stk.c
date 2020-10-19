@@ -3,17 +3,21 @@
 #include "core_cm4.h"
 #include <stdio.h>
 
-static volatile int delay_count = -1;
+static unsigned char delay_non_blocking_active = 0;
+static unsigned int delay_non_blocking = 0;
+static unsigned int delay_blocking = 0;
 unsigned long sys_time = 0;
-Callback cb;
+Callback systickCB;
 
 void systick_irc_handler() {
 	sys_time++;
-	if (delay_count > 0)
-		delay_count--;
-	else if (delay_count == 0 && cb != NULL) {
-		delay_count = -1;
-		cb();
+	if (delay_non_blocking > 0)
+		delay_non_blocking--;
+	if (delay_blocking > 0)
+		delay_blocking--;
+	else if (delay_non_blocking == 0 && delay_non_blocking_active && systickCB != NULL) {
+		delay_non_blocking_active = 0;
+		systickCB();
 	}
 		
 }
@@ -22,13 +26,14 @@ void systick_irc_handler() {
 // För att något ska hända måste först callback_init att kallas
 void delay_no_block(unsigned int count) {
 	if (!count) return;
-
-	delay_count = count;
+	
+	delay_non_blocking_active = 1;
+	delay_non_blocking = count;
 }
 
 void delay(unsigned int count) {
-	delay_no_block(count);
-	while(delay_count > 0);
+	delay_blocking = count;
+	while(delay_blocking > 0);
 }
 
 void stk_init(void) {
@@ -40,6 +45,6 @@ void stk_init(void) {
 	*((void (**)(void)) 0x2001C03C) = systick_irc_handler;
 }
 
-void callback_init(Callback callback) {
-	cb = callback;
+void systick_callback_init(Callback callback) {
+	systickCB = callback;
 }

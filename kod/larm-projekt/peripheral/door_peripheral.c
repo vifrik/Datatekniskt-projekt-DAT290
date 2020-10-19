@@ -5,6 +5,7 @@
 #include "shared_peripheral.h"
 #include "debug.h"
 #include "lamp.h"
+#include "door_peripheral.h"
 
 extern State state;
 extern unsigned long sys_time;
@@ -106,16 +107,21 @@ void door_peripheral_init(void) {
 void door_peripheral_think(void) {	
 	while(1) {
 		for(int i = 0; i < number_of_doors; i++ ){
+			char door_status = door_read(i);
+			
 			if(!door_states[i].active) continue;
-
-			if(door_states[i].opened){
-				if(sys_time - door_states[i].opened > door_states[i].tolerance * 1000000 && !door_states[i].alarm){
+			if (!door_status){
+				if(!state.alarm) red_lamp_disable();
+				door_states[i].opened = 0;
+			}
+			
+			if(door_states[i].opened && (sys_time - door_states[i].opened > door_states[i].tolerance * 1000000)){
+				if(!door_states[i].alarm){
 					alarm_raise(i);
 					door_states[i].alarm = 1;
-				} else if (sys_time - door_states[i].opened > door_states[i].tolerance * 1000000) {
-					door_states[i].opened = 0;
 				}
-			} else if (!door_states[i].alarm && door_read(i)) {
+			} else if (!door_states[i].alarm && door_status && !door_states[i].opened) {
+				red_lamp_enable();
 				door_states[i].opened = sys_time;
 			}	
 		}

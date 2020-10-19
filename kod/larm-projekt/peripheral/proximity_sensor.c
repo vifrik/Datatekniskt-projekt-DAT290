@@ -4,6 +4,7 @@
 #include "stm32f4xx_syscfg.h"
 #include "stk.h"
 #include "misc.h"
+#include "proximity_sensor.h"
 
 #define EXTI0_IRQVEC		((void (**)(void)) 0x2001C058)
 
@@ -61,8 +62,8 @@ void proximity_init(void) {
 
 	/* Enable and set EXTI Line0 Interrupt to the lowest priority */
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 	

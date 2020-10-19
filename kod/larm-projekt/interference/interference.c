@@ -25,7 +25,7 @@ void clear_buff(unsigned char buffer[], unsigned char length) {
 }
 
 void interference_receiver(void) {
-	DUMP("CAN message received: ");
+	//DUMP("CAN message received: ");
 }
 
 void timer_callback() {
@@ -44,7 +44,7 @@ void interference_init(void) {
 	clear_buff(msg.buff, 8);
 	
 	stk_init();
-	callback_init(timer_callback);
+	systick_callback_init(timer_callback);
 	timer_callback();
 }
 
@@ -54,6 +54,7 @@ void interference_think(void) {
 	// Main loop
 	while(1) {
 		unsigned char c = _tstchar();
+		DUMP_numeric(c);
 		if (c == 13 || c == 10) {
 			usart_send("Updated delay to: ");
 			for (int i = 0; i<10;i++) _outchar(charBuffer[i]);
