@@ -15,7 +15,6 @@ void irq_handler_exti2(void) {
 		if (vibCB != NULL) {
 			vibCB();
 		}
-		DUMP("Vibration");
 		
 		EXTI_ClearITPendingBit(EXTI_Line2);
 	}
@@ -46,8 +45,8 @@ void vibration_init(void) {
     /* Add IRQ vector to NVIC */
     /* PE2 is connected to EXTI_Line2, which has EXTI2_IRQn vector */
     NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0E;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0E;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 6;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 6;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 	

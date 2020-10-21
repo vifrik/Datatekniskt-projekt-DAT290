@@ -18,7 +18,7 @@ void canmsg_init(CANMsg *msg) {
 }
 
 void alarm_raise(uchar unitId) {
-	usart_send("Alarm");
+	usart_sendl("Alarm");
 	red_lamp_enable();
 	
 	state.alarm = 1;
@@ -34,7 +34,7 @@ void alarm_raise(uchar unitId) {
 
 void alarm_lower() {
 	red_lamp_disable();
-	usart_send("Alarm off");
+	usart_sendl("Alarm off");
 	state.alarm = 0;
 }
 
