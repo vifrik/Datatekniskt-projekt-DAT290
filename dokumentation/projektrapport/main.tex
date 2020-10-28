@@ -7,7 +7,6 @@
 \usepackage{float}
 \usepackage{comment}
 \usepackage[backend=biber, style=ieee, urldate=comp]{biblatex}
-\usepackage[hidelinks]{hyperref}
 
 \addbibresource{referenser.bib}
 
@@ -95,9 +94,14 @@ I mån av tid kommer extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
 
-\subsection{Projektdrift}
+\subsection{Arbetsmetod}
+
 Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
-Det togs fram en skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman. 
+En skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman togs fram.
+
+I nästa steg delades arbetsgruppen upp i tre undergrupper som ansvarade över olika delar av projektet.
+Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
+Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
 
 Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodatorn MD407 vilket är den hårdvara som driver systemet.
 
@@ -107,6 +111,9 @@ Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlad
 Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
 Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
+
+De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
+Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 
 \newpage
 
@@ -599,11 +606,8 @@ Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterad
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 
-\subsection{Reflektion av projektdrift}
+\subsection{Projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
-
-De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
-Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 %Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
 \section{Referenser}
