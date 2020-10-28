@@ -88,18 +88,22 @@ Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika
 Till exempel ska kunden kunna justerbara antal anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
 Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
-Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter.
-Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett rörelselarm.
+Grunden till systemet som ska utvecklas kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. De övergripande målen med centralenheten är att användaren ska kunna konfigurera periferienheterna genom den och att den ska kunna larma när ett alarm sätts på en periferienhet.
 
-Dörrlarmet ska trigga ett larm då en dörr står öppen längre än ett givet tidsinterval.
-Inledningsvis ska larmet sättas igång lokalt på periferienheten.
-Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
-Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har löst ut.
-När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
-Denna kod kommer förinstallerad på systemet men den kan ändras av användaren.
+Två periferienheter kommer att utvecklas, ett dörrlarm och ett rörelselarm.
+Dörrlarmets ska kunna starta ett larm då en dörr kopplad till en sensor öppnas.
+Rörelselarmet ska använda två sensorer, en vibrationssensor och en avståndssensor, och kommer larma vid upptäckta störningar. 
+De olika sensorernas toleranser ska kunna bestämmas på centralenheten.
+Ifall en tolerans har bestämts ska ett lokalt larm först sättas hos periferienheten, ett alarm skickas till centralenheten om toleransen överskrids.
+
+Att ett alarm har gått ska kommuniceras till användaren via en terminal på centralenheten och röda lampor.
+När ett larm startar på centralenheten ska det krävas en manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
+Denna kod är förutbestämd på systemet men ska kunna ändras av användaren.
 
 I mån av tid kommer extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
+
+Larmsystemet kommer att avgränsas till mindre platser såsom kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
 
 \subsection{Projektdrift}
 Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
@@ -524,13 +528,21 @@ De visar även att systemet är robust då det fungerar även vid störningar oc
 Detta kapitel innehåller en reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
 \subsection{Slutprodukt}
 
-Larmsystemet består av en centralenhet och olika perferienheter.
-Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten som hanterar dessa meddelanden.
-Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar den ett alarm.
-Med hjälp av en knappsats och en kod kan alarm stängas av.
-De beståndsdelar och den grundligaste funktionalitet som lades fram i projektets målsättning har alltså implementerats och fungerar som tänkt.
+Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet. 
+Centralenheten kan enligt specifikationerna konfigurera periferienheterna och ställa larm när ett alarm kommer ifrån en periferienheten. 
+Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specifierades. 
 
-Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
+Periferienheterna fungerar enligt de krav som ställts...
+
+
+Det målet som inte uppfylldes var implementationen av testläget. Detta kunde inte göras på grund av tidsbrist.
+%Larmsystemet består av en centralenhet och olika perferienheter.
+%Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten %som hanterar dessa meddelanden.
+%Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar %den ett alarm.
+%Med hjälp av en knappsats och en kod kan alarm stängas av.
+
+%Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för %periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
+
 
 Systemet kan till exempel installeras i ett kontor.
 Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
