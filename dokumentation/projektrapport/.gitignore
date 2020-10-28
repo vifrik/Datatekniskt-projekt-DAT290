@@ -9,3 +9,5 @@
 __*
 *.pdf
 *.synctex(busy)
+*.run.xml
+*.bcf

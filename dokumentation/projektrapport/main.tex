@@ -6,6 +6,9 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{comment}
+\usepackage[backend=biber, style=ieee, urldate=comp]{biblatex}
+
+\addbibresource{referenser.bib}
 
 \newcommand\namn{Larmsystem}
 \newcommand{\todo}[1]{\marginpar{TODO: #1}\vspace{1cm}}
@@ -28,7 +31,7 @@
 
     {\LARGE Modulärt larmsystemet}
 
-    {\large \namn, grupp 11
+    {\large Datateknik, Datatekniskt projekt, grupp 11
 
     Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
@@ -64,21 +67,17 @@ Inbrott är ett vanligt problem i Sverige.
 En minskning med 14 \% från året innan \cite{brastold}.
 Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
 Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
-\subsection{Syfte}
-%Inbrott är ett vanligt problem i Sverige.
-%År 2019 anmäldes 75.250 inbrottstölder.
-%En minskning med 14\% från året innan \cite{brastold}.
-%Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
-%Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
 
+\subsection{Syfte}
 Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska utvecklas.
 Systemet ska lämpa sig för säkring av mindre byggnader så som kontor och lägenheter.
 Möjlighet ska finnas för systemets användare att anpassa systemet efter sina förutsättningar.
 
 \subsection{Mål}
 
-Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral. Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
-Till exempel justerbart antal anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
+Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral.
+Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
+Till exempel ska kunden kunna justerbara antal anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
 Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
 Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter.
@@ -99,7 +98,7 @@ Denna extra funktionalitet kommer innebära ett självlärande system, ett testl
 Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
 En skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman togs fram.
 
-I nästa steg delades arbetsgruppen upp i tre undergrupper  som ansvarade över olika delar av projektet.
+I nästa steg delades arbetsgruppen upp i tre undergrupper som ansvarade över olika delar av projektet.
 Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
 Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
 
@@ -110,7 +109,7 @@ Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlad
 
 Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
-Funktionaliteten hos Simserver är begränsad därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
+Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
 
 De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
 Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
@@ -128,7 +127,7 @@ MD407 har begränsat med minne vilket gör att programmen som skrivs för mikrod
 C är ett lågnivå-programmeringsspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet.
 C lämpar sig alltså för utveckling mot MD407.
 
-Systemet kretsar kring att flera MD407 sammankopplas, en av dessa mikrodatorer agerar som centralenhet medan resterande används för att ansluta periferienheter.
+Systemet kretsar kring att flera MD407 sammankopplas, en av dessa mikrodatorer agerar som centralenhet och att resterande används för att ansluta periferienheter.
 MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network), ett protokoll för kommunikation mellan datorer.
 % Ett kommunikationsprotokoll har sedan byggts ovanpå CAN som är anpassat för systemet.
 
@@ -137,10 +136,10 @@ MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar A
 Ett MD407-kort väljs som centralenhet för systemet.
 Från denna enhet körs huvudprogrammet.
 Centralenheten sköter huvudparten av systemets funktion.
-Centralenheten registrerar vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna samt läser inmatning från en ansluten dator för att styra systemet.
+Centralenheten registrerar vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna och läser inmatning från en ansluten dator för att styra systemet.
 
 Två typer av periferienhet finns tillgängliga att ansluta till systemet.
-Ett dörrlarm, vilket kontrollerar hurvida en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar om detta förändras.
+Ett dörrlarm, kontrollerar huruvida en dörr är öppen eller stängd och en rörelsesensor mäter avståndet till föremålet framför den och registrerar om detta förändras.
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
@@ -150,8 +149,19 @@ Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka
     \caption{Översikt över systemet}
 \end{figure}
 
+\begin{table}[H]
+    \centering
+    \caption{CAN-meddelandets uppbyggnad samt ett exempel på hur ett alarm-meddelande från en periferienhet ser ut.}
+    \label{tab:meddelandestruktur}
 
-\subsubsection{CAN}
+    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+    \end{tabular}}
+\end{table}
+
+\subsubsection{Controller area network}
 Ett protokoll har utvecklats för kommunikation mellan enheterna.
 Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas mellan enheterna.
 
@@ -184,43 +194,33 @@ Varje CAN-meddelande byggs upp av fem fält:
 \end{description}
 
 \begin{table}[H]
-  \centering
-    \caption{CAN-meddelandets uppbyggnad samt ett exempel på hur ett alarm-meddelande från en periferienhet ser ut.} \label{tab:meddelandestruktur}
-    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
-        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
-        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
-        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
-    \end{tabular}}
-\end{table}
+    \centering
+    \caption{Samtliga meddelandetyper och deras prioritet.}
+    \label{tab:meddelandetyper}
+    \begin{tabular}{|c|c|}\hline
+      Prioritet & Meddelande-ID \\\hline
+      0 & ALARM \\\hline
+      1 & ERROR \\\hline
+      2 & ALARM\_OFF \\\hline
+      3 & POLL\_REQUEST \\\hline
+      4 & POLL\_RESPONSE \\\hline
+      5 & DICP\_REQUEST \\\hline
+      6 & DICP\_RESPONSE \\\hline
+      7 & TOL\_SET \\\hline
+      8 & ACTIVE\_ON \\\hline
+      9 & ACTIVE\_OFF \\\hline
+    \end{tabular}
+  \end{table}
 
 Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
 För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
 Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
 
 För centralenhet och periferienhet finns unika mottagningsfunktioner.
-Mottagningsfunktionen undersöker riktning- och Enhets-ID fälten hos mottaget CAN-meddelande.
+Mottagningsfunktionen undersöker riktnings- och enhets-ID-fälten hos mottaget CAN-meddelande.
 Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
 Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
 För varje meddelandetyp finns en unik hanteringsfunktion som utför de instruktioner meddelandet medförde.
-
-\begin{table}[H]
-  \centering
-  \caption{Samtliga meddelandetyper och deras prioritet.}
-  \label{tab:meddelandetyper}
-  \begin{tabular}{|c|c|}\hline
-    Prioritet & Meddelande-ID \\\hline
-    0 & ALARM \\\hline
-    1 & ERROR \\\hline
-	2 & ALARM\_OFF \\\hline
-	3 & POLL\_REQUEST \\\hline
-	4 & POLL\_RESPONSE \\\hline
-    5 & DICP\_REQUEST \\\hline
-    6 & DICP\_RESPONSE \\\hline
-    7 & TOL\_SET \\\hline
-    8 & ACTIVE\_ON \\\hline
-    9 & ACTIVE\_OFF \\\hline
-  \end{tabular}
-\end{table}
 
 \subsubsection{Centralenhet}
 Centralenheten sköter huvuddelen av systemets funktionalitet.
@@ -335,8 +335,8 @@ Efter att ett meddelande har initialiserats med den förväntade datan skickas d
 Detta görs genom att ett CANmsg fylls med data.
 Sedan gör CAN-protokollet om meddelandet till ett TX-meddelande för att sedan automatiskt skicka det på bussen.
 
-\subsection{Utveckling av Centralenheten}
-Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och agerade som centrum i kommunikationen.
+\subsection{Utveckling av centralenheten}
+Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
 När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
 Kommandon utvecklades för att konfigurera de olika enheterna.
 För att skydda systemet mot attacker implementerades ett lösenordsskydd i centralenhetens USART.
@@ -346,7 +346,7 @@ Pollingsystemet började som en idé på papper där teoretiska meddelanden rita
 Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
 TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
 
-\subsection{Utveckling av Periferienheterna}
+\subsection{Utveckling av periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
 %Eftersom gruppen sen tidigare saknade erfarenhet med hårdvaran uppstod en del motstånd under arbetet.
 När periferienheterna fick förmågan att läsa av sina sensorer upptäcktes det att det inte fanns något sätt att förmedla detta till utvecklaren.
@@ -367,14 +367,14 @@ Tillsammans med funktionen att väcka ett ALARM utvecklades funktionalitet för 
 Under projektet gång upptäcktes en miss i periferienheterna.
 Dörrperiferienheten hade endast stöd för en dörr och saknade funktionalitet för lampor.
 Samtidigt hade rörelseperiferienheten endast stöd för avståndssensorn.
-Detta ledde till att många typer av meddelande behövde skrivas om och orsakade extra arbete.
+Detta ledde till att många typer av meddelande behövde skrivas om.
 Hade specifikationen för periferienheterna studerats noggrannare hade detta kunnat undvikas.
 
 
 \section{Resultat}
 Denna sektion syftar till att presentera det slutgiltiga resultatet av systemet samt att reflektera och diskutera kring utfallet utifrån de mål och syfte som ställts upp i rapportens inledning.
 Sektionen inleds med resultaten från systemet i sin helhet följt av djupare granskning av delsystemen.
-Resultat från utförda tester redovisas även upp i denna sektion.
+Resultat från utförda tester redovisas i denna sektion.
 
 \subsection{Larmsystemet}
 %Systemet utför sin grundligaste uppgift
@@ -419,11 +419,13 @@ Avståndssensorn har möjligheten att upptäcka om något rör sig utan att det 
 Vid kontakt har vibrationssensorn möjlighet att alarmera.
 
 \begin{description}
-  \item[Avståndsensor] Avståndssensorn observerar fem senaste avstånden och beräknar variansen av dessa.
-  Om variansen är större än toleransen initieras ett alarm.
+  \item[Avståndsensor] Avståndssensorn observerar det senaste avståndet.
+  Om avståndet underskrider två gånger toleransen alarmerar periferienheten lokalt.
+  Däremot, om avståndet är mindre än toleransen skickas ett alarm till centralenheten.
   Toleransen går att bestämma på centralenheten.
 
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
+  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart. 
   Känsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
@@ -434,7 +436,7 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
 Kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 Protokollet är designat för att så få meddelanden som möjligt ska behöva skickas.
 I och med det har funktionalitet så som meddelandebekräftelser inte implementerats.
-Funktionalitet som potentiellt skulle göra systemet stabilare och mer motståndskraftigt mot attacker.
+Detär en funktionalitet som potentiellt skulle göra systemet stabilare och mer motståndskraftigt mot attacker.
 Istället har ett robust pollingsystem byggts som gör systemet tillräckligt stabilt. %Test här som visar på stabilitet?
 
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
@@ -450,7 +452,7 @@ Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:medde
 I målsättningen presenterades viss funktionalitet som skulle implementeras utöver larmsystemets grundligaste funktioner.
 I detta stycke presenteras resultaten av detta.
 
-\subsubsection{Självlärande}
+\subsubsection{Självlärande identifikationsprotokol}
 Systemet fungerar enligt specifikationerna för självlärandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om att bli tilldelad ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
@@ -506,7 +508,7 @@ I denna sektion finns det flera exempel på utförda tester.
 \end{description}
 \end{comment}
 
-\subsubsection{CAN test}
+\subsubsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
 
@@ -592,9 +594,7 @@ Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskad
 Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för inbrott.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
-För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsöken.
-
-
+För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
 
 \subsection{Förbättringsmöjligheter}
 Det finns fortfarande utvecklingsmöjligheter för systemet.
@@ -605,11 +605,9 @@ Centralenheten och kommunikationsprotokollet har goda förutsättningar för att
 
 \subsection{Projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
-Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
+%Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
-
-\bibliographystyle{IEEEtran}
-
-\bibliography{referenser.bib}
+\section{Referenser}
+\printbibliography[heading=none]
 
 \end{document}
