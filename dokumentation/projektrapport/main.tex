@@ -6,7 +6,9 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{comment}
-\usepackage[backend=biber, style=ieee, urldate=comp]{biblatex}
+\usepackage[backend=biber, style=ieee, sorting=none]{biblatex}
+
+\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\space\url{#1}}
 
 \addbibresource{referenser.bib}
 
@@ -70,7 +72,7 @@ Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning
 
 \subsection{Syfte}
 Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska utvecklas.
-Systemet ska lämpa sig för säkring av mindre byggnader så som kontor och lägenheter.
+Systemet ska lämpa sig för säkring av mindre byggnader som kontor och lägenheter.
 Möjlighet ska finnas för systemets användare att anpassa systemet efter sina förutsättningar.
 
 \subsection{Mål}
@@ -317,7 +319,7 @@ I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
 Senare i projektet när systemet närmade sig färdigställning återgick gruppen till att arbeta tillsammans.
 
 \subsection{Utveckling av CAN}
-Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
+Arbetet med CAN-protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
 När en standard för meddelandestruktur var definierad påbörjades arbetet med att ta fram de olika meddelandetyperna.
 Alla typer av meddelanden, dess funktion och dess parametrar dokumenterades och gjordes lätttillgängligt i kodbasen.
 En gemensam mottagar-funktion utvecklades som kom att bli standarden för alla enheter i systemet.
