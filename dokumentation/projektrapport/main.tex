@@ -9,7 +9,7 @@
 
 \newcommand\namn{Larmsystem}
 \newcommand{\todo}[1]{\marginpar{TODO: #1}\vspace{1cm}}
-\newcommand{\comment}[1]{\marginpar{Comment: #1}}
+%\newcommand{\comment}[1]{\marginpar{Comment: #1}}
 
 \newcommand{\subsubsubsection}[1]{\paragraph{#1}\mbox{}\\}
 \setcounter{secnumdepth}{4}
@@ -59,17 +59,26 @@
 \pagenumbering{arabic}
 
 \section{Inledning}
-\subsection{Syfte}
 Inbrott är ett vanligt problem i Sverige.
 År 2019 anmäldes 75.250 inbrottstölder.
-En minskning med 14\% från året innan \cite{brastold}.
+En minskning med 14 \% från året innan \cite{brastold}.
 Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
 Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
-Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska därför utvecklas.
+\subsection{Syfte}
+%Inbrott är ett vanligt problem i Sverige.
+%År 2019 anmäldes 75.250 inbrottstölder.
+%En minskning med 14\% från året innan \cite{brastold}.
+%Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
+%Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
+
+Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska utvecklas.
+Systemet ska lämpa sig för säkring av mindre byggnader så som kontor och lägenheter.
+Möjlighet ska finnas för systemets användare att anpassa systemet efter sina förutsättningar.
 
 \subsection{Mål}
 
 Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral. Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
+Till exempel justerbart antal anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
 Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
 Grunden i systemet kommer vara en centralenhet till vilken användaren kan ansluta periferienheter.
@@ -78,7 +87,7 @@ Huvudsakligen kommer två periferienheter att utvecklas, ett dörrlarm och ett r
 Dörrlarmet ska trigga ett larm då en dörr står öppen längre än ett givet tidsinterval.
 Inledningsvis ska larmet sättas igång lokalt på periferienheten.
 Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
-Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har utlöst.
+Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har löst ut.
 När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
 
 I mån av tid kommer extra funktionalitet implementeras.
@@ -94,7 +103,7 @@ I nästa steg delades arbetsgruppen upp i tre undergrupper  som ansvarade över 
 Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
 Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
 
-Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodator MD407 vilket är den hårdvara som driver systemet.
+Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodatorn MD407 vilket är den hårdvara som driver systemet.
 
 Versionshantering har gjorts med hjälp av git.
 Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlades.
@@ -104,22 +113,22 @@ Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter sim
 Funktionaliteten hos Simserver är begränsad därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
 
 De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
-Stor del av all kommunikation kring projektet har sket via kommunikationsverktygen Zoom, Discord och Messenger.
+Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 
+\newpage
 
-
-\section{Teknisk Beskrivning}
-I detta avsnitt ges en fördjupad inblick i hur systemet fungerar och hänger ihop.
+\section{Teknisk beskrivning}
+I detta avsnitt ges en fördjupad inblick i hur systemet hänger ihop och fungerar.
 Den mjuk- och hårdvara som projektet baseras på beskrivs även i mer detalj.
 
-\subsection{Teknisk Bakgrund}
+\subsection{Teknisk bakgrund}
 Hårdvaran som systemet körs på är en MD407-mikrodator.
 Mjukvaran är skriven i programmeringsspråket C.
 MD407 har begränsat med minne vilket gör att programmen som skrivs för mikrodatorn bör vara små och effektiva.
 C är ett lågnivå-programmeringsspråk vilket medför att programmeraren har stor kontroll över minneshanteringen i programmet.
 C lämpar sig alltså för utveckling mot MD407.
 
-Systemet kretsar kring att flera MD407 sammankopplas, en av dessa mikrodatorer agerar som centralenhet och resterande används för att ansluta periferienheter.
+Systemet kretsar kring att flera MD407 sammankopplas, en av dessa mikrodatorer agerar som centralenhet medan resterande används för att ansluta periferienheter.
 MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar Area Network), ett protokoll för kommunikation mellan datorer.
 % Ett kommunikationsprotokoll har sedan byggts ovanpå CAN som är anpassat för systemet.
 
@@ -127,11 +136,11 @@ MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar A
 
 Ett MD407-kort väljs som centralenhet för systemet.
 Från denna enhet körs huvudprogrammet.
-Centralenheten sköter den stora delen av systemets funktion.
-Centralenheten registrerar och håller koll på vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna samt läser inmatning från en ansluten dator för att styra systemet.
+Centralenheten sköter huvudparten av systemets funktion.
+Centralenheten registrerar vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna samt läser inmatning från en ansluten dator för att styra systemet.
 
 Två typer av periferienhet finns tillgängliga att ansluta till systemet.
-Ett dörrlarm, vilket kontrollerar ifall en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar ifall detta förändras.
+Ett dörrlarm, vilket kontrollerar hurvida en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar om detta förändras.
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
@@ -163,7 +172,7 @@ Varje CAN-meddelande byggs upp av fem fält:
     Ju närmare noll, desto högre prioritet.
     Samtliga meddelandetyper finns samlade i Tabell \ref{tab:meddelandetyper}.
 
-    \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0-14.
+    \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0 och 14.
     15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
     Centralenheten tilldelar enheterna ett ID i ordningen de anslöt sig i.
 
@@ -175,15 +184,13 @@ Varje CAN-meddelande byggs upp av fem fält:
 \end{description}
 
 \begin{table}[H]
-    \centering
+  \centering
+    \caption{CAN-meddelandets uppbyggnad samt ett exempel på hur ett alarm-meddelande från en periferienhet ser ut.} \label{tab:meddelandestruktur}
     \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
         \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
         0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
         \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
     \end{tabular}}
-    \caption{Diagram över CAN-meddelandets uppbyggnad samt ett exemepl på hur ett alarm-meddelande från en periferienhet ser ut.}
-    \label{tab:meddelandestruktur}
-
 \end{table}
 
 Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
@@ -191,13 +198,15 @@ För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-medd
 Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
 
 För centralenhet och periferienhet finns unika mottagningsfunktioner.
-Mottagningsfunktionen undersöker riktning och enhets-ID fälten hos mottaget CAN-meddelande.
+Mottagningsfunktionen undersöker riktning- och Enhets-ID fälten hos mottaget CAN-meddelande.
 Funktionen avgör sedan hurvida mottaget meddelande berör enheten.
 Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera meddelandet kallas.
 För varje meddelandetyp finns en unik hanteringsfunktion som utför de instruktioner meddelandet medförde.
 
 \begin{table}[H]
   \centering
+  \caption{Samtliga meddelandetyper och deras prioritet.}
+  \label{tab:meddelandetyper}
   \begin{tabular}{|c|c|}\hline
     Prioritet & Meddelande-ID \\\hline
     0 & ALARM \\\hline
@@ -211,25 +220,23 @@ För varje meddelandetyp finns en unik hanteringsfunktion som utför de instrukt
     8 & ACTIVE\_ON \\\hline
     9 & ACTIVE\_OFF \\\hline
   \end{tabular}
-  \caption{Samtliga meddelandetyper och deras prioritet.}
-  \label{tab:meddelandetyper}
 \end{table}
 
 \subsubsection{Centralenhet}
-Centralenheten sköter den stora delen av systemets funktionalitet.
-Främst ansvarar den för att hålla koll på alla anslutna enheter och alarmera om ett larm uppstår hos någon av de anslutna enheterna.
+Centralenheten sköter huvuddelen av systemets funktionalitet.
+Främst ansvarar den för övervaka alla anslutna enheter och alarmera om ett alarm uppstår hos någon av dem.
 Om alarm uppstår kan det avvaktiveras genom att mata in en fyrsiffrig kod på ansluten knappsats.
 
-Centralenheten både lyssnar efter meddelanden från- och skickar meddelanden till periferienheterna kontinuerligt.
+Centralenheten både lyssnar efter meddelanden och skickar meddelanden till periferienheterna kontinuerligt.
 Ett meddelande till centralenheten kan till exempel innefatta ett alarm, ny ID-förfrågan eller att det uppstått ett fel.
 
 Centralenheten skickar kontinuerligt förfrågningar, även kallat pollingmeddelande, till periferienheterna.
 Detta för att undersöka så att inga enheter kopplas bort samt för att förebygga återupspelningsattacker.
 I varje pollingmeddelande skickas en tidsstämpel från centralenhetens drifttid.
-Enheten som mottager pollingmeddelandet förväntas svara centralenheten inom ett visst tidsinterval.
+Enheten som mottager pollingmeddelandet förväntas svara centralenheten inom ett visst tidsintervall.
 I pollingsvaret ska tidsstämpeln återfinnas fast inverterad.
 När centralenheten mottager ett pollingsvar inom tidsramen med en korrekt inverterad tidstämpel skickas ett nytt pollingmeddelande till nästa anslutna enhet.
-Om korrekt pollingsvar ej mottages utsöndras alarm från centralenheten.
+Om korrekt pollingsvar ej mottages startas ett alarm från centralenheten.
 
 De instruktioner som matas in av användare via ansluten konsol hanteras av centralenheten.
 För att inte störa programflödet kontrolleras inmatningen av tecken periodiskt istället för att systemet väntar på inmatning från användare.
@@ -268,7 +275,7 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Vid sluten krets är det logiska värdet på kretsen noll.
 
     \item[Avståndssensor:] Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
-    För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10\textmu s.
+    För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
     Sensorn svarar med att skriva en logisk etta på echo-pinnen.
     Längden av denna logiska etta motsvarar det uppmätta avståndet.
 
@@ -280,12 +287,12 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
 \end{description}
 
 Dörrsensors tröskel justeras genom att sätta det antal tillåtna sekunder som en dörr kan vara öppen.
-När en dörr öpnnas sparar periferienheten den nuvarande tiden.
+När en dörr öppnas sparar periferienheten den aktuella tiden.
 Överskrider tiden som dörren varit öppen den tillåtna tiden skapar periferienheten ett alarm.
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Genom att beräkna variansen på dessa mätvärden har avståndssensorn möjligheten att upptäcka en rörelse.
-En varians större än tröskeln innebär ett alarm.
+En varians större än tröskeln medför ett alarm.
 En lägre tröskel används för att lokalt kunna alarmera.
 
 Vibrationssensorns känslighet justeras direkt på sensorn.
@@ -297,13 +304,14 @@ Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
     \caption{Översikt över periferienheterna och dess komponenter}
 \end{figure}
 
+\newpage
 
 \section{Metod}
-Denna sektion beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts. 
-Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar. 
+Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts.
+Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
 Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
-För att förenkla arbetet i början delades det in i tre olika delar: CAN, centralenheten och periferienheterna. 
+För att förenkla arbetet i början delades det in i tre olika delar: CAN, centralenheten och periferienheterna.
 I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
 Senare i projektet när systemet närmade sig färdigställning återgick gruppen till att arbeta tillsammans.
 
@@ -316,7 +324,7 @@ Mottagaren hanterar meddelandet och tar reda på vilken typ det är genom att br
 Beroende på meddelandetyp kallas den korresponderande funktionen.
 När mottagaren var på plats påbörjades implementeringen av diverse funktionalitet.
 
-CAN-protokollet samlar datan från en inkommande sänding in ett RX-meddelande.
+CAN-protokollet samlar datan från en inkommande sänding i ett RX-meddelande.
 Logiken och koden för att göra om ett sådant meddelande till ett CANMsg var sedan tidigare given.
 Metoder för att till exempel uppdatera tolerans eller sätta antalet dörrar utvecklades.
 När funktionerna var testade så lades de till i mottagarfunktionen.
@@ -329,7 +337,7 @@ Sedan gör CAN-protokollet om meddelandet till ett TX-meddelande för att sedan 
 
 \subsection{Utveckling av Centralenheten}
 Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och agerade som centrum i kommunikationen.
-När alla enheter i systemet hade en unik identifikation kunde periferienheten nu skicka olika kommandon till de olika enheterna.
+När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
 Kommandon utvecklades för att konfigurera de olika enheterna.
 För att skydda systemet mot attacker implementerades ett lösenordsskydd i centralenhetens USART.
 
@@ -340,7 +348,7 @@ TCP är ett protokoll där avsändaren kan garantera att all data når mottagare
 
 \subsection{Utveckling av Periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
-Eftersom gruppen sen tidigare saknade erfarenhet med hårdvaran uppstod en del motstånd under arbetet.
+%Eftersom gruppen sen tidigare saknade erfarenhet med hårdvaran uppstod en del motstånd under arbetet.
 När periferienheterna fick förmågan att läsa av sina sensorer upptäcktes det att det inte fanns något sätt att förmedla detta till utvecklaren.
 För att lösa detta utvecklades ett antal funktioner som gjorde det möjligt att skriva ut olika typer av data till USART.
 
@@ -348,7 +356,7 @@ För identifiering av periferienheterna krävs en identifikation.
 Tilldelningen av identifikationen sker automatiskt vid uppkoppling av periferienheten med hjälp av DICP.
 DICP är ett protokoll baserat på DHCP (Dynamic Host Controller Protocol).
 DHCP tilldelar automatiskt IP(Internet Protocol)-adresser på ett nätverk.
-Tilldelningen sker via att skicka ett meddelande på en generisk adress så kallad \textit{Broadcast Adress} på engelska.
+Tilldelningen sker via att skicka ett meddelande på en generisk adress så kallad \textit{Broadcast Address} på engelska.
 DICP använder sig av adressen 15 som den generiska adressen för att anropa centralenheten i en ID-förfrågan.
 Centralenheten svarar på ett DICP-meddelande med ett ledigt ID och periferienheten antar detta ID.
 
@@ -366,7 +374,7 @@ Hade specifikationen för periferienheterna studerats noggrannare hade detta kun
 \section{Resultat}
 Denna sektion syftar till att presentera det slutgiltiga resultatet av systemet samt att reflektera och diskutera kring utfallet utifrån de mål och syfte som ställts upp i rapportens inledning.
 Sektionen inleds med resultaten från systemet i sin helhet följt av djupare granskning av delsystemen.
-Resultat från utförda tester visas även upp i denna sektion.
+Resultat från utförda tester redovisas även upp i denna sektion.
 
 \subsection{Larmsystemet}
 %Systemet utför sin grundligaste uppgift
@@ -379,13 +387,13 @@ Systemet stödjer i teorin att upp till 15 enheter ansluts. Detta är inget som 
 Systemet vidhåller däremot sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
 \subsubsection{Centralenhet}
-Centralenheten fungerar som förväntat. 
-Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten. 
-I terminalen skrivs detaljer om larmet ut. 
-Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten. 
+Centralenheten fungerar som förväntat.
+Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten.
+I terminalen skrivs detaljer om larmet ut.
+Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten.
 Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
 
-Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna. 
+Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna.
 Förfrågningarna innehåller ett meddelande som periferienheten förväntas besvara vilket skyddar från återuppspelningsattacker.
 
 Gränsnittet som tillåter användaren att göra inställningar i systemet fungerar men är minimalt.
@@ -446,17 +454,17 @@ I detta stycke presenteras resultaten av detta.
 Systemet fungerar enligt specifikationerna för självlärandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om att bli tilldelad ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
-Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via USART att den mottagit en förfrågan för ett ID och periferienheten skrev att den tilldalades ett ID.
+Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via USART att den mottagit en förfrågan för ett ID och periferienheten skrev att den tilldelades ett ID.
 
 \subsubsection{Skydd mot återuppspelningsattacker}
 Systemets skydd mot denna typ av attacker var effektivt.
-Att återuppspela den inspelade busstrafiken orsakade ett larm i systemet på ett eller annat sätt.
+Vid återuppspelning av den inspelade busstrafiken orsakades ett alarm i systemet på ett eller annat sätt.
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på pollingmeddelandet.
-Den återuppspelade trafiken kommer alldrig innehålla den senaste nycklen och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
+Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
-Detta gör att en angripare inte kan byta ut systemets periferienheter med sina egna enheter.
+Detta gör att en angripare inte kan byta ut systemets periferienheter mot sina egna enheter.
 
 \subsubsection{Testläge}
 Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
@@ -464,24 +472,24 @@ Då centralenheten körs i detta testläge skrivs information om de meddelanden 
 Detta underlättar vid felsökning och installation av systemet.
 
 Det finns förbättringsmöjligheter för testläget i den slutgiltiga produkten.
-Tillexempel möjlighet att få felmeddelanden utskrivet eller likanande.
+Till exempel möjlighet att få felmeddelanden utskrivna.
 Mer felsökningsverktyg alltid är uppskattat.
 Inom ramarna för detta projekt fyller testläget däremot sin funktion.
 
 \subsubsection{Lokalt larm}
 Från ansluten konsol finns möjlighet för användaren att konfigurera precis hur och när varje periferienhet ska alarmera.
 Om användaren vill att ett lokalt larm ska akiveras vid den enhet som larmar finns den möjligheten.
-Vid larm tänds då en rödlampa på enheten som indikerar att ett lokalt larm har gått.
-Efter en tid som specificeras av användaren utsöndras även ett larm från centralenheten så vida det lokala larmet inte har avvaktiverats av användaren.
+Vid larm tänds då en röd lampa på enheten som indikerar att ett lokalt larm har gått.
+Efter en tid som specificeras av användaren startas även ett larm från centralenheten så vida det lokala larmet inte har avvaktiverats av användaren.
 Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användaren via ansluten konsol.
 
 \subsection{Tester}
-För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt. 
-En mall för genomförelse och dokumentation av tester utvecklades. 
-I denna sektion finns det flera exempel på utförda tester. 
+För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt.
+En mall för genomförelse och dokumentation av tester utvecklades.
+I denna sektion finns det flera exempel på utförda tester.
 
 
-%Mall för tester. 
+%Mall för tester.
 %Vi vill nog också lägga många tester i en bilaga.
 \begin{comment}
 \subsubsection{Sak som testas}
@@ -531,13 +539,13 @@ Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyde
 
 \item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
 
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. 
-Alla enheter kopplas in och startas. 
-En enhet får spela in meddelanden mellan centralenheten och en dörrenhet. 
-När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den. 
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Alla enheter kopplas in och startas.
+En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
+När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
 Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
 
-\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig. 
+\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
 Då något uppenbart är fel larmar centralenheten.
 
 \item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
@@ -547,17 +555,17 @@ Då något uppenbart är fel larmar centralenheten.
 \begin{description}
 \item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
 
-\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas. 
-Det ska även testas om larmet aktiveras om en periferienhet tas bort. 
+\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas.
+Det ska även testas om larmet aktiveras om en periferienhet tas bort.
 Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
 
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas. 
-Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr. 
-Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd. 
-När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras. 
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr.
+Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd.
+När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras.
 Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
 
-\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras. 
+\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras.
 Kommandon från centralenheten gör det dem ska.
 
 \item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
@@ -566,7 +574,7 @@ Kommandon från centralenheten gör det dem ska.
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-En reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
+Detta kapitel innehåller en reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
 \subsection{Slutprodukt}
 
 Larmsystemet består av en centralenhet och olika perferienheter.
@@ -575,19 +583,17 @@ Om centralenheten får ett alarmmeddelande, eller om den inte får något meddel
 Med hjälp av en knappsats och en kod kan alarm stängas av.
 De beståndsdelar och den grundligaste funktionalitet som lades fram i projektets målsättning har alltså implementerats och fungerar som tänkt.
 
-Extra funktionalitet, mer specifikt ett testläge, ett självlärande systemte, lokalt larm för periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
+Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
 
 Systemet kan till exempel installeras i ett kontor.
 Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
-Systemets användare skulle i så fall ha ett gott skydd mot stöld och oänskade intrång.
+Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskade intrång.
 
-
-
-Larmsystemets olika sensorer i samband med det inbyggda skyddet mot attacker gör att det finns få möjligheter för inbrott.
+Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för inbrott.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
 För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsöken.
- 
+
 
 
 \subsection{Förbättringsmöjligheter}
