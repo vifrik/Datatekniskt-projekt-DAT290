@@ -31,7 +31,7 @@
 
     {\LARGE Modulärt larmsystemet}
 
-    {\large Datateknik, Datatekniskt projekt, grupp 11
+    {\large Datateknik - Datatekniskt projekt, grupp 11
 
     Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
@@ -88,6 +88,7 @@ Inledningsvis ska larmet sättas igång lokalt på periferienheten.
 Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
 Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har löst ut.
 När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
+Denna kod kommer förinstallerad på systemet men den kan ändras av användaren.
 
 I mån av tid kommer extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
@@ -452,7 +453,7 @@ Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:medde
 I målsättningen presenterades viss funktionalitet som skulle implementeras utöver larmsystemets grundligaste funktioner.
 I detta stycke presenteras resultaten av detta.
 
-\subsubsection{Självlärande identifikationsprotokol}
+\subsubsection{Självlärande system för ID hantering}
 Systemet fungerar enligt specifikationerna för självlärandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om att bli tilldelad ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
@@ -463,6 +464,7 @@ Systemets skydd mot denna typ av attacker var effektivt.
 Vid återuppspelning av den inspelade busstrafiken orsakades ett alarm i systemet på ett eller annat sätt.
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på pollingmeddelandet.
+%Den inverterar bara väl? Vi kan nog skriva det för att göra det lite tydligare
 Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
@@ -544,7 +546,8 @@ Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyde
 \item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
 Alla enheter kopplas in och startas.
 En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
-När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
 Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
 
 \item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
