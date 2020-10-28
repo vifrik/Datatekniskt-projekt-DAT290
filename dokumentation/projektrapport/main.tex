@@ -28,7 +28,7 @@
 
     {\LARGE Modulärt larmsystemet}
 
-    {\large \namn, grupp 11
+    {\large Datateknik - DAT290, grupp 11
 
     Titus Blosse, Viktor Frideen, Nazif Kadiroglu, Markus Moen, Lukas Schiavone, Fredrik Österström
 
@@ -89,6 +89,7 @@ Inledningsvis ska larmet sättas igång lokalt på periferienheten.
 Om larmet inte hanteras inom ett givet tidsintervall vidarebefordras larmet till centralenheten.
 Då kommer användaren, med hjälp av ljud och display, få ett meddelande om att larmet har löst ut.
 När larmet har startat ska det krävas manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
+Denna kod kommer förinstallerad på systemet men den kan ändras av användaren.
 
 I mån av tid kommer extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
@@ -141,7 +142,7 @@ Centralenheten registrerar vilka periferienheter som är anslutna, kontrollerar 
 
 Två typer av periferienhet finns tillgängliga att ansluta till systemet.
 Ett dörrlarm, vilket kontrollerar hurvida en dörr är öppen eller stängd och en rörelsesensor som mäter avståndet till föremålet framför den och registrerar om detta förändras.
-Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
+Om dörren är öppen längre än en tid bestämd av användaren eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
 \begin{figure}[H]
@@ -151,7 +152,7 @@ Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka
 \end{figure}
 
 
-\subsubsection{CAN}
+\subsubsection{Controller area network}
 Ett protokoll har utvecklats för kommunikation mellan enheterna.
 Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas mellan enheterna.
 
@@ -450,7 +451,7 @@ Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:medde
 I målsättningen presenterades viss funktionalitet som skulle implementeras utöver larmsystemets grundligaste funktioner.
 I detta stycke presenteras resultaten av detta.
 
-\subsubsection{Självlärande}
+\subsubsection{Självlärande system för ID hantering}
 Systemet fungerar enligt specifikationerna för självlärandet.
 När en periferienhet ansluter sig till systemet skickar den en förfrågan om att bli tilldelad ett enhets-ID till centralenheten.
 Detta meddelande innehåller även information om periferienheten för centralenhet.
@@ -461,6 +462,7 @@ Systemets skydd mot denna typ av attacker var effektivt.
 Vid återuppspelning av den inspelade busstrafiken orsakades ett alarm i systemet på ett eller annat sätt.
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
 Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på pollingmeddelandet.
+%Den inverterar bara väl? Vi kan nog skriva det för att göra det lite tydligare
 Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
@@ -506,7 +508,7 @@ I denna sektion finns det flera exempel på utförda tester.
 \end{description}
 \end{comment}
 
-\subsubsection{CAN test}
+\subsubsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
 
@@ -542,7 +544,8 @@ Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyde
 \item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
 Alla enheter kopplas in och startas.
 En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
-När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
 Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
 
 \item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
@@ -607,6 +610,7 @@ Centralenheten och kommunikationsprotokollet har goda förutsättningar för att
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
 Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
+\section{Referenser}
 
 \bibliographystyle{IEEEtran}
 
