@@ -11,3 +11,4 @@ __*
 *.synctex(busy)
 *.run.xml
 *.bcf
+*.out

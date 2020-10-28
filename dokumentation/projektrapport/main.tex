@@ -6,9 +6,15 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{comment}
-\usepackage[backend=biber, style=ieee, urldate=comp]{biblatex}
+\usepackage{appendix}
+\usepackage[backend=biber, style=ieee, sorting=none]{biblatex}
+\usepackage[hidelinks]{hyperref}
 
-\addbibresource{referenser.bib}
+\floatstyle{plaintop}
+\restylefloat{table}
+
+%\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\space\url{#1}}
+%\addbibresource{referenser.bib}
 
 \newcommand\namn{Larmsystem}
 \newcommand{\todo}[1]{\marginpar{TODO: #1}\vspace{1cm}}
@@ -18,10 +24,12 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
+% Nr, författare, titel, år, url, hämtad
+\newcommand{\citewebpage}[6]{\noindent [#1] #2, "#3," #4. [Online]. Tillgänglig: \url{#5},  hämtad #6}
+
 \restylefloat{table}
 
 \begin{document}
-
 
 \thispagestyle{empty}
 
@@ -64,13 +72,13 @@
 \section{Inledning}
 Inbrott är ett vanligt problem i Sverige.
 År 2019 anmäldes 75.250 inbrottstölder.
-En minskning med 14 \% från året innan \cite{brastold}.
+En minskning med 14 \% från året innan [1].
 Vanliga sätt att förhindra inbrott är grannsamverkan, certifierade lås mot inbrott och hemlarm.
 Larmsystem minskar risken för ett inbrott och möjliggör ytterligare minskning både i Sverige och i resten av världen.
 
 \subsection{Syfte}
 Ett modulärt larmsystem som informerar dess användare om oönskade intrång ska utvecklas.
-Systemet ska lämpa sig för säkring av mindre byggnader så som kontor och lägenheter.
+Systemet ska lämpa sig för säkring av mindre byggnader som kontor och lägenheter.
 Möjlighet ska finnas för systemets användare att anpassa systemet efter sina förutsättningar.
 
 \subsection{Mål}
@@ -97,14 +105,9 @@ Denna extra funktionalitet kommer innebära ett självlärande system, ett testl
 
 Larmsystemet kommer att avgränsas till mindre platser såsom kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
 
-\subsection{Arbetsmetod}
-
+\subsection{Projektdrift}
 Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
-En skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman togs fram.
-
-I nästa steg delades arbetsgruppen upp i tre undergrupper som ansvarade över olika delar av projektet.
-Grupperna utvecklade mjukvaran som var grunden för deras specifika område för att sedan stegvis utöka funktionaliteten.
-Under utvecklingens gång ökade sammarbetet mellan grupperna då de separata mjukvarorna integrerades och gemensamt arbete blev fördelaktigt.
+Det togs fram en skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman. 
 
 Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodatorn MD407 vilket är den hårdvara som driver systemet.
 
@@ -114,9 +117,6 @@ Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlad
 Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
 Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
-
-De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
-Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 
 \newpage
 
@@ -290,9 +290,9 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 \end{description}
 
-Dörrsensors tröskel justeras genom att sätta det antal tillåtna sekunder som en dörr kan vara öppen.
-När en dörr öppnas sparar periferienheten den aktuella tiden.
-Överskrider tiden som dörren varit öppen den tillåtna tiden skapar periferienheten ett alarm.
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
+När en dörr öppnas kommer ett lokalt alarm triggas igång. 
+Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm. 
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Genom att beräkna variansen på dessa mätvärden har avståndssensorn möjligheten att upptäcka en rörelse.
@@ -315,12 +315,20 @@ Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur d
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
 Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
-För att förenkla arbetet i början delades det in i tre olika delar: CAN, centralenheten och periferienheterna.
+\subsection{Inledande arbete}
+
+Det första steget i utvecklingen var att ta fram en överblick på hur systemet skulle komma att se ut.
+Alltså att ta fram den generella designen av systemet och fastställa vilka komponenter som skulle utgöra systemet.
+Systemet delades upp i tre delar:
+periferienheter, centralenhet samt kommunikationsprotokoll.
+Delarna valdes för att de har tydliga avgränsningar sinsemellan vilket skulle underlätta vid uppdelning av arbetsbördan.
+Därefter delades arbetsgruppen upp i tre undergrupper.
+Varje undergrupp fick ansvar för en del av systemet.
 I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
 Senare i projektet när systemet närmade sig färdigställning återgick gruppen till att arbeta tillsammans.
 
-\subsection{Utveckling av CAN}
-Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
+\subsection{Utveckling av kommunikationsprotokoll}
+Arbetet med CAN-protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
 När en standard för meddelandestruktur var definierad påbörjades arbetet med att ta fram de olika meddelandetyperna.
 Alla typer av meddelanden, dess funktion och dess parametrar dokumenterades och gjordes lätttillgängligt i kodbasen.
 En gemensam mottagar-funktion utvecklades som kom att bli standarden för alla enheter i systemet.
@@ -429,7 +437,7 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
   Toleransen går att bestämma på centralenheten.
 
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
-  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart. 
+  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart.
   Känsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
@@ -492,12 +500,13 @@ Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användare
 
 \subsection{Tester}
 För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt.
-En mall för genomförelse och dokumentation av tester utvecklades.
-I denna sektion finns det flera exempel på utförda tester.
-
+En mall för genomförelse och dokumentation av tester utvecklades så att olika tester sköttes enhetligt.
+Denna sektion referar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
+Många tester har gjorts under utvecklingen av systemet och dessa tester har hjälp identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
+Testerna som har utförsts visar att systemet fungerar enligt projektets specifikationer.
+De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker. 
 
 %Mall för tester.
-%Vi vill nog också lägga många tester i en bilaga.
 \begin{comment}
 \subsubsection{Sak som testas}
 \begin{description}
@@ -513,77 +522,10 @@ I denna sektion finns det flera exempel på utförda tester.
 \end{description}
 \end{comment}
 
-\subsubsection{CAN-test}
-\begin{description}
-\item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
-
-\item[Testsyfte] Möjligheten att skicka och ta emot meddelanden.
-
-\item[Utförande] Testet ska utföras så att en enhet skickar meddelanden till centralenheten som visar när den tar emot dem.
-
-\item[Resultat] Centralenheten tog emot meddelanden skickade från periferienhet.
-
-\item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
-\end{description}
-
-\subsubsection{Dörrlarmstest}
-\begin{description}
-\item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
-
-\item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
-
-\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
-
-\item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
-
-\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som förväntat.
-Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
-\end{description}
-
-\subsubsection{Test av skydd mot återuppspelningsattacker}
-\begin{description}
-\item[Komponent] Centralenheten och dörrenheten.
-
-\item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
-
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
-Alla enheter kopplas in och startas.
-En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
-%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
-När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
-Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
-
-\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
-Då något uppenbart är fel larmar centralenheten.
-
-\item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
-\end{description}
-
-\subsubsection{Test av hela systemet}
-\begin{description}
-\item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
-
-\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas.
-Det ska även testas om larmet aktiveras om en periferienhet tas bort.
-Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
-
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
-Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr.
-Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd.
-När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras.
-Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
-
-\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras.
-Kommandon från centralenheten gör det dem ska.
-
-\item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
-\end{description}
-
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
 Detta kapitel innehåller en reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
-
 \subsection{Slutprodukt}
 
 Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet. 
@@ -593,15 +535,11 @@ Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål so
 Periferienheterna fungerar enligt de krav som ställts...
 
 
-
-
 Det målet som inte uppfylldes var implementationen av testläget. Detta kunde inte göras på grund av tidsbrist.
-
 %Larmsystemet består av en centralenhet och olika perferienheter.
 %Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten %som hanterar dessa meddelanden.
 %Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar %den ett alarm.
 %Med hjälp av en knappsats och en kod kan alarm stängas av.
-
 
 %Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för %periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
 
@@ -622,11 +560,103 @@ Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterad
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 
-\subsection{Projektdrift}
+\subsection{Reflektion av projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
+
+De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
+Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 %Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
+
 \section{Referenser}
-\printbibliography[heading=none]
+\citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
+%\printbibliography[heading=none]
+
+\newpage
+\appendix
+\section{Tester}
+\label{bilaga-tester}
+\subsection{CAN-test}
+\begin{description}
+\item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
+
+\item[Testsyfte] Möjligheten att skicka och ta emot meddelanden.
+
+\item[Utförande] Testet ska utföras så att en enhet skickar meddelanden till centralenheten som visar när den tar emot dem.
+
+\item[Resultat] Centralenheten tog emot meddelanden skickade från periferienhet.
+
+\item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
+\end{description}
+
+\subsection{Dörrlarmstest}
+\begin{description}
+\item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
+
+\item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
+
+\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en 4-siffrig kod till en knappsats ansluten till centralenheten.
+
+\item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
+
+\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som förväntat.
+Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
+\end{description}
+
+\subsection{Test av skydd mot återuppspelningsattacker}
+\begin{description}
+\item[Komponent] Centralenheten och dörrenheten.
+
+\item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Alla enheter kopplas in och startas.
+En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
+%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
+Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
+
+\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
+Då något uppenbart är fel larmar centralenheten.
+
+\item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
+\end{description}
+
+\subsubsection{Systemets prestanda med ansluten störenhet}
+\begin{description}
+\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
+För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
+
+\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
+
+\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
+Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
+Detta görs flera gånger med olika inställningar på störenheten.
+Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
+
+\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
+
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
+\end{description}
+
+\subsection{Test av hela systemet}
+\begin{description}
+\item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
+
+\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas.
+Det ska även testas om larmet aktiveras om en periferienhet tas bort.
+Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr.
+Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd.
+När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras.
+Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
+
+\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras.
+Kommandon från centralenheten gör det dem ska.
+
+\item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
+\end{description}
 
 \end{document}
