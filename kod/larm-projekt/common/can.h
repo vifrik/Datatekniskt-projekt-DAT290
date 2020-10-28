@@ -28,41 +28,6 @@ typedef struct  {
 
 } AlarmMsg;
 
-/* msgDoorAlarm initDoorAlarm(uchar iD) {
-    msgDoorAlarm msg;
-    //msg.msgId = 1;
-    msg.nodeId = iD;
-    
-    return msg;
-}
-
-
-CANMsg eDoorAlarm(msgDoorAlarm msg) {
-    CANMsg cmsg;
-    cmsg.msgId = 1;
-    cmsg.nodeId = msg.nodeId;
-    cmsg.length = 0;
-    cmsg.buff[0];
-}
-
-CANMsg encode (msgTest message) {
-    CANMsg msg;
-    msg.msgId = message.msgId;
-    msg.nodeId = message.nodeId;
-    msg.length = message.length;
-    for (int i = 0; i < message.length; i++) {
-   	 msg.buff[i] = message.buff[i];
-    }
-
-    return msg;
-}
-
-/*typedef struct {
-    uchar msgId = 1;
-    uchar nodeId;
-} AlarmMsg;
-*/
-
 typedef void (*VoidFunction)(void);
 
 // Exported CAN functions

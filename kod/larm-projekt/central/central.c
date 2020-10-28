@@ -89,6 +89,7 @@ void timeout_alarm(uchar id){
 	usart_send_numeric(id);
 }
 
+// Skicka ett poll-meddelande till periferienhet med id, id
 void poll_request(uchar id) {
     CANMsg msg;
 	msg = msg_create(POLL_REQUEST, id, TO_PERIPHERAL, 8);
@@ -99,15 +100,14 @@ void poll_request(uchar id) {
     can_send(&msg);
 }
 
+// Hanterar "poll response"-meddelanden
 void poll_response_handler(CANMsg *msg) {
 	//Ignorera ifall enheten inte finns med i listan av enheter
 	if(msg->nodeId < state.devices){
 		Peripheral p = peripherals[msg->nodeId];	
 		for (int i = 0; i < msg->length; i++) {
+			// Om den skickade buffern inte stämmer överrens med den inkommande inverterad, larma
 			if (p.buff[i] != (uchar)~msg->buff[i]) {
-				usart_send_numeric(p.buff[i]);
-				usart_send(" ");
-				usart_send_numericl(~msg->buff[i]);
 				poll_alarm(msg->nodeId);
 				break;
 			}

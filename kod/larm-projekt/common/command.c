@@ -90,26 +90,3 @@ Command command_handler() {
 	
 	return cmd;
 }
-
-/*
-void command_parser(Command cmd) {
-	switch(cmd.command) {
-		case TOL:
-			usart_sendl("TOL command with arguments:");
-			usart_send_numeric(cmd.arg0);
-			usart_send_numeric(cmd.arg1);
-			usart_send_numericl(cmd.arg2);
-			break;
-		case TEST1:
-			break;
-		case UNKNOWN:
-			usart_sendl("Unknown command!");
-	}
-}
-
-command_init();
-while(1) {
-	Command cmd = command_handler();
-	command_parser(cmd);
-}
-*/
