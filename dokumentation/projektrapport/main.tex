@@ -312,11 +312,19 @@ Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur d
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
 Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
-För att förenkla arbetet i början delades det in i tre olika delar: CAN, centralenheten och periferienheterna.
+\subsection{Inledande arbete}
+
+Det första steget i utvecklingen var att ta fram en överblick på hur systemet skulle komma att se ut.
+Alltså att ta fram den generella designen av systemet och fastställa vilka komponenter som skulle utgöra systemet.
+Systemet delades upp i tre delar:
+periferienheter, centralenhet samt kommunikationsprotokoll.
+Delarna valdes för att de har tydliga avgränsningar sinsemellan vilket skulle underlätta vid uppdelning av arbetsbördan.
+Därefter delades arbetsgruppen upp i tre undergrupper.
+Varje undergrupp fick ansvar för en del av systemet.
 I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
 Senare i projektet när systemet närmade sig färdigställning återgick gruppen till att arbeta tillsammans.
 
-\subsection{Utveckling av CAN}
+\subsection{Utveckling av kommunikationsprotokoll}
 Arbetet med CAN protokollet påbörjades teoretiskt med att hitta en standard för hur meddelanden skulle vara strukturerade.
 När en standard för meddelandestruktur var definierad påbörjades arbetet med att ta fram de olika meddelandetyperna.
 Alla typer av meddelanden, dess funktion och dess parametrar dokumenterades och gjordes lätttillgängligt i kodbasen.
@@ -426,7 +434,7 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
   Toleransen går att bestämma på centralenheten.
 
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
-  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart. 
+  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart.
   Känsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
