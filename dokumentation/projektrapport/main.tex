@@ -287,9 +287,9 @@ Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssenso
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 \end{description}
 
-Dörrsensors tröskel justeras genom att sätta det antal tillåtna sekunder som en dörr kan vara öppen.
-När en dörr öppnas sparar periferienheten den aktuella tiden.
-Överskrider tiden som dörren varit öppen den tillåtna tiden skapar periferienheten ett alarm.
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
+När en dörr öppnas kommer ett lokalt alarm triggas igång. 
+Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm. 
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Genom att beräkna variansen på dessa mätvärden har avståndssensorn möjligheten att upptäcka en rörelse.
@@ -529,7 +529,7 @@ I denna sektion finns det flera exempel på utförda tester.
 
 \item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
 
-\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
+\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en 4-siffrig kod till en knappsats ansluten till centralenheten.
 
 \item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
 
