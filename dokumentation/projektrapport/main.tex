@@ -6,9 +6,10 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{comment}
+\usepackage{appendix}
 \usepackage[backend=biber, style=ieee, sorting=none]{biblatex}
 
-\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\space\url{#1}}
+%\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\space\url{#1}}
 
 \addbibresource{referenser.bib}
 
@@ -512,72 +513,6 @@ I denna sektion finns det flera exempel på utförda tester.
 \end{description}
 \end{comment}
 
-\subsubsection{CAN-test}
-\begin{description}
-\item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
-
-\item[Testsyfte] Möjligheten att skicka och ta emot meddelanden.
-
-\item[Utförande] Testet ska utföras så att en enhet skickar meddelanden till centralenheten som visar när den tar emot dem.
-
-\item[Resultat] Centralenheten tog emot meddelanden skickade från periferienhet.
-
-\item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
-\end{description}
-
-\subsubsection{Dörrlarmstest}
-\begin{description}
-\item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
-
-\item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
-
-\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
-
-\item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
-
-\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som förväntat.
-Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
-\end{description}
-
-\subsubsection{Test av skydd mot återuppspelningsattacker}
-\begin{description}
-\item[Komponent] Centralenheten och dörrenheten.
-
-\item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
-
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
-Alla enheter kopplas in och startas.
-En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
-%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
-När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
-Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
-
-\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
-Då något uppenbart är fel larmar centralenheten.
-
-\item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
-\end{description}
-
-\subsubsection{Test av hela systemet}
-\begin{description}
-\item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
-
-\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas.
-Det ska även testas om larmet aktiveras om en periferienhet tas bort.
-Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
-
-\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
-Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr.
-Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd.
-När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras.
-Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
-
-\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras.
-Kommandon från centralenheten gör det dem ska.
-
-\item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
-\end{description}
-
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
@@ -614,5 +549,91 @@ Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera e
 
 \section{Referenser}
 \printbibliography[heading=none]
+
+\newpage
+\appendix
+\section{Tester}
+\subsection{CAN-test}
+\begin{description}
+\item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
+
+\item[Testsyfte] Möjligheten att skicka och ta emot meddelanden.
+
+\item[Utförande] Testet ska utföras så att en enhet skickar meddelanden till centralenheten som visar när den tar emot dem.
+
+\item[Resultat] Centralenheten tog emot meddelanden skickade från periferienhet.
+
+\item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
+\end{description}
+
+\subsection{Dörrlarmstest}
+\begin{description}
+\item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
+
+\item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
+
+\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av därimellan genom att skriva in en kod till en knappsats ansluten till centralenheten.
+
+\item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
+
+\item[Analys] Larmcykeln för dörrlarm med standardinställningar fungerar som förväntat.
+Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
+\end{description}
+
+\subsection{Test av skydd mot återuppspelningsattacker}
+\begin{description}
+\item[Komponent] Centralenheten och dörrenheten.
+
+\item[Testsyfte] Funktionaliteten som ska testas är att pollingsystemet mellan central- och periferienheter skyddar mot återuppspelningsattacker.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Alla enheter kopplas in och startas.
+En enhet får spela in meddelanden mellan centralenheten och en dörrenhet.
+%När den har spelat in en viss mängd trafik börjar den skicka ut den i samma sekvens som den tog emot den.
+När den har spelat in en 32 meddelanden från CAN-bussen börjar den skicka ut dessa i samma sekvens som den tog emot dem.
+Sedan testas också att dörrenheten kopplas ut, vilket i vanliga fall skulle ge upphov till ett larm och om systemet fungerar som planerat kommer det larmas även i detta fall.
+
+\item[Resultat] Resultatet av testet. Vid många tillfällen så svarar återuppspelningsenheten inte som centralenheten förväntar sig.
+Då något uppenbart är fel larmar centralenheten.
+
+\item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
+\end{description}
+
+\subsubsection{Systemets prestanda med ansluten störenhet}
+\begin{description}
+\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
+För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
+
+\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
+
+\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
+Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
+Detta görs flera gånger med olika inställningar på störenheten.
+Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
+
+\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
+
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
+\end{description}
+
+\subsection{Test av hela systemet}
+\begin{description}
+\item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
+
+\item[Testsyfte] Hela systemet ska testas, det vill säga att larm från dörrar, vibrations- och avståndssensorn ska testas.
+Det ska även testas om larmet aktiveras om en periferienhet tas bort.
+Man ska kunna larma av med en knappsats och skicka kommandon till centralenheten via en ansluten dator.
+
+\item[Utförande] Hur testet ska utföras och vilka specifika fall som testas.
+Först testas dörrlarmet genom att koppla bort en sladd som simulerar en dörr.
+Sedan aktiveras avståndssensorn genom att rörelse sker framför den och efter det testas vibrationssensorn genom att den blir rörd.
+När dessa har testats så skall en periferienhet tas bort för att se om larmet aktiveras.
+Sist testas kommandon från centralenheten, till exempel kommandot för att stänga av larmet på en dörr som sedan testas som innan, men nu förväntas inget larm.
+
+\item[Resultat] Larm aktiveras när de är förväntade men inte när de inte borde aktiveras.
+Kommandon från centralenheten gör det dem ska.
+
+\item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
+\end{description}
 
 \end{document}
