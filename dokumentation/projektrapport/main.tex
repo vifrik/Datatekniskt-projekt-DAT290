@@ -490,12 +490,13 @@ Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användare
 
 \subsection{Tester}
 För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt.
-En mall för genomförelse och dokumentation av tester utvecklades.
-I denna sektion finns det flera exempel på utförda tester.
-
+En mall för genomförelse och dokumentation av tester utvecklades så att olika tester sköttes enhetligt.
+Denna sektion referar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
+Många tester har gjorts under utvecklingen av systemet och dessa tester har hjälp identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
+Testerna som har utförsts visar att systemet fungerar enligt projektets specifikationer.
+De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker. 
 
 %Mall för tester.
-%Vi vill nog också lägga många tester i en bilaga.
 \begin{comment}
 \subsubsection{Sak som testas}
 \begin{description}
@@ -551,6 +552,7 @@ Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera e
 \newpage
 \appendix
 \section{Tester}
+\label{bilaga-tester}
 \subsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
