@@ -100,8 +100,7 @@ Att ett alarm har gått ska kommuniceras till användaren via en terminal på ce
 När ett larm startar på centralenheten ska det krävas en manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
 Denna kod är förutbestämd på systemet men ska kunna ändras av användaren.
 
-I mån av tid kommer extra funktionalitet implementeras.
-\todo{inte i mån av tid}
+Utöver basfunktionaliteten kommer även extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
 Larmsystemet kommer avgränsas till mindre lokaler som exempelvis kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
@@ -141,44 +140,79 @@ MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar A
 
 \subsection{Systemöversikt}
 
+\todo{referera till bilden}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{canbuss-pp.png}
+    \caption{Översikt över systemet}
+    \label{fig:oversikt}
+\end{figure}
+
 Ett MD407-kort väljs som centralenhet för systemet.
 Från denna enhet körs huvudprogrammet.
 Centralenheten sköter huvudparten av systemets funktion.
 Centralenheten registrerar vilka periferienheter som är anslutna, kontrollerar kontinuerligt så att inget alarm gått hos periferienheterna och läser inmatning från en ansluten dator för att styra systemet.
+Enheterna är sammankopplade via CAN-bussen som i Figur \ref{fig:oversikt}.
 
-Två typer av periferienhet finns tillgängliga att ansluta till systemet.
-Ett dörrlarm, kontrollerar huruvida en dörr är öppen eller stängd och en rörelsesensor mäter avståndet till föremålet framför den och registrerar om detta förändras.
-Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
-Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
-
-\todo{referera till bilden}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{canbuss-pp.png}
-    \caption{Översikt över systemet}
-\end{figure}
-
-\begin{table}[H]
-    \centering
-    \caption{CAN-meddelandets uppbyggnad samt ett exempel på hur ett alarm-meddelande från en periferienhet ser ut.}
-    \label{tab:meddelandestruktur}
-
-    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
-        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
-        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
-        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
-    \end{tabular}}
-\end{table}
+Två typer av periferienheter finns tillgängliga för anslutning: en dörrenhet och en rörelseenhet.
+Dörrenheten kontrollerar huruvida en dörr är öppen eller stängd. Rörelseenheten mäter avståndet till föremålet framför den och registrerar om detta förändras med en av sina sensorer och mäter vibrationer med sin andra.
+Om en dörr är öppen längre än bestämd tid eller om rörelsesensorn registrerar ett avstånd mindre än sitt gränsvärde kommer periferienheterna larma.
+Användaren har möjlighet att bestämma tiden för enskilda dörrar och gränsvärdet för avståndssensorn via USART på centralenheten.
+%Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
 \subsubsection{Controller area network}
 Ett protokoll har utvecklats för kommunikation mellan enheterna.
 Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas mellan enheterna.
 
-CAN är ett protokoll för kommunikation och hantering av meddelanden mellan enheter.
+\begin{table}[H]
+    \centering
+    \caption{CAN-meddelandets uppbyggnad och ett exempel på hur ett alarm-meddelande från en periferienhet med ID ett ser ut.}
+    \label{tab:meddelandestruktur}
+
+    \resizebox{\textwidth}{!}{\begin{tabular}{|c||c|c|c|c|c|}\hline
+        Fältnamn & Riktning & Meddelande-ID & Enhets-ID & Längd & Data \\\hline
+        Antal bitar & 1 & 6 & 4 & 3 & 64 \\\hline
+        Exempel & TO\_CENTRAL & ALARM & 1 & 0 & 0 \\\hline
+    \end{tabular}}
+\end{table}
+
+%\begin{table}[H]
+%    \centering
+%    \caption{CAN-meddelandets uppbyggnad och ett exempel på hur ett alarm-meddelande från en periferienhet kan se ut.}
+%    \label{tab:meddelandestruktur}
+
+%    \resizebox{\textwidth}{!}{\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
+%        \multicolumn{1}{|c|}{Riktning} & \multicolumn{6}{|c|}{Meddelande-ID} & \multicolumn{4}{|c|}{Enhets-ID} & \multicolumn{3}{|c|}{Längd} & \multicolumn{1}{|c|}{Data (8 bytes)} \\\hline
+%        0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\\hline
+%        \multicolumn{1}{|c|}{TO\_CENTRAL} & \multicolumn{6}{|c|}{ALARM} & \multicolumn{4}{|c|}{NodeId} & \multicolumn{3}{|c|}{0} & \multicolumn{1}{|c|}{0} \\\hline
+%    \end{tabular}}
+%\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Samtliga meddelandetyper och deras prioritet.}
+    \label{tab:meddelandetyper}
+    \begin{tabular}{|c||c|}\hline
+        Prioritet & Meddelande-ID \\\hline\hline
+        0 & ALARM \\\hline
+        1 & ERROR \\\hline
+        2 & ALARM\_OFF \\\hline
+        3 & POLL\_REQUEST \\\hline
+        4 & POLL\_RESPONSE \\\hline
+        5 & DICP\_REQUEST \\\hline
+        6 & DICP\_RESPONSE \\\hline
+        7 & TOL\_SET \\\hline
+        8 & ACTIVE\_ON \\\hline
+        9 & ACTIVE\_OFF \\\hline
+    \end{tabular}
+\end{table}
+
+
+\noindent CAN är ett protokoll för kommunikation och hantering av meddelanden mellan enheter.
 CAN-protokollet måste därför finnas hos både periferienhet och centralenhet.
 Koden är därför strukturerad så att samma kod kan köras på valfri enhet oavsett typ.
 Med hjälp av riktning och enhets-ID (enhets-identifikation) kan alla enheter ta emot och skicka meddelanden till godtycklig mottagare.
-Varje CAN-meddelande byggs upp av fem fält:
+Varje CAN-meddelande byggs upp av fem fält som visat i Tabell \ref{tab:meddelandestruktur}:
 
 \begin{description}
     \item[Riktning:] Detta fält anger om meddelandet går till eller från centralenheten.
@@ -190,7 +224,6 @@ Varje CAN-meddelande byggs upp av fem fält:
     Ordningen i uppräkningstypen bestämmer meddelandets prioritet.
     Ju närmare noll, desto högre prioritet.
     Samtliga meddelandetyper finns samlade i Tabell \ref{tab:meddelandetyper}.
-    \todo{flytta tabell över}
 
     \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0 och 14.
     15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
@@ -203,25 +236,6 @@ Varje CAN-meddelande byggs upp av fem fält:
     Ett meddelande kan lagra upp till 64 bitar av data.
 \end{description}
 
-\begin{table}[H]
-    \centering
-    \caption{Samtliga meddelandetyper och deras prioritet.}
-    \label{tab:meddelandetyper}
-    \begin{tabular}{|c|c|}\hline
-      Prioritet & Meddelande-ID \\\hline
-      0 & ALARM \\\hline
-      1 & ERROR \\\hline
-      2 & ALARM\_OFF \\\hline
-      3 & POLL\_REQUEST \\\hline
-      4 & POLL\_RESPONSE \\\hline
-      5 & DICP\_REQUEST \\\hline
-      6 & DICP\_RESPONSE \\\hline
-      7 & TOL\_SET \\\hline
-      8 & ACTIVE\_ON \\\hline
-      9 & ACTIVE\_OFF \\\hline
-    \end{tabular}
-  \end{table}
-
 Då ett meddelande ska skickas anropas en avsändarfunktion hos den enhet som vill skicka.
 För varje meddelandetyp finns en unik avsändarfunktion som skapar ett CAN-meddelande med de nödvändiga parametrarna.
 Funktionen lägger sedan ut meddelandet på bussen så att mottagaren kan plocka upp det.
@@ -233,8 +247,18 @@ Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera 
 För varje meddelandetyp finns en unik hanteringsfunktion som utför de instruktioner meddelandet medförde.
 
 \subsubsection{Centralenhet}
+\todo{Referera!}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{central-oversikt-pp.png}
+    \caption{Översikt över centralenheten och dess komponenter}
+    \label{fig:oversiktcentral}
+\end{figure}
+
 Centralenheten sköter huvuddelen av systemets funktionalitet.
-Främst ansvarar den för övervaka alla anslutna enheter och alarmera om ett alarm uppstår hos någon av dem.
+En del av funktionaliteten är att kunna alarmera, avalarmera och konfigurera systemet.
+För att kunna göra detta är ett larmdon, en knappsats och en USART-terminal kopplade till centralenheten enligt Figur \ref{fig:oversiktcentral}.
+Enheten ansvarar över att övervaka alla anslutna enheter och alarmera om ett alarm uppstår hos någon av dem.
 Om alarm uppstår kan det avvaktiveras genom att mata in en fyrsiffrig kod på ansluten knappsats.
 
 Centralenheten både lyssnar efter meddelanden och skickar meddelanden till periferienheterna kontinuerligt.
@@ -248,25 +272,26 @@ I pollingsvaret ska tidsstämpeln återfinnas fast inverterad.
 När centralenheten mottager ett pollingsvar inom tidsramen med en korrekt inverterad tidstämpel skickas ett nytt pollingmeddelande till nästa anslutna enhet.
 Om korrekt pollingsvar ej mottages startas ett alarm från centralenheten.
 
-De instruktioner som matas in av användare via ansluten konsol hanteras av centralenheten.
+De instruktioner som matas in av användare via ansluten konsol (USART i Figur \ref{fig:oversiktcentral}) hanteras av centralenheten.
 För att inte störa programflödet kontrolleras inmatningen av tecken periodiskt istället för att systemet väntar på inmatning från användare.
 Inmatade tecken sparas i en buffer.
 Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
 Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
-\todo{Referera!}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{central-oversikt-pp.png}
-    \caption{Översikt över centralenheten och dess komponenter}
-\end{figure}
-
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
 \subsubsection{Periferienhet}
+\todo{REFERERA!}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{periferi-oversikt-pp.png}
+    \caption{Översikt över periferienheterna och dess komponenter}
+    \label{fig:oversiktperiferi}
+\end{figure}
+
 När periferienheten initialiseras hämtas en identifierare från centralenheten via CAN.
 Detta görs genom att anta en standard-identifierare 15 och att skicka ett DICP(Dynamic Identification Configuration protocol)-meddelande.
-Centralenheten tilldelar periferienheten och besvarar DICP-meddelandet med den tilldelade identifikationen.
+Centralenheten tilldelar periferienheten en identifikator och besvarar DICP-meddelandet med den tilldelade identifikationen.
 Vid framtida kommunikation använder periferienheten sig av sin unika identifierare för att skicka meddelanden.
 
 För att inte centralenheten ska initiera ett alarm måste periferienheterna kunna svara på dess förfrågan.
@@ -277,11 +302,12 @@ Centralenheten verifierar att den inverterade tiden stämmer överrens med tiden
 Om en avvikelse i tiden uppstår så larmar centralenheten med ett alarm.
 
 Periferienheterna avlyssnar sina sensorer och rapporterar ett alarm till centralenheten om tröskeln för sensortypen är överskriden.
-Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor.
+Det finns tre typer av sensorer, en dörr-, en avstånds- och en vibrationssensor som är kopplade till respektive periferienhet enligt Figur \ref{fig:oversiktperiferi}.
+Larmdonet i figuren används för att alarmera lokalt och att visa för användaren att ett alarm har uppstått.
 
 \begin{description}
     \item[Dörrsensor:] Dörrsensorns uppgift är att upptäcka om en dörr är öppen eller stängd.
-    Värdet på sensorerna läses av från PE0-12, portpinnar på MD407, som är konfigurerade med en Pull-Up-resistorer.
+    Värdet på sensorerna läses av från PE0, PE2, PE4, PE6, PE8, PE10 och PE12, portpinnar på MD407 som är konfigurerade med Pull-Up-resistorer.
     Vid öppnad dörr bryts kretsen och det logiska värdet blir ett.
     Vid sluten krets är det logiska värdet på kretsen noll.
 
@@ -302,19 +328,12 @@ När en dörr öppnas kommer ett lokalt alarm triggas igång.
 Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm. 
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
-Genom att beräkna variansen på dessa mätvärden har avståndssensorn möjligheten att upptäcka en rörelse.
-En varians större än tröskeln medför ett alarm.
-En lägre tröskel används för att lokalt kunna alarmera.
+Om avståndet är mindre än den inställda tröskeln skickar enheten ett alarm till centralenheten.
+Är avståndet däremot mindre är två gånger tröskeln kommer sensorn att alarmera lokalt.
 
 Vibrationssensorns känslighet justeras direkt på sensorn.
 Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
-
-\todo{REFERERA!}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{periferi-oversikt-pp.png}
-    \caption{Översikt över periferienheterna och dess komponenter}
-\end{figure}
+Sensorn alarmerar lokalt och till centralenheten direkt vid en upptäckt vibration.
 
 \newpage
 
@@ -590,8 +609,11 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 \appendix
 \section{Tester}
 \label{bilaga-tester}
-\todo{Gör subsections för funktionstester och prestendatester}
-\subsection{CAN-test}
+\subsection{Funktionstester}
+Här listas tester för systemets olika funktioner.
+Dessa tester är för att se till så att systemet fungerar som planerat och för att hitta problem.
+
+\subsubsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
 
@@ -604,7 +626,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 \item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
 \end{description}
 
-\subsection{Dörrlarmstest}
+\subsubsection{Dörrlarmstest}
 \begin{description}
 \item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
 
@@ -618,7 +640,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
 \end{description}
 
-\subsection{Test av skydd mot återuppspelningsattacker}
+\subsubsection{Test av skydd mot återuppspelningsattacker}
 \begin{description}
 \item[Komponent] Centralenheten och dörrenheten.
 
@@ -637,24 +659,7 @@ Då något uppenbart är fel larmar centralenheten.
 \item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
 \end{description}
 
-\subsection{Systemets prestanda med ansluten störenhet}
-\begin{description}
-\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
-För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
-
-\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
-
-\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
-Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
-Detta görs flera gånger med olika inställningar på störenheten.
-Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
-
-\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
-
-\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
-\end{description}
-
-\subsection{Test av hela systemet}
+\subsubsection{Test av hela systemet}
 \begin{description}
 \item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
 
@@ -672,6 +677,27 @@ Sist testas kommandon från centralenheten, till exempel kommandot för att stä
 Kommandon från centralenheten gör det dem ska.
 
 \item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
+\end{description}
+
+\subsection{Prestandatest}
+Här listas test på systemets prestanda.
+Dessa test är till för att se hur bra systemet fungerar under press och för att se systemets gränser.
+
+\subsubsection{Systemets prestanda med ansluten störenhet}
+\begin{description}
+\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
+För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
+
+\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
+
+\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
+Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
+Detta görs flera gånger med olika inställningar på störenheten.
+Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
+
+\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
+
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
 \end{description}
 
 \end{document}
