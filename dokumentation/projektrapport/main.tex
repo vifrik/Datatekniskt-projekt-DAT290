@@ -100,8 +100,7 @@ Att ett alarm har gått ska kommuniceras till användaren via en terminal på ce
 När ett larm startar på centralenheten ska det krävas en manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
 Denna kod är förutbestämd på systemet men ska kunna ändras av användaren.
 
-I mån av tid kommer extra funktionalitet implementeras.
-\todo{inte i mån av tid}
+Utöver basfunktionaliteten kommer även extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
 Larmsystemet kommer avgränsas till mindre lokaler som exempelvis kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
@@ -594,8 +593,11 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 \appendix
 \section{Tester}
 \label{bilaga-tester}
-\todo{Gör subsections för funktionstester och prestendatester}
-\subsection{CAN-test}
+\subsection{Funktionstester}
+Här listas tester för systemets olika funktioner.
+Dessa tester är för att se till så att systemet fungerar som planerat och för att hitta problem.
+
+\subsubsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
 
@@ -608,7 +610,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 \item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
 \end{description}
 
-\subsection{Dörrlarmstest}
+\subsubsection{Dörrlarmstest}
 \begin{description}
 \item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
 
@@ -622,7 +624,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 Att avlarmning från centralenhet fungerar på ett larm från en dörrenhet tyder på att avlarmning även borde fungera på larm från andra enheter.
 \end{description}
 
-\subsection{Test av skydd mot återuppspelningsattacker}
+\subsubsection{Test av skydd mot återuppspelningsattacker}
 \begin{description}
 \item[Komponent] Centralenheten och dörrenheten.
 
@@ -641,24 +643,7 @@ Då något uppenbart är fel larmar centralenheten.
 \item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
 \end{description}
 
-\subsection{Systemets prestanda med ansluten störenhet}
-\begin{description}
-\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
-För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
-
-\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
-
-\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
-Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
-Detta görs flera gånger med olika inställningar på störenheten.
-Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
-
-\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
-
-\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
-\end{description}
-
-\subsection{Test av hela systemet}
+\subsubsection{Test av hela systemet}
 \begin{description}
 \item[Komponent] Centralenheten, en dörrperiferienhet och en rörelseperiferienhet.
 
@@ -676,6 +661,27 @@ Sist testas kommandon från centralenheten, till exempel kommandot för att stä
 Kommandon från centralenheten gör det dem ska.
 
 \item[Analys] Dessa resultat innebär att systemet i sin helhet fungerar och kan anses vara åtminstone mestadels klart.
+\end{description}
+
+\subsection{Prestandatest}
+Här listas test på systemets prestanda.
+Dessa test är till för att se hur bra systemet fungerar under press och för att se systemets gränser.
+
+\subsubsection{Systemets prestanda med ansluten störenhet}
+\begin{description}
+\item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
+För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
+
+\item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
+
+\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
+Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
+Detta görs flera gånger med olika inställningar på störenheten.
+Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
+
+\item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
+
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är välprioriterade.
 \end{description}
 
 \end{document}
