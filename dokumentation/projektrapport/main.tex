@@ -540,25 +540,21 @@ De visar även att systemet är robust då det fungerar även vid störningar oc
 \section{Slutsatser}
 Detta kapitel innehåller en reflektion på den slutgiltiga produkten och diskussion kring projektets drift.
 
-\todo{Se över. "..."?}
-\subsection{Slutprodukt}
+\subsection{Resultat i förhållande till mål}
 
 Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet. 
 Centralenheten kan enligt specifikationerna konfigurera periferienheterna och ställa larm när ett alarm kommer ifrån en periferienheten. 
 Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specifierades. 
 
-Periferienheterna fungerar enligt de krav som ställts...
+Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet. 
+Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. All extra funktionaliteten implementerades även som planerat.
 
+Anledningen till att slutprodukten uppfyller alla mål och även expanderats ytterligare beror på att hur arbetsprocessen delades upp. 
+Att arbetet delades upp i tre delar i början gjorde att grundläggande funktionalitet snabbt utvecklades inom de tre områdena. 
+Detta gjorde att central- och periferienheterna tidigt kunde kommunicera med varandra över CAN-bussen vilket förenklade processen att testa systemet. 
+På grund av detta gick det fort att verifiera att kod fungerade korrekt och gå vidare till att skriva ny kod.
 
-Det målet som inte uppfylldes var implementationen av testläget. Detta kunde inte göras på grund av tidsbrist.
-%Larmsystemet består av en centralenhet och olika perferienheter.
-%Periferienheterna avlyssnar sina sensorer och skickar kontinuerligt meddelanden till centralenheten %som hanterar dessa meddelanden.
-%Om centralenheten får ett alarmmeddelande, eller om den inte får något meddelande alls, så aktiverar %den ett alarm.
-%Med hjälp av en knappsats och en kod kan alarm stängas av.
-
-%Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för %periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
-
-\todo{Egen underrubrik?}
+\subsection{Användningsområden}
 Systemet kan till exempel installeras i ett kontor.
 Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
 Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskade intrång.
