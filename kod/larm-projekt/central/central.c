@@ -178,7 +178,7 @@ void set_passcode(unsigned int newpass, unsigned int newpass1) {
 void help_msg(void) {
 	usart_send("\nEnter commands into the console to configure system, press 'enter' to submit command\n");
 	usart_send("These are the available options:\n");
-	usart_send("Activate or Deactivate unit:\n Type 'active nodeId 0/1'\n");
+	usart_send("Activate or Deactivate unit:\n Type 'active passcode nodeId 0/1'\n");
 	usart_send("Set Tolerance:\n Type 'tol passcode nodeId unitId time'\n");
 	usart_send("Set number of doors:\n Type 'nDoors passcode nodeId numberOfDoors'\n");
 	usart_send("Show connected units:\n Type 'show passcode'\n");
