@@ -171,8 +171,8 @@ Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas 
     \label{tab:meddelandestruktur}
 
     \resizebox{\textwidth}{!}{\begin{tabular}{|c||c|c|c|c|c|}\hline
-        Fält & Riktning & Meddelande-ID & Enhets-ID & Längd & Data (8 bytes) \\\hline\hline
-        Bitar & 0 & 0 & 0 & 0 & 0 \\\hline
+        Fältnamn & Riktning & Meddelande-ID & Enhets-ID & Längd & Data \\\hline
+        Antal bitar & 1 & 6 & 4 & 3 & 64 \\\hline
         Exempel & TO\_CENTRAL & ALARM & 1 & 0 & 0 \\\hline
     \end{tabular}}
 \end{table}
