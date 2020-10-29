@@ -37,7 +37,7 @@
     \parskip=14pt
     \vspace*{3\parskip}
 
-    {\LARGE Utveckling av modulärt larmssystem för mindre lokaler och bostäder}
+    {\LARGE Utveckling av modulärt larmssystem för mindre lokaler}
 
     {\large Datateknik - Datatekniskt projekt, grupp 11
 
@@ -85,14 +85,14 @@ Möjlighet ska finnas för systemets användare att anpassa systemet efter sina 
 
 Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral.
 Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
-Till exempel ska kunden kunna justerbara antal anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
+Till exempel ska kunden kunna justera antalet anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
 Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
 
 Grunden till systemet som ska utvecklas kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. De övergripande målen med centralenheten är att användaren ska kunna konfigurera periferienheterna genom den och att den ska kunna larma när ett alarm sätts på en periferienhet.
 
 Två periferienheter kommer att utvecklas, ett dörrlarm och ett rörelselarm.
 Dörrlarmets ska kunna starta ett larm då en dörr kopplad till en sensor öppnas.
-Rörelselarmet ska använda två sensorer, en vibrationssensor och en avståndssensor, och kommer larma vid upptäckta störningar. 
+Rörelselarmet ska använda två sensorer, en vibrationssensor och en avståndssensor och kommer larma vid upptäckta störningar. 
 De olika sensorernas toleranser ska kunna bestämmas på centralenheten.
 Ifall en tolerans har bestämts ska ett lokalt larm först sättas hos periferienheten, ett alarm skickas till centralenheten om toleransen överskrids.
 
@@ -101,13 +101,16 @@ När ett larm startar på centralenheten ska det krävas en manuell inmatning av
 Denna kod är förutbestämd på systemet men ska kunna ändras av användaren.
 
 I mån av tid kommer extra funktionalitet implementeras.
+\todo{inte i mån av tid}
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
-Larmsystemet kommer att avgränsas till mindre platser såsom kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
+Larmsystemet kommer avgränsas till mindre lokaler som exempelvis kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
+\todo{Beskriva begränsningar i metod. man kan ta in andra avgränsningar också där}
 
 \subsection{Projektdrift}
 Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
 Det togs fram en skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman. 
+\todo{Flytta till metod och ersätt med något annat}
 
 Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodatorn MD407 vilket är den hårdvara som driver systemet.
 
@@ -117,6 +120,7 @@ Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlad
 Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
 Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
 Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
+\todo{Beskriv kommunikation. Finns kanske ett stycke längst ner i slutsatsen}
 
 \newpage
 
@@ -147,6 +151,7 @@ Ett dörrlarm, kontrollerar huruvida en dörr är öppen eller stängd och en r�
 Om dörren är öppen längre än en bestämd tid eller om rörelsesensorn registrerar en avvikelse i avstånd kommer periferienheterna larma.
 Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
+\todo{referera till bilden}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{canbuss-pp.png}
@@ -185,6 +190,7 @@ Varje CAN-meddelande byggs upp av fem fält:
     Ordningen i uppräkningstypen bestämmer meddelandets prioritet.
     Ju närmare noll, desto högre prioritet.
     Samtliga meddelandetyper finns samlade i Tabell \ref{tab:meddelandetyper}.
+    \todo{flytta tabell över}
 
     \item[Enhets-ID:] Varje ansluten enhet tilldelas ett unikt enhets-ID, mellan 0 och 14.
     15 är reserverat för ID-tilldelning. Ett lägre enhets-ID innebär högre prioritet.
@@ -248,6 +254,7 @@ Inmatade tecken sparas i en buffer.
 Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
 Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
+\todo{Referera!}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{central-oversikt-pp.png}
@@ -302,6 +309,7 @@ En lägre tröskel används för att lokalt kunna alarmera.
 Vibrationssensorns känslighet justeras direkt på sensorn.
 Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
 
+\todo{REFERERA!}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{periferi-oversikt-pp.png}
@@ -310,6 +318,7 @@ Detta görs genom att ställa in en potentiometer med hjälp av en skruvmejsel.
 
 \newpage
 
+\todo{Varför vi har gjort som vi har gjort}
 \section{Metod}
 Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts.
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
@@ -347,6 +356,7 @@ Efter att ett meddelande har initialiserats med den förväntade datan skickas d
 Detta görs genom att ett CANmsg fylls med data.
 Sedan gör CAN-protokollet om meddelandet till ett TX-meddelande för att sedan automatiskt skicka det på bussen.
 
+\todo{Mer text. Känns lite för teoretiskt kanske}
 \subsection{Utveckling av centralenheten}
 Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
 När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
@@ -358,6 +368,7 @@ Pollingsystemet började som en idé på papper där teoretiska meddelanden rita
 Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
 TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
 
+\todo{Varför valt 15}
 \subsection{Utveckling av periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
 %Eftersom gruppen sen tidigare saknade erfarenhet med hårdvaran uppstod en del motstånd under arbetet.
@@ -382,7 +393,7 @@ Samtidigt hade rörelseperiferienheten endast stöd för avståndssensorn.
 Detta ledde till att många typer av meddelande behövde skrivas om.
 Hade specifikationen för periferienheterna studerats noggrannare hade detta kunnat undvikas.
 
-
+\newpage
 \section{Resultat}
 Denna sektion syftar till att presentera det slutgiltiga resultatet av systemet samt att reflektera och diskutera kring utfallet utifrån de mål och syfte som ställts upp i rapportens inledning.
 Sektionen inleds med resultaten från systemet i sin helhet följt av djupare granskning av delsystemen.
@@ -437,8 +448,8 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
   Toleransen går att bestämma på centralenheten.
 
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
-  Om vibrationssensor upptäcker en rörelse skickar den ett alarm till centralenheten omedelbart.
-  Känsligheten för sensorn går att kalibrera på sensorn med hjälp av en skruvmejsel.
+  Om vibrationssensor upptäcker en vibration skickar den ett alarm till centralenheten omedelbart.
+  Känsligheten för sensorn går att justera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
 
@@ -448,7 +459,7 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
 Kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
 Protokollet är designat för att så få meddelanden som möjligt ska behöva skickas.
 I och med det har funktionalitet så som meddelandebekräftelser inte implementerats.
-Detär en funktionalitet som potentiellt skulle göra systemet stabilare och mer motståndskraftigt mot attacker.
+Det är en funktionalitet som potentiellt skulle göra systemet stabilare och mer motståndskraftigt mot attacker.
 Istället har ett robust pollingsystem byggts som gör systemet tillräckligt stabilt. %Test här som visar på stabilitet?
 
 Det slutgiltiga kommunikationsprotokollet skiljer sig från den ursprungliga designen.
@@ -458,6 +469,7 @@ Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kun
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
 Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
+\todo{Dem klagade på referensen}
 
 
 \subsection{Extra funktionalitet}
@@ -474,21 +486,22 @@ Funktionaliteten kunde verifieras då centralenheten skrev till terminalen via U
 Systemets skydd mot denna typ av attacker var effektivt.
 Vid återuppspelning av den inspelade busstrafiken orsakades ett alarm i systemet på ett eller annat sätt.
 Detta beror på att centralenheten konstant skickar ut nya pollingmeddelanden innehållande en ny nyckel baserad på systemtiden.
-Periferienheterna utför en algoritm på nyckeln och skickar tillbaka denna i deras svar på pollingmeddelandet.
-%Den inverterar bara väl? Vi kan nog skriva det för att göra det lite tydligare
+Periferienheterna inverterar nyckeln och skickar tillbaka den i deras svar på pollingmeddelandet.
 Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och därmed kommer ett alarm sättas hos centralenheten när den upptäcker den felaktiga nyckeln.
 
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
 Detta gör att en angripare inte kan byta ut systemets periferienheter mot sina egna enheter.
 
+\todo{Fake news!!!}
 \subsubsection{Testläge}
 Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
 Då centralenheten körs i detta testläge skrivs information om de meddelanden som tas emot och skickas från centralen ut till ansluten konsol.
 Detta underlättar vid felsökning och installation av systemet.
 
+\todo{Förbättringsmöjligheter i slutsatser}
 Det finns förbättringsmöjligheter för testläget i den slutgiltiga produkten.
 Till exempel möjlighet att få felmeddelanden utskrivna.
-Mer felsökningsverktyg alltid är uppskattat.
+Mer felsökningsverktyg är alltid uppskattat.
 Inom ramarna för detta projekt fyller testläget däremot sin funktion.
 
 \subsubsection{Lokalt larm}
@@ -501,7 +514,7 @@ Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användare
 \subsection{Tester}
 För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt.
 En mall för genomförelse och dokumentation av tester utvecklades så att olika tester sköttes enhetligt.
-Denna sektion referar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
+Denna sektion refererar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
 Många tester har gjorts under utvecklingen av systemet och dessa tester har hjälp identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
 Testerna som har utförsts visar att systemet fungerar enligt projektets specifikationer.
 De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker. 
@@ -525,7 +538,9 @@ De visar även att systemet är robust då det fungerar även vid störningar oc
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
 \section{Slutsatser}
-Detta kapitel innehåller en reflektion på den slutgiltiga produkten samt diskussion kring projektets drift.
+Detta kapitel innehåller en reflektion på den slutgiltiga produkten och diskussion kring projektets drift.
+
+\todo{Se över. "..."?}
 \subsection{Slutprodukt}
 
 Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet. 
@@ -543,7 +558,7 @@ Det målet som inte uppfylldes var implementationen av testläget. Detta kunde i
 
 %Extra funktionalitet, mer specifikt ett testläge, ett självlärande system, lokalt larm för %periferienheterna, samt motståndskraftighet gentemot återuppspelningsattacker finns i systemet.
 
-
+\todo{Egen underrubrik?}
 Systemet kan till exempel installeras i ett kontor.
 Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
 Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskade intrång.
@@ -553,6 +568,7 @@ Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet 
 
 För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
 
+\todo{Källa. Förbättra}
 \subsection{Förbättringsmöjligheter}
 Det finns fortfarande utvecklingsmöjligheter för systemet.
 Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
@@ -560,6 +576,7 @@ Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterad
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 
+\todo{Kommunikation i projektdrift}
 \subsection{Reflektion av projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
 
@@ -569,6 +586,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 
 
 \section{Referenser}
+\todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
 \citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
 %\printbibliography[heading=none]
 
@@ -576,6 +594,7 @@ Stor del av all kommunikation kring projektet har skett via kommunikationsverkty
 \appendix
 \section{Tester}
 \label{bilaga-tester}
+\todo{Gör subsections för funktionstester och prestendatester}
 \subsection{CAN-test}
 \begin{description}
 \item[Komponent] Främst ska CAN testas, dock användes två enheter så att något kunde skicka och ta emot meddelanden.
@@ -622,7 +641,7 @@ Då något uppenbart är fel larmar centralenheten.
 \item[Analys] Pollingsystemet fyller sitt syfte; systemet är inte känsligt mot återuppspelningsattacker.
 \end{description}
 
-\subsubsection{Systemets prestanda med ansluten störenhet}
+\subsection{Systemets prestanda med ansluten störenhet}
 \begin{description}
 \item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
 För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
