@@ -92,34 +92,31 @@ Grunden till systemet som ska utvecklas kommer vara en centralenhet till vilken 
 
 Två periferienheter kommer att utvecklas, ett dörrlarm och ett rörelselarm.
 Dörrlarmets ska kunna starta ett larm då en dörr kopplad till en sensor öppnas.
-Rörelselarmet ska använda två sensorer, en vibrationssensor och en avståndssensor och kommer larma vid upptäckta störningar. 
+Rörelselarmet ska använda två sensorer, en vibrationssensor och en avståndssensor och kommer larma vid upptäckta störningar.
 De olika sensorernas toleranser ska kunna bestämmas på centralenheten.
 Ifall en tolerans har bestämts ska ett lokalt larm först sättas hos periferienheten, ett alarm skickas till centralenheten om toleransen överskrids.
 
 Att ett alarm har gått ska kommuniceras till användaren via en terminal på centralenheten och röda lampor.
-När ett larm startar på centralenheten ska det krävas en manuell inmatning av fyrsiffrig kod på en ansluten knapsats för att larma av.
+När ett larm startar på centralenheten ska det krävas en manuell inmatning av fyrsiffrig kod på en ansluten knappsats för att larma av.
 Denna kod är förutbestämd på systemet men ska kunna ändras av användaren.
 
 Utöver basfunktionaliteten kommer även extra funktionalitet implementeras.
 Denna extra funktionalitet kommer innebära ett självlärande system, ett testläge för periferienheterna, ett lokalt larm för rörelsesensorn och ett inbyggt skydd mot återuppspelningsattacker, en attack där förövaren återger tidigare skickad data i dataintrångsyfte.
 
-Larmsystemet kommer avgränsas till mindre lokaler som exempelvis kontor, lägenheter och villor på grund av hårdvarubegräsningar. 
-\todo{Beskriva begränsningar i metod. man kan ta in andra avgränsningar också där}
+Larmsystemet kommer utformas för att passa till mindre lokaler som exempelvis kontor, lägenheter och villor på grund av hårdvarubegräsningar.
 
 \subsection{Projektdrift}
-Det första steget i projektarbetet var att ta fram en plan över det system som skulle konstrueras.
-Det togs fram en skiss över de beståndsdelar systemet skulle komma att innefatta samt hur dessa skulle hänga samman. 
-\todo{Flytta till metod och ersätt med något annat}
+Mycket av all utveckling har skett på distans i och med dom restriktioner som legat på sociala sammankomster undet utvecklingstiden.
+Stor del av all kommunikation kring projektet har därför skett via kommunikationsverktygen Zoom, Discord och Messenger.
+
+Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
+Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
+Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
 
 Mjukvaran för projektet är skriven i programmeringsspråket C, ett språk som lämpar sig väl för utveckling mot mikrodatorn MD407 vilket är den hårdvara som driver systemet.
 
 Versionshantering har gjorts med hjälp av git.
 Ett gemensamt fjärrarkiv skapades på GitHub där all kod för projektet samlades.
-
-Majoriteten av testen utfördes direkt på hårdvaran i Chalmers lokaler.
-Vissa tester har genomförts med hjälp av mjukvaran Simserver som tillåter simulering av MD407-kortet.
-Funktionaliteten hos Simserver är begränsad och därför har den största delen av testerna behövts utföras i Chalmers laborationssalar.
-\todo{Beskriv kommunikation. Finns kanske ett stycke längst ner i slutsatsen}
 
 \newpage
 
@@ -140,7 +137,6 @@ MD407-korten kommunicerar via ett protokoll som baserats på CAN (Controllerar A
 
 \subsection{Systemöversikt}
 
-\todo{referera till bilden}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{canbuss-pp.png}
@@ -160,7 +156,7 @@ Om en dörr är öppen längre än bestämd tid eller om rörelsesensorn registr
 Användaren har möjlighet att bestämma tiden för enskilda dörrar och gränsvärdet för avståndssensorn via USART på centralenheten.
 %Om larmet fortsätter tillräcklig länge kommer periferienheten i fråga skicka ett meddelande till centralenheten.
 
-\subsubsection{Controller area network}
+\subsubsection{Kommunikationsprotokoll}
 Ett protokoll har utvecklats för kommunikation mellan enheterna.
 Basen till protokollet är CAN-meddelanden(Controller Area Network) som skickas mellan enheterna.
 
@@ -247,7 +243,6 @@ Om så är fallet kontrolleras meddelandetypen och en funktion för att hantera 
 För varje meddelandetyp finns en unik hanteringsfunktion som utför de instruktioner meddelandet medförde.
 
 \subsubsection{Centralenhet}
-\todo{Referera!}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{central-oversikt-pp.png}
@@ -281,7 +276,6 @@ Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
 
 \subsubsection{Periferienhet}
-\todo{REFERERA!}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{periferi-oversikt-pp.png}
@@ -323,9 +317,9 @@ Larmdonet i figuren används för att alarmera lokalt och att visa för använda
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 \end{description}
 
-Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
-När en dörr öppnas kommer ett lokalt alarm triggas igång. 
-Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm. 
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran.
+När en dörr öppnas kommer ett lokalt alarm triggas igång.
+Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm.
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Om avståndet är mindre än den inställda tröskeln skickar enheten ett alarm till centralenheten.
@@ -349,7 +343,10 @@ Det första steget i utvecklingen var att ta fram en överblick på hur systemet
 Alltså att ta fram den generella designen av systemet och fastställa vilka komponenter som skulle utgöra systemet.
 Systemet delades upp i tre delar:
 periferienheter, centralenhet samt kommunikationsprotokoll.
-Delarna valdes för att de har tydliga avgränsningar sinsemellan vilket skulle underlätta vid uppdelning av arbetsbördan.
+Att dela upp systemet på detta vis föreföll naturligt då utgångspunkten för projektet var att ha en centralenhet som ett flertal sensorer kunde anslutas till.
+För att systemet skulle kunna hantera ett stort antal sensorer var det uppenbart att ett robust kommunikationsprotokoll behövde utvecklas.
+Ytterligare en anledning till att dessa tre delar valdes var för att de har tydliga avgränsningar sinsemellan.
+Dessa avgränsningar skulle komma att underlätta vid uppdelning av arbetsbördan.
 Därefter delades arbetsgruppen upp i tre undergrupper.
 Varje undergrupp fick ansvar för en del av systemet.
 I början av projektet jobbade varje undergrupp enskilt på de olika delarna.
@@ -364,7 +361,8 @@ Mottagaren hanterar meddelandet och tar reda på vilken typ det är genom att br
 Beroende på meddelandetyp kallas den korresponderande funktionen.
 När mottagaren var på plats påbörjades implementeringen av diverse funktionalitet.
 
-CAN-protokollet samlar datan från en inkommande sänding i ett RX-meddelande.
+CAN-protokollet samlar datan från en inkommande sänding i ett
+\newline RX-meddelande.
 Logiken och koden för att göra om ett sådant meddelande till ett CANMsg var sedan tidigare given.
 Metoder för att till exempel uppdatera tolerans eller sätta antalet dörrar utvecklades.
 När funktionerna var testade så lades de till i mottagarfunktionen.
@@ -536,7 +534,7 @@ En mall för genomförelse och dokumentation av tester utvecklades så att olika
 Denna sektion refererar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
 Många tester har gjorts under utvecklingen av systemet och dessa tester har hjälp identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
 Testerna som har utförsts visar att systemet fungerar enligt projektets specifikationer.
-De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker. 
+De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker.
 
 %Mall för tester.
 \begin{comment}
@@ -561,16 +559,16 @@ Detta kapitel innehåller en reflektion på den slutgiltiga produkten och diskus
 
 \subsection{Resultat i förhållande till mål}
 
-Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet. 
-Centralenheten kan enligt specifikationerna konfigurera periferienheterna och ställa larm när ett alarm kommer ifrån en periferienheten. 
-Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specifierades. 
+Larmsystemet uppfyller nästan alla de mål som ställdes i början av arbetet.
+Centralenheten kan enligt specifikationerna konfigurera periferienheterna och ställa larm när ett alarm kommer ifrån en periferienheten.
+Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specifierades.
 
-Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet. 
+Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet.
 Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. All extra funktionaliteten implementerades även som planerat.
 
-Anledningen till att slutprodukten uppfyller alla mål och även expanderats ytterligare beror på att hur arbetsprocessen delades upp. 
-Att arbetet delades upp i tre delar i början gjorde att grundläggande funktionalitet snabbt utvecklades inom de tre områdena. 
-Detta gjorde att central- och periferienheterna tidigt kunde kommunicera med varandra över CAN-bussen vilket förenklade processen att testa systemet. 
+Anledningen till att slutprodukten uppfyller alla mål och även expanderats ytterligare beror på att hur arbetsprocessen delades upp.
+Att arbetet delades upp i tre delar i början gjorde att grundläggande funktionalitet snabbt utvecklades inom de tre områdena.
+Detta gjorde att central- och periferienheterna tidigt kunde kommunicera med varandra över CAN-bussen vilket förenklade processen att testa systemet.
 På grund av detta gick det fort att verifiera att kod fungerade korrekt och gå vidare till att skriva ny kod.
 
 \subsection{Användningsområden}
@@ -591,12 +589,10 @@ Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterad
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 
-\todo{Kommunikation i projektdrift}
 \subsection{Reflektion av projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
 
 De restriktioner som har legat på sociala sammankomster under utvecklingstiden har påverkat arbetet. Vid ett fåtal tillfällen har hela arbetsgruppen varit samlad i samma rum.
-Stor del av all kommunikation kring projektet har skett via kommunikationsverktygen Zoom, Discord och Messenger.
 %Det visade sig däremot vara svårare än tänkt och deadlines för hårdvaran missades med några dagar.
 
 
@@ -690,7 +686,7 @@ För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i 
 
 \item[Testsyfte] Det som ska testas är systemets förmåga att kunna skicka meddelanden mellan enheter när det finns många störningar på CAN-bussen.
 
-\item[Utförande] Systemet kopplas upp och störenheten ansluts. 
+\item[Utförande] Systemet kopplas upp och störenheten ansluts.
 Därefter bevakas systemets vanliga funktioner för att se om det klarar påfrestningen.
 Detta görs flera gånger med olika inställningar på störenheten.
 Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur många störningar den lägger på CAN-bussen.
