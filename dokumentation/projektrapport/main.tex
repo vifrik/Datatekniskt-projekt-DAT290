@@ -381,7 +381,7 @@ Efter pollingsystemet skapades funktioner för att jämföra inmatningen från e
 
 I och med att periferienheterna expanderades till att innefatta flera sensorer expanderades även centralenheten till att kunna hantera flera sensorer på samma periferienhet. Detta innebar att centralenheten uppdaterades till att även hålla koll på hur många sensorer som var uppkopplade till varje periferienhet och ifrån vilken sensor som ett larm uppstod ifrån.
 
-För att användaren skulle kunna styra systemet skapades först funktioner för att kunna läsa tangentbordsinmatning via USART. Därefter fastställdes en struktur för kommandon. Utifrån det implementerades det funktioner för att kunna tolka ifall det fanns ett kommando i en textsträng. Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen "set_ndoors" som motsvarar "ndoors" kommandot. 
+För att användaren skulle kunna styra systemet skapades först funktioner för att kunna läsa tangentbordsinmatning via USART. Därefter fastställdes en struktur för kommandon. Utifrån det implementerades det funktioner för att kunna tolka ifall det fanns ett kommando i en textsträng. Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen set_ndoors som motsvarar ndoors kommandot. 
 
 %Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
 %När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
