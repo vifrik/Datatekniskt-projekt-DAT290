@@ -432,7 +432,7 @@ Möjlighet finns för användaren att ansluta just de sensorer han eller hon beh
 Att sedan ställa in känsligheten hos sensorerna och på vilka grunder periferienheterna ska larma är implementerat och fungerar som väntat.
 
 Systemet stödjer i teorin att upp till 15 enheter ansluts. Detta är inget som har kunnat verifieras då tillgång till den mängd hårdvara ej finns.
-Systemet vidhåller däremot sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
+Som man kan se i testet ``Systemets prestanda med ansluten störenhet'' i bilaga \ref{A:störenhet} vidhåller systemet däremot sin funktionalitet när en störningsenhet är ansluten, detta tyder på att systemet kan hantera 15 anslutna enheter.
 
 \subsubsection{Centralenhet}
 Centralenheten fungerar som förväntat.
@@ -541,7 +541,8 @@ Denna funktionalitet fungerar som väntat och kan enkelt aktiveras av användare
 För att verifiera att varje del av systemet fungerade enligt specifikationen testades systemet utförligt.
 En mall för genomförelse och dokumentation av tester utvecklades så att olika tester sköttes enhetligt.
 Denna sektion refererar till tester i bilaga~\ref{bilaga-tester}, dock är dessa inte alla tester som har utförts.
-Många tester har gjorts under utvecklingen av systemet och dessa tester har hjälp identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
+Många tester har utförts under utvecklingen av systemet.
+Dessa tester har hjälpt identifiera problem så att de har kunnat åtgärdas innan nästa funktion utvecklades.
 Testerna som har utförsts visar att systemet fungerar enligt projektets specifikationer.
 De visar även att systemet är robust då det fungerar även vid störningar och är skyddat mot enkla attacker.
 
@@ -691,6 +692,7 @@ Här listas test på systemets prestanda.
 Dessa test är till för att se hur bra systemet fungerar under press och för att se systemets gränser.
 
 \subsubsection{Systemets prestanda med ansluten störenhet}
+\label{A:störenhet}
 \begin{description}
 \item[Komponent] Centralenheten och en ansluten periferienhet ska testas, såväl som störenheten och CAN-bussen.
 För testets syfte spelar det ingen roll vilken periferienhet som väljs, men i detta test valdes dörrenheten.
