@@ -440,7 +440,6 @@ Däremot är det lätt att göra misstag och precis vad varje kommando gör kan 
 Att expandera gränssnittet skulle göra systemet mer användarvänligt och enklare att hantera.
 
 \subsubsection{Dörrperiferienhet}
-\todo{Motivera varför 7 dörrar används}
 Enheten kan hålla upp till sju dörrar under bevakning.
 Varje dörr är kopplad till en grön ljusdiod och varje enhet är kopplad till en röd ljusdiod.
 15 av 16 GPIOE-portpinnar används, sju dörrsensorer, sju gröna ljusdioder, en röd ljusdiod.
@@ -507,6 +506,7 @@ Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och d�
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
 Detta gör att en angripare inte kan byta ut systemets periferienheter mot sina egna enheter.
 
+\begin{comment}
 \todo{Fake news!!!}
 \subsubsection{Testläge}
 Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
@@ -518,6 +518,7 @@ Det finns förbättringsmöjligheter för testläget i den slutgiltiga produkten
 Till exempel möjlighet att få felmeddelanden utskrivna.
 Mer felsökningsverktyg är alltid uppskattat.
 Inom ramarna för detta projekt fyller testläget däremot sin funktion.
+\end{comment}
 
 \subsubsection{Lokalt larm}
 Från ansluten konsol finns möjlighet för användaren att konfigurera precis hur och när varje periferienhet ska alarmera.
@@ -586,6 +587,8 @@ Exempelvis är systemet känsligt mot attackerare som känner till hur systemet 
 Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterade nycklar.
 Möjlighet att utöka med fler periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
+Ett mer sofistikerat testläge skulle även kunna implementeras.
+Detta skulle underlätta utvecklingen av nya delsystem och därmed förenkla vidareutveckling.
 
 \subsection{Reflektion av projektdrift}
 Det slutgiltiga systemet är ett bevis på att det är möjligt att konstruera ett enkelt larmsystem med grundliga kunskaper inom maskinorienteradprogramering och MD407-kort.
