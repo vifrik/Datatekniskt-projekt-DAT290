@@ -438,8 +438,8 @@ Som man kan se i testet ``Systemets prestanda med ansluten störenhet'' i bilaga
 Centralenheten fungerar som förväntat.
 Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten.
 I terminalen skrivs detaljer om larmet ut.
-Larmet bryts via terminalen eller knappsatsen som är kopplad till centralenheten.
-Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna.
+Larmet bryts via knappsatsen som är kopplad till centralenheten.
+Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna och upptäckt felaktig data i ett pollingsvar.
 
 Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna.
 Förfrågningarna innehåller ett meddelande som periferienheten förväntas besvara vilket skyddar från återuppspelningsattacker.
@@ -574,29 +574,34 @@ Centralenheten kan enligt specifikationerna konfigurera periferienheterna och st
 Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specifierades.
 
 Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet.
-Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. All extra funktionaliteten implementerades även som planerat.
+Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. 
 
-Anledningen till att slutprodukten uppfyller alla mål och även expanderats ytterligare beror på att hur arbetsprocessen delades upp.
-Att arbetet delades upp i tre delar i början gjorde att grundläggande funktionalitet snabbt utvecklades inom de tre områdena.
-Detta gjorde att central- och periferienheterna tidigt kunde kommunicera med varandra över CAN-bussen vilket förenklade processen att testa systemet.
+Det ända målet som inte uppfylldes var testläget. 
+Testläget avprioriterades då kommunikation över CAN-bussen etablerades mycket tidigt. 
+Det fanns ingen anledning för att bygga ett system för att emulera CAN-kommuniaktion när faktisk CAN-kommunikation var på plats.
+
+Anledningen till att slutprodukten uppfyller närapå alla mål och även expanderats ytterligare beror till stor del på hur arbetsprocessen delades upp.
+Att arbetet delades upp i tre delar i början gjorde att grundläggande funktionalitet snabbt utvecklades samtidigt inom de tre områdena.
+Detta gjorde att central- och periferienheterna tidigt kunde kommunicera med varandra enligt kommunikationsprotokollet över CAN-bussen vilket förenklade processen att testa systemet.
 På grund av detta gick det fort att verifiera att kod fungerade korrekt och gå vidare till att skriva ny kod.
 
 \subsection{Användningsområden}
+Det främsta användnigsområdet för larmsystemet är att övervaka mindre lokaler genom att placera sensorer runtom utrymmet.
 Systemet kan till exempel installeras i ett kontor.
-Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna riggas med sensorer.
+Där skulle dörrar, fönster samt värdesaker så som datorer och skärmar kunna utrustas med sensorer.
 Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskade intrång.
 
-Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för inbrott.
+Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för att göra inbrott utan att avlösa ett alarm.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
 För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
 
 \todo{Källa. Förbättra}
 \subsection{Förbättringsmöjligheter}
-Det finns fortfarande utvecklingsmöjligheter för systemet.
-Exempelvis är systemet känsligt mot attackerare som känner till hur systemet fungerar.
+Det finns många utvecklingsmöjligheter för systemet.
+Till exempel är systemet känsligt mot attackerare som känner till hur systemet fungerar.
 Detta skulle kunna förebyggas med ett mer avancerat pollingsystem med krypterade nycklar.
-Möjlighet att utöka med fler periferienheter finns också.
+Möjlighet att utöka med fler typer av periferienheter finns också.
 Centralenheten och kommunikationsprotokollet har goda förutsättningar för att expanderas för att kunna hantera fler typer av periferienheter.
 Ett mer sofistikerat testläge skulle även kunna implementeras.
 Detta skulle underlätta utvecklingen av nya delsystem och därmed förenkla vidareutveckling.
