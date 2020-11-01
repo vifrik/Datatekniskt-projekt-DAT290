@@ -252,7 +252,7 @@ För varje meddelandetyp finns en unik hanteringsfunktion som utför de instrukt
 \end{figure}
 
 Centralenheten sköter huvuddelen av systemets funktionalitet.
-En del av funktionaliteten är att kunna alarmera, avalarmera och konfigurera systemet.
+En del av funktionaliteten är att kunna alarmera, avlarma och konfigurera systemet.
 För att kunna göra detta är ett larmdon, en knappsats och en USART-terminal kopplade till centralenheten enligt Figur \ref{fig:oversiktcentral}.
 Enheten ansvarar över att övervaka alla anslutna enheter och alarmera om ett alarm uppstår hos någon av dem.
 Om alarm uppstår kan det avaktiveras genom att mata in en fyrsiffrig kod på ansluten knappsats.
@@ -270,8 +270,8 @@ Om korrekt pollingsvar ej mottages startas ett alarm från centralenheten.
 
 De instruktioner som matas in av användare via ansluten konsol (USART i Figur \ref{fig:oversiktcentral}) hanteras av centralenheten.
 För att inte störa programflödet kontrolleras inmatningen av tecken periodiskt istället för att systemet väntar på inmatning från användare.
-Inmatade tecken sparas i en buffer.
-Då buffern är full eller en blankrad matas in av användare tolkas tecknen i buffern.
+Inmatade tecken sparas i en buffert.
+Då bufferten är full eller en blankrad matas in av användare tolkas tecknen i bufferten.
 Om ett korrekt kommando har matats in kallas en funktion som hanterar kommandot.
 
 %skickas för att säkerställa att enheten i fråga fortfarande är ansluten och inte larmar. I pollingmeddelandet
@@ -451,7 +451,7 @@ Centralenheten fungerar som förväntat.
 Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten.
 I terminalen skrivs detaljer om larmet ut.
 Larmet bryts via knappsatsen som är kopplad till centralenheten.
-I testet ''Dörrlarmstest`` som finns att läsa i bilaga \ref{A:dörrtest} undersöks hurvida en full larmcykel kan genomföras.
+I testet ''Dörrlarmstest`` som finns att läsa i bilaga \ref{A:dörrtest} undersöks huruvida en full larmcykel kan genomföras.
 Testet var framgångsrikt och visade att systemet kan hantera ett alarm, en återställning och sedan fortsätta köras.
 Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna och upptäckt felaktig data i ett pollingsvar.
 
@@ -741,11 +741,11 @@ Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur m�
 
 \item[Testsyfte] Räckvidden på sensorn testas i syfte av att kunna bestämma gränsvärden som avståndssensorn kan hantera.
 
-\item[Utförande] Avståndssenorn kopplas upp och dess avstånd skrivs ut på USART.
+\item[Utförande] Avståndssensorn kopplas upp och dess avstånd skrivs ut på USART.
 Ett föremål placeras framför sensorn och vid förflyttning noteras det nya avståndet ner.
 Både den undre och den övre gränsen testas på samma vis. 
 
-\item[Resultat] Sensorn klarar att hantera avstånd från 2 cm upp till 360 cm innan den ger ifrån sig abnormaliteter.
+\item[Resultat] Sensorn klarar att hantera avstånd från 2 cm upp till 360 cm innan den ger ifrån sig abnormiteter.
 
 \item[Analys] De värden som mättes upp i testet stämmer överens med dokumentationen av sensorn.
 Det övre värdet kan variera på grund av faktorer som att rummet inte varit helt tomt och att föremål blockerat ljudvågorna från att komma fram.
