@@ -317,9 +317,9 @@ Larmdonet i figuren används för att alarmera lokalt och att visa för använda
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 \end{description}
 
-Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran.
-När en dörr öppnas kommer ett lokalt alarm triggas igång.
-Om dörren är öppen längre än det givna tidsintervallet kommer även Centralenheten få ett alarm.
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
+När en dörr öppnas kommer ett lokalt alarm triggas igång. 
+Om dörren är öppen längre än det angivna tidsintervallet kommer även Centralenheten få ett alarm. 
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Om avståndet är mindre än den inställda tröskeln skickar enheten ett alarm till centralenheten.
@@ -506,7 +506,8 @@ Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kun
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
 Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
-\todo{Dem klagade på referensen}
+%\todo{Dem klagade på referensen}
+%tror denna är lungt för vi refererar tidigare
 
 
 \subsection{Extra funktionalitet}
@@ -607,9 +608,10 @@ Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskad
 Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för att göra inbrott utan att avlösa ett alarm.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
-För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
+%För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
+Till skillnad från vad många tänker så hindrar larm inte de flesta inbrottstjuvar, men de minskar konsekvenserna av ett inbrott[2]. Larm sätter en tidspress på inbrottstjuvar vilket gör att de inte hinner begå ett fullständigt och färre saker blir stulna samt att skadorna blir mindre.
 
-\todo{Källa. Förbättra}
+%\todo{Källa. Förbättra}
 \subsection{Förbättringsmöjligheter}
 Det finns många utvecklingsmöjligheter för systemet.
 Till exempel är systemet känsligt mot attackerare som känner till hur systemet fungerar.
@@ -629,6 +631,8 @@ De restriktioner som har legat på sociala sammankomster under utvecklingstiden 
 \section{Referenser}
 \todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
 \citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
+
+\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
 %\printbibliography[heading=none]
 
 \newpage
@@ -658,7 +662,7 @@ Dessa tester är för att se till så att systemet fungerar som planerat och fö
 
 \item[Testsyfte] En full larmcykel skall testas; att dörrenheten kan skicka ett larm till centralenheten som tar emot det här meddelandet, och sen ska det larmas av.
 
-\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av däremellan genom att skriva in en 4-siffrig kod till en knappsats ansluten till centralenheten.
+\item[Utförande] Tre dörrar ska anslutas till dörrenheten. Larmet aktiveras från en dörr i taget och det larmas av däremellan genom att skriva in en fyr-siffrig kod till en knappsats ansluten till centralenheten.
 
 \item[Resultat] Alla dörrar larmade till centralenheten då respektive dörr blev bortkopplad. Varje larm kunde återställas från centralenheten.
 
