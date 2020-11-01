@@ -374,7 +374,7 @@ Att ha en gemensam mottagarfunktion underlättade vid implementering av nya peri
 
 \subsection{Utveckling av centralenheten}
 Det första som utvecklades på centralenheten var DICP-funktionaliteten och andra grundläggande CAN-funktioner.
-Centralenhetens logik för att upptäcka alarm utvecklades även.
+Centralenhetens logik för att upptäcka alarm implementerades även.
 Dessa funktioner prioriterades först för att kunna testa att central- och periferienhet kunde kommunicera med varandra.
 
 Efter att grunden till kommunikationen lades utvecklades logiken på centralenheten för att hålla koll på alla periferienheter som var uppkopplade till systemet.
@@ -394,17 +394,6 @@ För att användaren skulle kunna styra systemet skapades först funktioner för
 Därefter fastställdes en struktur för kommandon. Utifrån det implementerades det funktioner för att kunna tolka ifall det fanns ett kommando i en textsträng.
 Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen \textit{set\_ndoors} som motsvarar \textit{ndoors} kommandot. 
 
-%Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
-%När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
-%Kommandon utvecklades för att konfigurera de olika enheterna.
-%För att skydda systemet mot attacker implementerades ett lösenordsskydd i centralenhetens USART.
-
-%Centralenhetens pollingsystem utvecklades i syfte att stoppa återuppspelningsattacker och att upptäcka eventuella bortfall av periferienheter.
-%Pollingsystemet började som en idé på papper där teoretiska meddelanden ritades ut och manuellt stegades fram.
-%Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
-%TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
-
-\todo{Varför valt 15}
 \subsection{Utveckling av periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
 När periferienheterna fick förmågan att läsa av sina sensorer upptäcktes det att det inte fanns något sätt att förmedla detta till utvecklaren.
@@ -530,20 +519,6 @@ Den återuppspelade trafiken kommer aldrig innehålla den senaste nyckeln och d�
 Skulle en enhet kopplas ifrån CAN-bussen sätts ett alarm genast på centralenheten.
 Detta gör att en angripare inte kan byta ut systemets periferienheter mot sina egna enheter.
 
-\begin{comment}
-\todo{Fake news!!!}
-\subsubsection{Testläge}
-Möjlighet finns att i koden för centralenheten aktivera ett så kallat testläge.
-Då centralenheten körs i detta testläge skrivs information om de meddelanden som tas emot och skickas från centralen ut till ansluten konsol.
-Detta underlättar vid felsökning och installation av systemet.
-
-\todo{Förbättringsmöjligheter i slutsatser}
-Det finns förbättringsmöjligheter för testläget i den slutgiltiga produkten.
-Till exempel möjlighet att få felmeddelanden utskrivna.
-Mer felsökningsverktyg är alltid uppskattat.
-Inom ramarna för detta projekt fyller testläget däremot sin funktion.
-\end{comment}
-
 \subsubsection{Lokalt larm}
 Från ansluten konsol finns möjlighet för användaren att konfigurera precis hur och när varje periferienhet ska alarmera.
 Om användaren vill att ett lokalt larm ska aktiveras vid den enhet som larmar finns den möjligheten.
@@ -608,8 +583,7 @@ Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskad
 Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för att göra inbrott utan att avlösa ett alarm.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
-%För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
-Till skillnad från vad många tänker så hindrar larm inte de flesta inbrottstjuvar, men de minskar konsekvenserna av ett inbrott[2]. Larm sätter en tidspress på inbrottstjuvar vilket gör att de inte hinner begå ett fullständigt och färre saker blir stulna samt att skadorna blir mindre.
+Till skillnad från vad många tänker så hindrar larm inte de flesta inbrottstjuvar, men de minskar konsekvenserna av ett inbrott[2]. Larm sätter en tidspress på inbrottstjuvar vilket gör att de inte hinner begå ett fullständigt och färre saker blir stulna samt att skadorna blir mindre. Systemets korta alarmtid är därför mycket effektivt för att minska allvarlighetsgraden av ett inbrott.
 
 %\todo{Källa. Förbättra}
 \subsection{Förbättringsmöjligheter}
