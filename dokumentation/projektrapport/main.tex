@@ -25,7 +25,7 @@
 \setcounter{tocdepth}{4}
 
 % Nr, författare, titel, år, url, hämtad
-\newcommand{\citewebpage}[6]{\noindent [#1] #2, "#3," #4. [Online]. Tillgänglig: \url{#5},  hämtad #6}
+\newcommand{\citewebpage}[6]{\noindent [#1] #2, "#3," #4. [Online]. Tillgänglig: \url{#5},  hämtad #6\\}
 
 \restylefloat{table}
 
@@ -86,7 +86,8 @@ Möjlighet ska finnas för systemets användare att anpassa systemet efter sina 
 Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral.
 Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
 Till exempel ska kunden kunna justera antalet anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
-Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+Systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+Dessutom ska systemet testas både under utveckling och efter färdigställning för att kunna garantera att det fungerar enligt utsatta mål.
 
 Grunden till systemet som ska utvecklas kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. De övergripande målen med centralenheten är att användaren ska kunna konfigurera periferienheterna genom den och att den ska kunna larma när ett alarm sätts på en periferienhet.
 
@@ -308,18 +309,18 @@ Larmdonet i figuren används för att alarmera lokalt och att visa för använda
     \item[Avståndssensor:] Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
     För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
     Sensorn svarar med att skriva en logisk etta på echo-pinnen.
-    Längden av denna logiska etta motsvarar det uppmätta avståndet.
+    Längden av denna logiska etta motsvarar det uppmätta avståndet [3].
 
     \item[Vibrationssensor:] Vibrationssensors uppgift är att upptäcka vibrationer.
     En vibrationssensor används ofta för att mäta böjningar, beröring, vibration eller stötar.
     Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
     D0 används för att läsa det logiska värdet på sensorn.
-    Noll motsvarar en vibration och ett motsvarar standardtillståndet.
+    Noll motsvarar en vibration och ett motsvarar standardtillståndet [4].
 \end{description}
 
-Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
-När en dörr öppnas kommer ett lokalt alarm triggas igång. 
-Om dörren är öppen längre än det angivna tidsintervallet kommer även Centralenheten få ett alarm. 
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran.
+När en dörr öppnas kommer ett lokalt alarm triggas igång.
+Om dörren är öppen längre än det angivna tidsintervallet kommer även Centralenheten få ett alarm.
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Om avståndet är mindre än den inställda tröskeln skickar enheten ett alarm till centralenheten.
@@ -331,9 +332,8 @@ Sensorn alarmerar lokalt och till centralenheten direkt vid en upptäckt vibrati
 
 \newpage
 
-\todo{Varför vi har gjort som vi har gjort}
 \section{Metod}
-Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts.
+Detta kapitel beskriver hur projektet har utförts; vad som har gjorts, hur det har gjorts och varför det har gjorts.
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
 Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
@@ -392,7 +392,17 @@ Detta innebar att centralenheten uppdaterades till att även hålla koll på hur
 
 För att användaren skulle kunna styra systemet skapades först funktioner för att kunna läsa tangentbordsinmatning via USART.
 Därefter fastställdes en struktur för kommandon. Utifrån det implementerades det funktioner för att kunna tolka ifall det fanns ett kommando i en textsträng.
-Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen \textit{set\_ndoors} som motsvarar \textit{ndoors} kommandot. 
+Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen \textit{set\_ndoors} som motsvarar \textit{ndoors} kommandot.
+
+%Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
+%När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
+%Kommandon utvecklades för att konfigurera de olika enheterna.
+%För att skydda systemet mot attacker implementerades ett lösenordsskydd i centralenhetens USART.
+
+%Centralenhetens pollingsystem utvecklades i syfte att stoppa återuppspelningsattacker och att upptäcka eventuella bortfall av periferienheter.
+%Pollingsystemet började som en idé på papper där teoretiska meddelanden ritades ut och manuellt stegades fram.
+%Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
+%TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
 
 \subsection{Utveckling av periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
@@ -406,7 +416,7 @@ Protokollet valdes eftersom dess funktionalitet var liknade den funktionalitet s
 DHCP tilldelar automatiskt IP(Internet Protocol)-adresser på ett nätverk.
 
 Tilldelningen sker via att skicka ett meddelande på en generisk adress så kallad \textit{Broadcast Address} på engelska.
-Den generiska adressen valdes att bli 15 eftersom indexeringen av periferienheter började på adress noll.
+Den generiska adressen valdes att bli 15 eftersom indexeringen av periferienheter började på adress noll och att 15 är det största möjliga ID-värdet.
 DICP använder sig av den generiska adressen för att anropa centralenheten i en ID-förfrågan.
 Centralenheten svarar på ett DICP-meddelande med ett ledigt ID och periferienheten antar detta ID.
 
@@ -441,6 +451,8 @@ Centralenheten fungerar som förväntat.
 Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten.
 I terminalen skrivs detaljer om larmet ut.
 Larmet bryts via knappsatsen som är kopplad till centralenheten.
+I testet ''Dörrlarmstest`` som finns att läsa i bilaga \ref{A:dörrtest} undersöks hurvida en full larmcykel kan genomföras.
+Testet var framgångsrikt och visade att systemet kan hantera ett alarm, en återställning och sedan fortsätta köras.
 Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna och upptäckt felaktig data i ett pollingsvar.
 
 Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna.
@@ -473,13 +485,13 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
   Däremot, om avståndet är mindre än toleransen skickas ett alarm till centralenheten.
   Toleransen går att bestämma på centralenheten.
 
+  Avståndsintervallet för avståndssensorn är 2 cm till 360 cm. Ett prestandatest gjordes på detta och går att finna under bilaga \ref{A:avstand}.
+
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
   Om vibrationssensor upptäcker en vibration skickar den ett alarm till centralenheten omedelbart.
   Känsligheten för sensorn går att justera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
-
-\todo{Testa avståndssensorn, rapportera felmarginal etc här?}
 
 \subsubsection{Kommunikationsprotokoll}
 Kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
@@ -553,6 +565,7 @@ De visar även att systemet är robust då det fungerar även vid störningar oc
 
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
+\newpage
 \section{Slutsatser}
 Detta kapitel innehåller en reflektion på den slutgiltiga produkten och diskussion kring projektets drift.
 
@@ -563,10 +576,10 @@ Centralenheten kan enligt specifikationerna konfigurera periferienheterna och st
 Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specificerades.
 
 Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet.
-Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. 
+Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat.
 
-Det ända målet som inte uppfylldes var testläget. 
-Testläget prioriterades inte då kommunikation över CAN-bussen etablerades mycket tidigt. 
+Det ända målet som inte uppfylldes var testläget.
+Testläget prioriterades inte då kommunikation över CAN-bussen etablerades mycket tidigt.
 Det fanns ingen anledning för att bygga ett system för att emulera CAN-kommunikation när faktisk CAN-kommunikation var på plats.
 
 Anledningen till att slutprodukten uppfyller närapå alla mål och även expanderats ytterligare beror till stor del på hur arbetsprocessen delades upp.
@@ -603,11 +616,14 @@ De restriktioner som har legat på sociala sammankomster under utvecklingstiden 
 
 
 \section{Referenser}
-\todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
+%\todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
 \citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
 
-\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
-%\printbibliography[heading=none]
+\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
+
+\citewebpage{3}{Elec Freaks}{Ultrasonic Ranging Module HC - SR04}{}{https://chalmers.instructure.com/courses/10285/files/folder/Kursmaterial\%20\%26\%20Dokument/H\%C3\%A5rdvarurelaterat?preview=662574}{2020-11-01}
+
+\citewebpage{4}{e-Gizmo}{Vibration sensor module}{2017}{https://chalmers.instructure.com/courses/10285/files/folder/Kursmaterial\%20\%26\%20Dokument/H\%C3\%A5rdvarurelaterat?preview=662575}{2020-11-01}
 
 \newpage
 \appendix
@@ -630,7 +646,7 @@ Dessa tester är för att se till så att systemet fungerar som planerat och fö
 \item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
 \end{description}
 
-\subsubsection{Dörrlarmstest}
+\subsubsection{Dörrlarmstest} \label{A:dörrtest}
 \begin{description}
 \item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
 
@@ -715,7 +731,25 @@ Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur m�
 
 \item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
 
-\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är prioriterade enligt specifikationn.
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är prioriterade enligt specifikation.
+\end{description}
+
+\subsubsection{Avståndssensorns verkningsräckvidd}
+\label{A:avstand}
+\begin{description}
+\item[Komponent] Räckvidden på avståndssensorn ska testas.
+
+\item[Testsyfte] Räckvidden på sensorn testas i syfte av att kunna bestämma gränsvärden som avståndssensorn kan hantera.
+
+\item[Utförande] Avståndssenorn kopplas upp och dess avstånd skrivs ut på USART.
+Ett föremål placeras framför sensorn och vid förflyttning noteras det nya avståndet ner.
+Både den undre och den övre gränsen testas på samma vis. 
+
+\item[Resultat] Sensorn klarar att hantera avstånd från 2 cm upp till 360 cm innan den ger ifrån sig abnormaliteter.
+
+\item[Analys] De värden som mättes upp i testet stämmer överens med dokumentationen av sensorn.
+Det övre värdet kan variera på grund av faktorer som att rummet inte varit helt tomt och att föremål blockerat ljudvågorna från att komma fram.
+
 \end{description}
 
 \end{document}
