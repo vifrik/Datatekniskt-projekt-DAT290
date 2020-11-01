@@ -25,7 +25,7 @@
 \setcounter{tocdepth}{4}
 
 % Nr, författare, titel, år, url, hämtad
-\newcommand{\citewebpage}[6]{\noindent [#1] #2, "#3," #4. [Online]. Tillgänglig: \url{#5},  hämtad #6}
+\newcommand{\citewebpage}[6]{\noindent [#1] #2, "#3," #4. [Online]. Tillgänglig: \url{#5},  hämtad #6\\}
 
 \restylefloat{table}
 
@@ -308,13 +308,13 @@ Larmdonet i figuren används för att alarmera lokalt och att visa för använda
     \item[Avståndssensor:] Avståndssensorns uppgift är att upptäcka skillnader i avstånd.
     För att kunna läsa ett värde från sensorn måste en logisk etta skrivas till trig-pinnen i minst 10 \textmu s.
     Sensorn svarar med att skriva en logisk etta på echo-pinnen.
-    Längden av denna logiska etta motsvarar det uppmätta avståndet.
+    Längden av denna logiska etta motsvarar det uppmätta avståndet [3].
 
     \item[Vibrationssensor:] Vibrationssensors uppgift är att upptäcka vibrationer.
     En vibrationssensor används ofta för att mäta böjningar, beröring, vibration eller stötar.
     Sensorn kan rapportera en vibration både analogt via A0-pinnen eller digitalt via D0-pinnen på sensorn.
     D0 används för att läsa det logiska värdet på sensorn.
-    Noll motsvarar en vibration och ett motsvarar standardtillståndet.
+    Noll motsvarar en vibration och ett motsvarar standardtillståndet [4].
 \end{description}
 
 Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran.
@@ -331,7 +331,6 @@ Sensorn alarmerar lokalt och till centralenheten direkt vid en upptäckt vibrati
 
 \newpage
 
-\todo{Varför vi har gjort som vi har gjort}
 \section{Metod}
 Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts.
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
@@ -404,7 +403,6 @@ Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel fun
 %Innehållet i meddelandet tog stor inspiration från datorkommunikationens TCP (Transfer Control Protocol).
 %TCP är ett protokoll där avsändaren kan garantera att all data når mottagaren genom bekräftelser.
 
-\todo{Varför valt 15}
 \subsection{Utveckling av periferienheterna}
 Utvecklingen av periferienheterna startade med att utveckla funktioner för att läsa av sensorvärden.
 När periferienheterna fick förmågan att läsa av sina sensorer upptäcktes det att det inte fanns något sätt att förmedla detta till utvecklaren.
@@ -417,7 +415,7 @@ Protokollet valdes eftersom dess funktionalitet var liknade den funktionalitet s
 DHCP tilldelar automatiskt IP(Internet Protocol)-adresser på ett nätverk.
 
 Tilldelningen sker via att skicka ett meddelande på en generisk adress så kallad \textit{Broadcast Address} på engelska.
-Den generiska adressen valdes att bli 15 eftersom indexeringen av periferienheter började på adress noll.
+Den generiska adressen valdes att bli 15 eftersom indexeringen av periferienheter började på adress noll och att 15 är det största möjliga ID-värdet.
 DICP använder sig av den generiska adressen för att anropa centralenheten i en ID-förfrågan.
 Centralenheten svarar på ett DICP-meddelande med ett ledigt ID och periferienheten antar detta ID.
 
@@ -484,13 +482,13 @@ Vid kontakt har vibrationssensorn möjlighet att alarmera.
   Däremot, om avståndet är mindre än toleransen skickas ett alarm till centralenheten.
   Toleransen går att bestämma på centralenheten.
 
+  Avståndsintervallet för avståndssensorn är 2 cm till 360 cm. Ett prestandatest gjordes på detta och går att finna under bilaga \ref{A:avstand}.
+
   \item[Vibrationssensor] Vibrationssensorn läses av kontinuerligt.
   Om vibrationssensor upptäcker en vibration skickar den ett alarm till centralenheten omedelbart.
   Känsligheten för sensorn går att justera på sensorn med hjälp av en skruvmejsel.
 
   \end{description}
-
-\todo{Testa avståndssensorn, rapportera felmarginal etc här?}
 
 \subsubsection{Kommunikationsprotokoll}
 Kommunikationsprotokollet fungerar väl och är motståndskraftigt gentemot återuppspelningsattacker.
@@ -629,11 +627,14 @@ De restriktioner som har legat på sociala sammankomster under utvecklingstiden 
 
 
 \section{Referenser}
-\todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
+%\todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
 \citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
 
-\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
-%\printbibliography[heading=none]
+\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
+
+\citewebpage{3}{Elec Freaks}{Ultrasonic Ranging Module HC - SR04}{}{https://chalmers.instructure.com/courses/10285/files/folder/Kursmaterial\%20\%26\%20Dokument/H\%C3\%A5rdvarurelaterat?preview=662574}{2020-11-01}
+
+\citewebpage{4}{e-Gizmo}{Vibration sensor module}{2017}{https://chalmers.instructure.com/courses/10285/files/folder/Kursmaterial\%20\%26\%20Dokument/H\%C3\%A5rdvarurelaterat?preview=662575}{2020-11-01}
 
 \newpage
 \appendix
@@ -728,7 +729,25 @@ Det som ställs in är hur ofta störenheten skickar meddelanden, alltså hur m�
 
 \item[Resultat] Systemet fungerar som vanligt utan problem med störenheten ansluten, även när den skickar meddelanden oavbrutet.
 
-\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är prioriterade enligt specifikationn.
+\item[Analys] Testet tyder på att systemet fungerar under press och att meddelandetyperna är prioriterade enligt specifikation.
+\end{description}
+
+\subsubsection{Avståndssensorns verkningsräckvidd}
+\label{A:avstand}
+\begin{description}
+\item[Komponent] Räckvidden på avståndssensorn ska testas.
+
+\item[Testsyfte] Räckvidden på sensorn testas i syfte av att kunna bestämma gränsvärden som avståndssensorn kan hantera.
+
+\item[Utförande] Avståndssenorn kopplas upp och dess avstånd skrivs ut på USART.
+Ett föremål placeras framför sensorn och vid förflyttning noteras det nya avståndet ner.
+Både den undre och den övre gränsen testas på samma vis. 
+
+\item[Resultat] Sensorn klarar att hantera avstånd från 2 cm upp till 360 cm innan den ger ifrån sig abnormaliteter.
+
+\item[Analys] De värden som mättes upp i testet stämmer överens med dokumentationen av sensorn.
+Det övre värdet kan variera på grund av faktorer som att rummet inte varit helt tomt och att föremål blockerat ljudvågorna från att komma fram.
+
 \end{description}
 
 \end{document}
