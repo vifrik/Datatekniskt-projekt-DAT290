@@ -709,6 +709,19 @@ Kommandon från centralenheten gör det dem ska.
 Här listas test på systemets prestanda.
 Dessa test är till för att se hur bra systemet fungerar under press och för att se systemets gränser.
 
+\subsubsection{Prestandatest av tid mellan larm på periferienhet och centralenhet}
+\begin{description}
+\item[Komponent] Både centralenheten och en valfri periferienhet ska testas.
+
+\item[Testsyfte] Tiden som det tar att ett sensorvärde mäts till att ett alarm sätts på centralenheten.
+
+\item[Utförande] Hela systemet ska kopplas upp för att testa systemet under normala omständigheter. Ett larm ska aktiveras på periferienheten och tiden som det tar tills att centralenheten larmar ska mätas.
+
+\item[Resultat] Alarmet på centralenheten gick omedelbart. Det fanns inget syfte med att använda tidtagaruret.
+
+\item[Analys] Under normala förhållanden går ett alarm omedelbart på centralenheten. Även under attack från en störenhet skulle tiden emellan knappt vara märkbar. Denna funktionalitet fungerar utmärkt
+\end{description}
+
 \subsubsection{Systemets prestanda med ansluten störenhet}
 \label{A:störenhet}
 \begin{description}
