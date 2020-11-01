@@ -493,7 +493,8 @@ Meddelandetypen skulle sedan kodas ned till ett generellt CAN-meddelande som kun
 Denna design övergavs tidigt i utvecklingsstadiet då insikten kom att de unika meddelandestrukturerna kunde strykas.
 Istället skapas ett generellt CAN-meddelande direkt då ovan nämnd funktion kallas.
 Strukturen av det generella CAN-meddelandet, som kan ses i Tabell \ref{tab:meddelandestruktur}, håller tillräckligt med information för de meddelandetyper som används.
-\todo{Dem klagade på referensen}
+%\todo{Dem klagade på referensen}
+%tror denna är lungt för vi refererar tidigare
 
 
 \subsection{Extra funktionalitet}
@@ -594,9 +595,10 @@ Systemets användare skulle i så fall ha ett gott skydd mot stöld och oönskad
 Larmsystemets olika sensorer tillsammans med det inbyggda skyddet mot attacker gör att det finns få möjligheter för att göra inbrott utan att avlösa ett alarm.
 Den möjligheten som finns är om inbrottstjuvarna besitter kunskap om systemet och har fysisk åtkomst till CAN-bussen.
 
-För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
+%För att förebygga inbrott kan även informationen att det finns ett larmsystem i bostaden framföras med skyltar och det i sig förhindrar de allra flesta inbrottsförsök.
+Till skillnad från vad många tänker så hindrar larm inte de flesta inbrottstjuvar, men de minskar konsekvenserna av ett inbrott[2]. Larm sätter en tidspress på inbrottstjuvar vilket gör att de inte hinner begå ett fullständigt och färre saker blir stulna samt att skadorna blir mindre.
 
-\todo{Källa. Förbättra}
+%\todo{Källa. Förbättra}
 \subsection{Förbättringsmöjligheter}
 Det finns många utvecklingsmöjligheter för systemet.
 Till exempel är systemet känsligt mot attackerare som känner till hur systemet fungerar.
@@ -616,6 +618,8 @@ De restriktioner som har legat på sociala sammankomster under utvecklingstiden 
 \section{Referenser}
 \todo{Fler källor, dokumentation för sensorer. Kanske mer i inledning/slutsats}
 \citewebpage{1}{BRA}{Anmälda brott}{2019}{https://www.bra.se/download/18.7d27ebd916ea64de5304d238/1585555596510/100La-2019.xls}{2020-09-20}
+
+\citewebpage{2}{larm.se}{Har hemlarm någon effekt?}{https://larm.se/effekten-av-ett-inbrottslarm}{2020-10-29}
 %\printbibliography[heading=none]
 
 \newpage
