@@ -86,7 +86,8 @@ Möjlighet ska finnas för systemets användare att anpassa systemet efter sina 
 Produkten ska erbjuda ett flertal larmkomponenter som kan anslutas till en larmcentral.
 Varje enhet ska kunna konfigureras och anpassas för att passa kundens specifika situation.
 Till exempel ska kunden kunna justera antalet anslutna larmkomponenter eller på vilka villkor komponenterna alarmerar.
-Dessutom ska systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+Systemet vara dokumenterat och fackmannamässigt utfört med förutsättningar för expansion.
+Dessutom ska systemet testas både under utveckling och efter färdigställning för att kunna garantera att det fungerar enligt utsatta mål.
 
 Grunden till systemet som ska utvecklas kommer vara en centralenhet till vilken användaren kan ansluta periferienheter. De övergripande målen med centralenheten är att användaren ska kunna konfigurera periferienheterna genom den och att den ska kunna larma när ett alarm sätts på en periferienhet.
 
@@ -317,9 +318,9 @@ Larmdonet i figuren används för att alarmera lokalt och att visa för använda
     Noll motsvarar en vibration och ett motsvarar standardtillståndet.
 \end{description}
 
-Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran. 
-När en dörr öppnas kommer ett lokalt alarm triggas igång. 
-Om dörren är öppen längre än det angivna tidsintervallet kommer även Centralenheten få ett alarm. 
+Dörrsensors tröskel justeras genom att skapa ett tidsintervall som kan konfigureras i Centralenheten utifrån kundens begäran.
+När en dörr öppnas kommer ett lokalt alarm triggas igång.
+Om dörren är öppen längre än det angivna tidsintervallet kommer även Centralenheten få ett alarm.
 
 Avståndssensorn samlar kontinuerligt in mätvärden för avståndet.
 Om avståndet är mindre än den inställda tröskeln skickar enheten ett alarm till centralenheten.
@@ -331,9 +332,8 @@ Sensorn alarmerar lokalt och till centralenheten direkt vid en upptäckt vibrati
 
 \newpage
 
-\todo{Varför vi har gjort som vi har gjort}
 \section{Metod}
-Detta kapitel beskriver hur projektet har utförts; vad som har gjorts och hur det har gjorts.
+Detta kapitel beskriver hur projektet har utförts; vad som har gjorts, hur det har gjorts och varför det har gjorts.
 Varje delsystem gås igenom för sig men de olika komponenterna har ofta utvecklats parallellt då det finns många delar av dem som överlappar.
 Att delsystemen är kompatibla och kan samarbeta med varandra är viktigt för att systemet i sin helhet ska fungera.
 
@@ -392,7 +392,7 @@ Detta innebar att centralenheten uppdaterades till att även hålla koll på hur
 
 För att användaren skulle kunna styra systemet skapades först funktioner för att kunna läsa tangentbordsinmatning via USART.
 Därefter fastställdes en struktur för kommandon. Utifrån det implementerades det funktioner för att kunna tolka ifall det fanns ett kommando i en textsträng.
-Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen \textit{set\_ndoors} som motsvarar \textit{ndoors} kommandot. 
+Funktioner som motsvarade varsin kommandotyp utvecklades sedan, till exempel funktionen \textit{set\_ndoors} som motsvarar \textit{ndoors} kommandot.
 
 %Centralenhetens uppgift var till en början att tilldela ID:n till periferienheterna och den agerade som centrum i kommunikationen.
 %När alla enheter i systemet hade en unik identifikation kunde periferienheten skicka olika kommandon till de olika enheterna.
@@ -452,6 +452,8 @@ Centralenheten fungerar som förväntat.
 Vid larmutbrott skickas ett meddelande till en ansluten terminal via centralenheten.
 I terminalen skrivs detaljer om larmet ut.
 Larmet bryts via knappsatsen som är kopplad till centralenheten.
+I testet ''Dörrlarmstest`` som finns att läsa i bilaga \ref{A:dörrtest} undersöks hurvida en full larmcykel kan genomföras.
+Testet var framgångsrikt och visade att systemet kan hantera ett alarm, en återställning och sedan fortsätta köras.
 Utöver att centralenheten larmar via alarmmeddelande larmar även centralenheten vid tappad kontakt av periferienheterna och upptäckt felaktig data i ett pollingsvar.
 
 Centralenheten lagrar det antal enheter som är anslutna till systemet och skickar kontinuerligt förfrågningsmeddelanden till enheterna.
@@ -578,6 +580,7 @@ De visar även att systemet är robust då det fungerar även vid störningar oc
 
 %Systemet fungerar som önskat där enhetens alla delar kommunicerar och sammarbetar vilket resulterar i ett effektivt larmsystem.
 
+\newpage
 \section{Slutsatser}
 Detta kapitel innehåller en reflektion på den slutgiltiga produkten och diskussion kring projektets drift.
 
@@ -588,10 +591,10 @@ Centralenheten kan enligt specifikationerna konfigurera periferienheterna och st
 Dessutom utvecklades ytterligare kommandon hos centralenheten utöver de mål som specificerades.
 
 Periferienheterna fungerar enligt de krav som ställts och har även ytterligare funktionalitet.
-Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat. 
+Det går exempelvis att på rörelseperiferienheten att stänga av sensorerna vilket inte ursprungligen var planerat.
 
-Det ända målet som inte uppfylldes var testläget. 
-Testläget prioriterades inte då kommunikation över CAN-bussen etablerades mycket tidigt. 
+Det ända målet som inte uppfylldes var testläget.
+Testläget prioriterades inte då kommunikation över CAN-bussen etablerades mycket tidigt.
 Det fanns ingen anledning för att bygga ett system för att emulera CAN-kommunikation när faktisk CAN-kommunikation var på plats.
 
 Anledningen till att slutprodukten uppfyller närapå alla mål och även expanderats ytterligare beror till stor del på hur arbetsprocessen delades upp.
@@ -656,7 +659,7 @@ Dessa tester är för att se till så att systemet fungerar som planerat och fö
 \item[Analys] Den grundläggande funktionen av att skicka CAN-meddelanden fungerar och vi kan gå vidare till mer avancerade operationer.
 \end{description}
 
-\subsubsection{Dörrlarmstest}
+\subsubsection{Dörrlarmstest} \label{A:dörrtest}
 \begin{description}
 \item[Komponent] Både centralenheten och dörrperiferienheten ska testas.
 
